@@ -17,35 +17,43 @@
 
     <?php echo $filter??""?>
 
-    <div class="sections-list-grid my-3">
-        <div class="grid-title bg-light fw-bold">#</div>
-        <div class="grid-title bg-light fw-bold">Название</div>
-        <div class="grid-title bg-light fw-bold">Кол-во</div>
-        <div class="grid-title bg-light fw-bold">vis</div>
-        <div class="grid-title bg-light fw-bold">edit</div>
-        <div class="grid-title bg-light fw-bold">del</div>
-        <?php if(isset($list)) foreach($list as $key=>$item):?>
-            <div>
-                <?=$item->id?>
-            </div>
-            <div class="<?=$item->parent?"ps-4":""?>">
-                <?=$item->name?>
-            </div>
-            <div>
-                <?=$item->cnt?>
-            </div>
-            <div>
-                <div class="form-check form-switch">
-                    <input class="form-check-input float-none changeVisible" data-link="/admin/collections/change-visible" type="checkbox" id="changeVisible-Section<?=$item->id?>" data-id="<?=$item->id?>" <?=$item->display?"checked":""?>>
+    <?php if(empty($list)):?>
+        <div class="mb-3 callout callout-error">
+            Нет данных
+        </div>
+    <?php else:?>
+        <div class="sections-list-grid my-3">
+            <div class="grid-title bg-light fw-bold">#</div>
+            <div class="grid-title bg-light fw-bold">Название</div>
+            <div class="grid-title bg-light fw-bold">Кол-во</div>
+            <div class="grid-title bg-light fw-bold">vis</div>
+            <div class="grid-title bg-light fw-bold">edit</div>
+            <div class="grid-title bg-light fw-bold">del</div>
+            <?php if(isset($list)) foreach($list as $key=>$item):?>
+                <div>
+                    <?=$item->id?>
                 </div>
-            </div>
-            <div>
-                <a class="btn btn-primary btn-sm" href="<?=base_url("admin/sections/edit/$item->id")?>"><i class="bi bi-pencil"></i></a>
-            </div>
-            <div>
-                <a class="btn btn-danger btn-sm" href="<?=base_url("admin/sections/edit/$item->id")?>"><i class="bi bi-trash3"></i></a>
-            </div>
-        <?php endforeach;?>
-    </div>
-
+                <div>
+                    <?php if($item->parent):?>
+                        <i class="bi bi-arrow-return-right ps-1"></i>
+                    <?php endif;''?>
+                    <?=$item->name?>
+                </div>
+                <div>
+                    <?=$item->cnt?>
+                </div>
+                <div>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input float-none changeVisible" data-link="/admin/sections/change-visible" type="checkbox" id="changeVisible-Section<?=$item->id?>" data-id="<?=$item->id?>" <?=$item->display?"checked":""?>>
+                    </div>
+                </div>
+                <div>
+                    <a class="btn btn-primary btn-sm" href="<?=base_url("admin/sections/edit/$item->id")?>"><i class="bi bi-pencil"></i></a>
+                </div>
+                <div>
+                    <a class="btn btn-danger btn-sm" href="<?=base_url("admin/sections/delete/$item->id")?>"><i class="bi bi-trash3"></i></a>
+                </div>
+            <?php endforeach;?>
+        </div>
+    <?php endif;?>
 </div>
