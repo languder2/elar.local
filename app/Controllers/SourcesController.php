@@ -21,7 +21,7 @@ class SourcesController extends BaseController
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
         //dd($this->model->createPassword("aRf8zKl1s1"));
         $page['data']['includes']=(object)[
-            'js'=>[],
+            'js'=>["/js/admin/change-visible.js"],
             'css'=>["/css/admin/collections.css","/css/admin/sections.css"],
         ];
         $page['data']["title"]= "Control Panel: Источники";

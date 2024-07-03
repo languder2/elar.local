@@ -21,7 +21,7 @@ class CollectionsController extends BaseController
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
         //dd($this->model->createPassword("aRf8zKl1s1"));
         $page['data']['includes']=(object)[
-            'js'=>[],
+            'js'=>["/js/admin/change-visible.js"],
             'css'=>["/css/admin/collections.css","/css/admin/sections.css"],
         ];
         $page['data']["title"]= "Control Panel: Коллекции";
@@ -105,8 +105,10 @@ class CollectionsController extends BaseController
         return redirect()->to(base_url("/admin/collections/"));
     }
     public function changeVisible():string|bool{
+        dd(1);
         if(!$this->clm->hasAuth()) return json_encode(['message'=>"success denied"]);
         $form= $this->request->getVar();
+        dd($form);
         $this->clm->dbUpdateFiled("collections",["display"=>(string)$form->display],["id"=>$form->id]);
         return true;
     }

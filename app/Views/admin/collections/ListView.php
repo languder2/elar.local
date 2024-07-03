@@ -34,7 +34,7 @@
             </div>
             <div>
                 <div class="form-check form-switch">
-                    <input class="form-check-input float-none changeVisible" data-link="/admin/collections/change-visible" type="checkbox" id="changeVisible-Section<?=$collection->id?>" data-id="<?=$collection->id?>" <?=$collection->display?"checked":""?>>
+                    <input class="form-check-input float-none change-visible" data-link="/admin/collections/change-visible" data-id="<?=$collection->id?>" type="checkbox" <?=$collection->display?"checked":""?>>
                 </div>
             </div>
             <div>
