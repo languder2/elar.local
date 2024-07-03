@@ -17,7 +17,15 @@ class SectionsController extends BaseController
         $page["title"]= "Control Panel: Разделы";
         $page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
 
-        $page['list']= $this->model->db->table("sections")->get()->getResult();
+        if($this->session->has("message"))
+            $page['data']['message']= $this->session->getFlashdata("message");
+
+        $page['list']= $this->model->db
+            ->table("sections")
+            ->orderBy("parent")
+            ->orderBy("sort")
+            ->orderBy("name")
+            ->get()->getResult();
         $page['list']= $this->model->buildTree($page['list'],"id");
         $page['list']= $this->model->Tree2List($page['list']);
 
@@ -32,7 +40,11 @@ class SectionsController extends BaseController
 
         if($action!=="add" && $id===false) return redirect()->to(base_url("/admin/sections/"));
 
+        $page['data']["title"] = ($action!=="edit")?"Раздел: Создать":"Раздел: Изменить";
+        $page["title"]= "Control Panel: ".$page['data']["title"];
         $page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
+        if($this->session->has("message"))
+            $page['data']['message']= $this->session->getFlashdata("message");
 
         $page['data']['includes']=(object)[
             'js'=>[],
@@ -46,7 +58,6 @@ class SectionsController extends BaseController
             ->get()
             ->getResult();
 
-        $page['data']["title"] = ($action!=="edit")?"Раздел: Создать":"Раздел: Изменить";
         $page['data']['action']= $action;
         $page['data']['id']= $id;
 
@@ -103,6 +114,16 @@ class SectionsController extends BaseController
             $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Коллекция добавлена: #".$this->db->insertID().": $form->id"]);
         }
         elseif($form->action=="edit"){
+            $current= $this->db->table("sections")->where(['id'=>$form->id])->get()->getFirstRow();
+            if(
+                $current->parent!=$form->parent
+                and $form->parent!=0
+                and $this->db->table("sections")->where(['parent'=>$form->id])->get()->getNumRows()
+            ){
+                $this->session->setFlashdata("message",(object)["type"=>"error","class"=>"callout-error","message"=>"Раздел не может стать дочерним т.к. имеет подразделы"]);
+                return redirect()->to(base_url("/admin/sections/edit/".$form->id));
+            }
+
             $this->model->db->table("sections")->update($sql,["id"=>$form->id]);
             $this->session->setFlashdata("message",(object)[
                 "type"=>"success",
