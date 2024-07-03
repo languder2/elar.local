@@ -47,7 +47,8 @@ class GeneralModel extends UserModel{
                 $result[$item->{$field}]->main = $item;
             }
             else
-                $result[$item->parent]->sub[$item->{$field}]= $item;
+                if(isset($result[$item->parent]->sub))
+                    $result[$item->parent]->sub[$item->{$field}]= $item;
         }
         return $result;
     }

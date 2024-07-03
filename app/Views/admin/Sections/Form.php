@@ -1,10 +1,18 @@
 <div class="w-50 mx-auto">
     <form action="/admin/sections/form-processing" method="post">
-        <input type="hidden" name="form[action]" value="<?=$action??"add"?>">
-        <input type="hidden" name="form[id]" value="<?=$id??0?>">
         <h3 class="mt-2 mb-3 text-center">
             <?=$title??""?>
         </h3>
+
+        <input type="hidden" name="form[action]" value="<?=$action??"add"?>">
+        <input type="hidden" name="form[id]" value="<?=$id??0?>">
+
+        <?php if(isset($message) and !empty($message)):?>
+            <div class="mb-3 callout <?=$message->class?>">
+                <?=$message->message?>
+            </div>
+        <?php endif;?>
+
         <?php if(!empty($errors)):?>
             <div class="text-center mt-3 mb-2 callout callout-error" role="alert">
                 <?php foreach ($errors as $error) echo "$error<br>";?>
@@ -15,6 +23,7 @@
                 <select class="form-select" name="form[parent]">
                     <option <?=(empty($form->level))?"selected":""?> value="0">Родительский раздел</option>
                     <?php if(!empty($sections)) foreach($sections as $section):?>
+                        <?php if(isset($form->id) && $section->id == $form->id) continue;?>
                         <option <?=(!empty($form->parent) && $form->parent==$section->id)?"selected":""?> value="<?=$section->id?>"><?=$section->name?></option>
                     <?php endforeach;?>
                 </select>

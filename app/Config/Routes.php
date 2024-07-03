@@ -18,10 +18,11 @@ $routes->match(['get','post'],'/admin/', [UserController::class, 'auth']);
 $routes->match(['get','post'],'/admin/welcome', [AdminController::class, 'welcome']);
 
 /** ADMIN: SECTIONS  */
-$routes->match(['get','post'],'/admin/sections', [SectionsController::class, 'adminList']);
+$routes->get('/admin/sections', [SectionsController::class, 'adminList']);
 $routes->match(['get','post'],'/admin/sections/add', [SectionsController::class, 'form/add']);
 $routes->match(['get','post'],'/admin/sections/edit/(:num)', [SectionsController::class, 'form/edit/$1']);
-$routes->match(['get','post'],'admin/sections/form-processing', [SectionsController::class, 'formProcessing']);
+$routes->post('admin/sections/form-processing', [SectionsController::class, 'formProcessing']);
+$routes->get('/admin/collections/delete/(:num)', [CollectionsController::class, 'delete/$1']);
 
 /** PUBLIC: ЗАГЛУШКА */
 $routes->get('/admin/collections', [CollectionsController::class, 'CollectionsList']);
