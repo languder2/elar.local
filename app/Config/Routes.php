@@ -32,3 +32,5 @@ $routes->get('/admin/collections/delete/(:num)', [CollectionsController::class, 
 $routes->post('/admin/collections/change-visible/', [CollectionsController::class, 'changeVisible']);
 $routes->post('/admin/collections/set-filter', [CollectionsController::class, 'setFilter']);
 /*S*/
+
+/* ssv */
