@@ -15,6 +15,7 @@
 
 .sections-list-grid > div{
     background-color: #0a53be05;
+    height: 100%;
 }
 .sections-list-grid > div:nth-child(12n+1),
 .sections-list-grid > div:nth-child(12n+2),
