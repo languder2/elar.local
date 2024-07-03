@@ -31,7 +31,7 @@ class CollectionsController extends BaseController
             $page['data']['filter']= $this->session->get("collectionsFilter");
         $page['data']['filterSection']= view("admin/collections/FilterSection",$page['data']);
 
-        $page['data']['edCollection']= $this->clm->getCollectionsList((array)$page['data']['filter']??[]);
+        $page['data']['edCollection']= $this->clm->getCollectionsList((array)($page['data']['filter']??[]));
         if($this->session->has("message"))
             $page['data']['message']= $this->session->getFlashdata("message");
 

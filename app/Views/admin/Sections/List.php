@@ -1,11 +1,12 @@
 <div class="container-lg">
     <div class="row">
-        <div class="col-lg-10 col-sm-8">
+        <div class="col col-lg-10 col-sm-8">
             <h3 class="mt-2 mb-3">Разделы</h3>
         </div>
-        <div class="col-lg col-sm-4 pt-2 fs-5 text-end">
-            <a href="<?=base_url('admin/sections/add')?>" class="btn btn-primary w-75">
+        <div class="col col-lg-2 col-sm-4 pt-2 fs-5 text-end">
+            <a href="<?=base_url('admin/sections/add')?>" class="btn btn-primary">
                 Создать
+                <i class="bi bi-plus-square-dotted"></i>
             </a>
         </div>
     </div>
@@ -44,7 +45,7 @@
                 </div>
                 <div>
                     <div class="form-check form-switch">
-                        <input class="form-check-input float-none changeVisible" data-link="/admin/sections/change-visible" type="checkbox" id="changeVisible-Section<?=$item->id?>" data-id="<?=$item->id?>" <?=$item->display?"checked":""?>>
+                        <input class="form-check-input float-none change-visible" data-link="/admin/sections/change-visible" data-id="<?=$item->id?>" type="checkbox" <?=$item->display?"checked":""?>>
                     </div>
                 </div>
                 <div>

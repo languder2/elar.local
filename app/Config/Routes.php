@@ -21,8 +21,10 @@ $routes->match(['get','post'],'/admin/welcome', [AdminController::class, 'welcom
 $routes->get('/admin/sections', [SectionsController::class, 'adminList']);
 $routes->match(['get','post'],'/admin/sections/add', [SectionsController::class, 'form/add']);
 $routes->match(['get','post'],'/admin/sections/edit/(:num)', [SectionsController::class, 'form/edit/$1']);
-$routes->post('admin/sections/form-processing', [SectionsController::class, 'formProcessing']);
-$routes->get('/admin/collections/delete/(:num)', [CollectionsController::class, 'delete/$1']);
+$routes->post('/admin/sections/form-processing', [SectionsController::class, 'formProcessing']);
+$routes->get('/admin/sections/delete/(:num)', [SectionsController::class, 'delete/$1']);
+$routes->post('/admin/sections/set-filter', [SectionsController::class, 'setFilter']);
+$routes->post('/admin/sections/change-visible/', [SectionsController::class, 'changeVisible']);
 
 /** PUBLIC: ЗАГЛУШКА */
 $routes->get('/admin/collections', [CollectionsController::class, 'CollectionsList']);

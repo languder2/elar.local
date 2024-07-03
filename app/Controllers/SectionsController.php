@@ -11,21 +11,32 @@ class SectionsController extends BaseController
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
 
         $page['includes']=(object)[
-            'js'=>[],
+            'js'=>["/js/admin/change-visible.js"],
             'css'=>["/css/admin/sections.css"],
         ];
         $page["title"]= "Control Panel: Разделы";
         $page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
 
         if($this->session->has("message"))
-            $page['data']['message']= $this->session->getFlashdata("message");
+            $page['message']= $this->session->getFlashdata("message");
+
+        $filter= [];
+        if($this->session->has("sectionsFilter"))
+            $filter= $this->session->get("sectionsFilter");
+
+
 
         $page['list']= $this->model->db
             ->table("sections")
+            ->like($filter)
+            ->orWhere(["parent!="=>0])
             ->orderBy("parent")
             ->orderBy("sort")
             ->orderBy("name")
             ->get()->getResult();
+
+        $page['filter']= view("admin/Sections/Filter",["filter"=>(object)$filter]);
+
         $page['list']= $this->model->buildTree($page['list'],"id");
         $page['list']= $this->model->Tree2List($page['list']);
 
@@ -111,7 +122,7 @@ class SectionsController extends BaseController
 
         if($form->action=="add"){
             $this->model->db->table("sections")->insert($sql);
-            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Коллекция добавлена: #".$this->db->insertID().": $form->id"]);
+            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел добавлена: #".$this->db->insertID().": $form->name"]);
         }
         elseif($form->action=="edit"){
             $current= $this->db->table("sections")->where(['id'=>$form->id])->get()->getFirstRow();
@@ -128,11 +139,48 @@ class SectionsController extends BaseController
             $this->session->setFlashdata("message",(object)[
                 "type"=>"success",
                 "class"=>"callout-success",
-                "message"=>"Коллекция добавлена: #".$this->model->db->insertID().": $form->id"  ]
-            );
+                "message"=>"Раздел изменен: #: $form->id: ".($current->name!=$form->name?" $current->name -> ":"")." $form->name",
+            ]);
         }
 
         return redirect()->to(base_url("/admin/sections/"));
+    }
+
+    public function delete($id=false):RedirectResponse|string
+    {
+        if(!$this->model->hasAuth())
+            return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
+
+        $current= $this->db->table("sections")->where(['id'=>$id])->get()->getFirstRow();
+
+        if($current->cnt)
+            $this->session->setFlashdata("message",(object)["type"=>"error","class"=>"callout-error","message"=>"Раздел не может быть удален, т.к. содержит публикации.<br>Раздел #$current->id: $current->name"]);
+        elseif($this->db->table("sections")->where(['parent'=>$current->id])->get()->getNumRows())
+            $this->session->setFlashdata("message",(object)["type"=>"error","class"=>"callout-error","message"=>"Раздел не может быть удален, т.к. содержит подразделы.<br>Раздел #$current->id: $current->name"]);
+        else{
+            $this->model->db->table("sections")->delete(["id"=>$id]);
+            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел удален: #$current->id $current->name"]);
+        }
+
+        return redirect()->to(base_url("/admin/sections/"));
+    }
+    public function setFilter():RedirectResponse|string
+    {
+        if(!$this->model->hasAuth())
+            return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
+
+        $filter= $this->request->getVar('filter')??[];
+
+        $this->session->set("sectionsFilter",$filter);
+        return redirect()->to(base_url("/admin/sections/"));
+    }
+
+    public function changeVisible():bool
+    {
+        $form= (object)$this->request->getVar();
+        if(empty($form->id) or !isset($form->display)) return false;
+        $this->model->db->table("sections")->update(["display"=>$form->display],["id"=>$form->id]);
+        return true;
     }
 
 }
