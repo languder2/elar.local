@@ -203,6 +203,7 @@ class App extends BaseConfig
     public function __construct()
     {
         parent::__construct();
-
+        if(in_array($_SERVER["REMOTE_ADDR"],LOCAL_ADDRESS))
+            $this->baseURL = $this->localURL;
     }
 }
