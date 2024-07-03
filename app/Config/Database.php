@@ -26,7 +26,7 @@ class Database extends Config
      */
     public array $local = [
         'DSN'          => '',
-        'hostname'     => 'MariaDB-11.2',
+        'hostname'     => 'MySQL-8.2',
         'username'     => 'root',
         'password'     => '',
         'database'     => 'elar',

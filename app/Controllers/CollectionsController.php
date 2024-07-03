@@ -24,7 +24,7 @@ class CollectionsController extends BaseController
             'js'=>[],
             'css'=>["/css/admin/collections.css","/css/admin/sections.css"],
         ];
-        $page['data']["title"]= "Control Panel: Профили обучения";
+        $page['data']["title"]= "Control Panel: Коллекции";
         $page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
 
         if($this->session->has("collectionsFilter"))
