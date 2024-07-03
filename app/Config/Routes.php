@@ -31,6 +31,4 @@ $routes->post('/admin/collections/form-processing', [CollectionsController::clas
 $routes->get('/admin/collections/delete/(:num)', [CollectionsController::class, 'delete/$1']);
 $routes->post('/admin/collections/change-visible/', [CollectionsController::class, 'changeVisible']);
 $routes->post('/admin/collections/set-filter', [CollectionsController::class, 'setFilter']);
-/*S asd as*/
-
-/* ssv */
+/* 03.07 */
