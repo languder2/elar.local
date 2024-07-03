@@ -26,7 +26,7 @@ if(empty($menu))
                                             data-bs-toggle="dropdown"
                                             aria-expanded="false"
                                         <?php endif;?>
-                                        <?php if($item->newTab):?>
+                                        <?php if($item->newTab=="true"):?>
                                             target="_blank"
                                         <?php endif;?>
                                     >

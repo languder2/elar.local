@@ -105,10 +105,8 @@ class CollectionsController extends BaseController
         return redirect()->to(base_url("/admin/collections/"));
     }
     public function changeVisible():string|bool{
-        dd(1);
         if(!$this->clm->hasAuth()) return json_encode(['message'=>"success denied"]);
-        $form= $this->request->getVar();
-        dd($form);
+        $form= (object)$this->request->getVar();
         $this->clm->dbUpdateFiled("collections",["display"=>(string)$form->display],["id"=>$form->id]);
         return true;
     }

@@ -3,7 +3,7 @@
 namespace App\Controllers;
 use CodeIgniter\HTTP\RedirectResponse;
 
-class SectionsController extends BaseController
+class PublicationsController extends BaseController
 {
     public function adminList(): string
     {
@@ -12,26 +12,27 @@ class SectionsController extends BaseController
 
         $page['includes']=(object)[
             'js'=>["/js/admin/change-visible.js"],
-            'css'=>["/css/admin/sections.css"],
+            'css'=>["/css/admin/publications.css"],
         ];
-        $page["title"]= "Control Panel: Разделы";
+        $page["title"]= "Control Panel: Публикации";
         $page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
 
         if($this->session->has("message"))
             $page['message']= $this->session->getFlashdata("message");
 
         $filter= [];
-        if($this->session->has("sectionsFilter"))
+        if($this->session->has("publicationsFilter"))
             $filter= $this->session->get("sectionsFilter");
 
-        $list= $this->model->db->table("sections");
+        $page['list']= $this->model->db
+            ->table("sections")
+            ->like($filter)
+            ->orWhere(["parent!="=>0])
+            ->orderBy("parent")
+            ->orderBy("sort")
+            ->orderBy("name")
+            ->get()->getResult();
 
-        if(!empty($filter))
-            $list= $list->like($filter)->orWhere(["parent!="=>0]);
-
-        $list= $list->orderBy("parent")->orderBy("sort")->orderBy("name");
-
-        $page['list']= $list->get()->getResult();
         $page['filter']= view("admin/Sections/Filter",["filter"=>(object)$filter]);
 
         $page['list']= $this->model->buildTree($page['list'],"id");
@@ -40,7 +41,7 @@ class SectionsController extends BaseController
         $page['pageContent']= view("admin/Sections/List",$page);
         return view("admin/template/page",$page);
     }
-
+/*
     public function form($action= "add",$id= false):string
     {
         if(!$this->model->hasAuth())
@@ -179,5 +180,5 @@ class SectionsController extends BaseController
         $this->model->db->table("sections")->update(["display"=>$form->display],["id"=>$form->id]);
         return true;
     }
-
+*/
 }
