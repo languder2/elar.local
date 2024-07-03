@@ -100,7 +100,7 @@ class CollectionsModel extends GeneralModel {
         $q= $this->db->table("collections")->get();
         $results= [];
         foreach($q->getResult() as $record)
-            $results[$record->count]= $record;
+            $results[$record->cnt]= $record;
         return $results;
     }
 
@@ -112,14 +112,15 @@ class CollectionsModel extends GeneralModel {
         return $results;
     }
 
-    public function getCollectionsList():array{
-        $q= $this->db->table("collections");
+    public function getCollectionsList($filter= []):array{
+        $q= $this->db->table("collections")
+            ->like($filter);
         $q= $q->get();
         $results= [];
         foreach($q->getResult() as $record){
+            $record->id = $record->id;
             $record->title = $record->title;
-            $record->description = $record->description;
-            $record->count = $record->count;
+            $record->cnt = $record->cnt;
             $results[$record->id]= $record;
         }
         return $results;
@@ -155,7 +156,7 @@ class CollectionsModel extends GeneralModel {
 
     public function dbDelete($table= false,$where= false):bool{
         if($table === false or $where === false) return false;
-        $this->db->table($table)->delete($where);
+            $this->db->table($table)->delete($where);
         return true;
     }
 

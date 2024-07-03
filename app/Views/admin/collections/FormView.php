@@ -24,10 +24,10 @@
                 <label class="h-auto w-auto">Название</label>
             </div>
             <div class="form-floating my-2 px-1">
-                <textarea name="form[description]" placeholder="" value="<?=$form->description??""?>" required class="
+                <textarea name="form[description]" placeholder="" class="
                     form-control h-auto" rows="3" style="resize: none;"
-                ></textarea>
-                <label class="h-auto w-auto">Краткое описание</label>
+                ><?=$form->description??""?></textarea>
+                <label class="h-auto w-auto">Описание</label>
             </div>
 
         </div>

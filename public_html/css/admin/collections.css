@@ -26,6 +26,6 @@ form .examGrid > div:nth-child(4n+1){
 /* ФИЛЬТР ПРОФИЛЕЙ ОБУЧЕНИЯ */
 form.formFilter{
     display: grid;
-    grid-template-columns: 100px 3fr 1fr 100px 110px;
+    grid-template-columns:6fr 1fr;
     gap: 5px;
 }
