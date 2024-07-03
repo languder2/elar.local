@@ -14,52 +14,41 @@
             <?=$message->message?>
         </div>
     <?php endif; ?>
-
-    <div class="grid-row py-2 text-center fw-bold ">
-        <div>Количество</div>
-        <div>Название</div>
-        <div>
-            Описание
-        </div>
-        <div>
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-3"></div>
-                    <?php if(isset($edForms)) foreach ($edForms as $form):?>
-                        <div class="col-3"><?=empty($form->short)?$form->name:$form->short?></div>
-                    <?php endforeach;?>
-                </div>
-            </div>
-        </div>
-        <div></div>
-    </div>
-    <?php if(isset($edCollection)) foreach ($edCollection as $collection):?>
-        <div class="grid-row py-2 text-center profileRow">
+    <?=$filterSection??""?>
+    <div class="sections-list-grid my-3">
+        <div class="grid-title bg-light fw-bold">#</div>
+        <div class="grid-title bg-light fw-bold">Название</div>
+        <div class="grid-title bg-light fw-bold">Кол-во</div>
+        <div class="grid-title bg-light fw-bold">vis</div>
+        <div class="grid-title bg-light fw-bold">edit</div>
+        <div class="grid-title bg-light fw-bold">del</div>
+        <?php if(isset($edCollection)) foreach ($edCollection as $collection):?>
             <div>
-                <?=$collection->count?>
+                <?=$collection->id?>
             </div>
-            <div class="text-start">
+            <div class="ps-4">
                 <?=$collection->title?>
             </div>
             <div>
-                <?=$collection->description?>
+                <?=$collection->cnt?>
             </div>
-            <div class="align-content-center">
-                <a class="btn btn-primary btn-sm" href="<?=base_url("admin/collections/edit/$collection->id")?>">edit</a>
-                <a
-                        class="linkRemove btn btn-danger btn-sm"
-                        href="<?=base_url("admin/collections/delete/$collection->id")?>"
-                        data-title="Удалить Коллекцию"
-                        data-message="Удалить #<?=$collection->id?> <?=$collection->title?>"
-                >
-                    del
-                </a>
-                <div class="form-check form-switch mt-3">
-                    <input class="form-check-input float-none changeVisible" data-link="/admin/collections/change-visible" type="checkbox" id="changeVisible-Profile<?=$collection->id?>" data-id="<?=$collection->id?>" <?=$collection->display?"checked":""?>>
+            <div>
+                <div class="form-check form-switch">
+                    <input class="form-check-input float-none changeVisible" data-link="/admin/collections/change-visible" type="checkbox" id="changeVisible-Section<?=$collection->id?>" data-id="<?=$collection->id?>" <?=$collection->display?"checked":""?>>
                 </div>
             </div>
-        </div>
-    <?php endforeach;?>
+            <div>
+                <a class="btn btn-primary btn-sm" href="<?=base_url("admin/collections/edit/$collection->id")?>"><i class="bi bi-pencil"></i></a>
+            </div>
+            <div>
+                <a class="btn btn-danger btn-sm"
+                   href="<?=base_url("admin/collections/delete/$collection->id")?>"
+                   data-title="Удалить Коллекцию"
+                   data-message="Удалить #
+                   <?=$collection->id?> <?=$collection->title?>"><i class="bi bi-trash3"></i></a>
+            </div>
+        <?php endforeach;?>
+    </div>
 </div>
 
 <?php

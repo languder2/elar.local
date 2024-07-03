@@ -22,21 +22,16 @@ class CollectionsController extends BaseController
         //dd($this->model->createPassword("aRf8zKl1s1"));
         $page['data']['includes']=(object)[
             'js'=>[],
-            'css'=>["/css/admin/collections.css"],
+            'css'=>["/css/admin/collections.css","/css/admin/sections.css"],
         ];
         $page['data']["title"]= "Control Panel: Профили обучения";
         $page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
 
-
-        $page['data']['title-collection']= $this->clm->getTitleCollection();
-        $page['data']['count-collection']= $this->clm->getCountCollection();
-        $page['data']['descrip-collection']= $this->clm->getDescriptionCollection();
-
-        if($this->session->has("profileFilter"))
-            $page['data']['filter']= $this->session->get("profileFilter");
+        if($this->session->has("collectionsFilter"))
+            $page['data']['filter']= $this->session->get("collectionsFilter");
         $page['data']['filterSection']= view("admin/collections/FilterSection",$page['data']);
 
-        $page['data']['edCollection']= $this->clm->getCollectionsList();
+        $page['data']['edCollection']= $this->clm->getCollectionsList((array)$page['data']['filter']??[]);
         if($this->session->has("message"))
             $page['data']['message']= $this->session->getFlashdata("message");
 
@@ -96,12 +91,17 @@ class CollectionsController extends BaseController
         return redirect()->to(base_url("/admin/collections/"));
     }
 
-    public function delete($id= false){
-        if(!$this->clm->hasAuth()) return redirect()->to(base_url(ADMIN));
-        if(!$id) return redirect()->to(base_url("/admin/collections/"));
-        $collection= $this->clm->dbGetRow("collections",["id"=>$id]);
-        $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Коллекция удалена: #$collection->id: $collection->title"]);
-        $this->clm->dbDelete("collections",["id"=>$id]);
+    public function delete($id= false)
+    {
+        if (!$this->clm->hasAuth()) return redirect()->to(base_url(ADMIN));
+        if (!$id) return redirect()->to(base_url("/admin/collections/"));
+        $collection = $this->clm->dbGetRow("collections", ["id" => $id]);
+        if ($collection->cnt == "") {
+        $this->session->setFlashdata("message", (object)["type" => "success", "class" => "callout-success", "message" => "Коллекция удалена: #$collection->id: $collection->title"]);
+        $this->clm->dbDelete("collections", ["id" => $id]);
+        }
+        else
+            $this->session->setFlashdata("message", (object)["type" => "error", "class" => "callout-error", "message" => "Коллекция не может быть удалена так как в ней есть записи"]);
         return redirect()->to(base_url("/admin/collections/"));
     }
     public function changeVisible():string|bool{
@@ -113,7 +113,7 @@ class CollectionsController extends BaseController
     public function setFilter(){
         if(!$this->clm->hasAuth()) return json_encode(['message'=>"success denied"]);
         $filter= (object)$this->request->getVar('filter');
-        $this->session->set("profileFilter",$filter);
+        $this->session->set("collectionsFilter",$filter);
         return redirect()->to(base_url("/admin/collections/"));
     }
 
