@@ -1,0 +1,31 @@
+.grid-row{
+    display: grid;
+    grid-template-columns: 120px 320px 2fr 150px;
+    gap: 7px;
+    margin-bottom: 3px;
+}
+.profileRow{
+    background: #0d6efd10;
+}
+.profileRow:nth-child(2n+1){
+    background: #0d6efd05;
+}
+form .examGrid{
+    display: grid;
+    grid-template-columns: 1fr 100px 100px 140px;
+    gap: 7px;
+    margin-bottom: 3px;
+    align-content: center;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+form .examGrid > div:nth-child(4n+1){
+    text-align: left;
+}
+/* ФИЛЬТР ПРОФИЛЕЙ ОБУЧЕНИЯ */
+form.formFilter{
+    display: grid;
+    grid-template-columns: 100px 3fr 1fr 100px 110px;
+    gap: 5px;
+}

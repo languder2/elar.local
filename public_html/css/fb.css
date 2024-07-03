@@ -1,0 +1,65 @@
+.fb_response,
+.fb_block {
+    transform: translate(0,100%);
+    max-height: 70vh;
+    padding: 24px;
+    overflow-y: auto;
+}
+.fb_show{
+    transform: translateY(0px);
+    transition: .4s ease-in-out;
+}
+.fb_hide{
+    transform: translateY(100%);
+    transition: .4s ease-in-out;
+}
+.fb_response h3,
+.fb_block h3{
+    color: #ca182e;
+    line-height: 1.5;
+}
+#fb_form textarea{
+    resize: none;
+    height: 194px !important;
+}
+.fb_response .close,
+#fb_form .close{
+    border: solid 2px #ca182e;
+    border-radius: 50px;
+    color: #ca182e;
+    padding: 7px 16px;
+    display: block;
+    position: absolute;
+    z-index: 9899;
+    right: 20px;
+    top: 3px;
+    text-align: center;
+    font-weight: bold;
+    font-size: 15pt;
+}
+
+.fb_response .close:hover,
+#fb_form .close:hover{
+    opacity: 0.5;
+}
+.fb_block button,
+.fb_response button{
+    color: #ca182e;
+    border: solid 2px #ca182e;
+    font-size: 14pt;
+    display: inline-block;
+    padding: 10px 30px;
+    font-weight: 500;
+}
+.fb_block button,
+.fb_response button{
+    background-color: #ca182e;
+}
+.fb_response button:hover,
+.fb_block button:hover{
+    opacity: 0.5;
+}
+
+div.fb_call{
+    cursor: pointer;
+}

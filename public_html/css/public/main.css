@@ -1,0 +1,35 @@
+.gridSpecList{
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    gap: 5px;
+}
+.gridSpecList > div{
+    padding: 5px 10px;
+    background-color: #f5faff;
+}
+.gridSpecList > div:nth-child(2n){
+    text-align: right;
+}
+.gridSpecList > div:nth-child(4n+1),
+.gridSpecList > div:nth-child(4n+2){
+    background-color: #0a53be10;
+}
+.gridSpecList a{
+    text-decoration: none;
+    color: darkblue;
+}
+.gridSpecList a:hover{
+    color: #0a53be;
+}
+
+
+.gridSpecDetailList{
+    display: grid;
+    grid-template-columns: 200px 100px 1fr 1fr;
+    gap: 5px;
+}
+.gridSpecDetailList .grid2{
+    display: grid;
+    grid-template-columns: 1fr 100px;
+}
+

@@ -1,0 +1,19 @@
+.navbar-top-menu .nav-link{
+    color: #f0f0f0 !important;
+}
+.navbar-top-menu .nav-link:hover{
+    color: #00ff00 !important;
+    opacity: 1 !important;
+}
+.callout{
+    padding: 1rem;
+    border: 1px solid #e9ecef;
+    border-left-width: 0.25rem;
+    border-radius: 0.25rem;
+}
+.callout-success{
+    border-left-color: #198754;
+}
+.callout-error{
+    border-left-color: #dc3545;
+}
