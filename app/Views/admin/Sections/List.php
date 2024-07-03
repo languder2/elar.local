@@ -21,7 +21,9 @@
         <div class="grid-title bg-light fw-bold">#</div>
         <div class="grid-title bg-light fw-bold">Название</div>
         <div class="grid-title bg-light fw-bold">Кол-во</div>
-        <div class="grid-title bg-light fw-bold"></div>
+        <div class="grid-title bg-light fw-bold">vis</div>
+        <div class="grid-title bg-light fw-bold">edit</div>
+        <div class="grid-title bg-light fw-bold">del</div>
         <?php if(isset($list)) foreach($list as $key=>$item):?>
             <div>
                 <?=$item->id?>
@@ -33,7 +35,15 @@
                 <?=$item->cnt?>
             </div>
             <div>
-                <a class="btn btn-primary btn-sm" href="<?=base_url("admin/sections/edit/$item->id")?>">edit</a>
+                <div class="form-check form-switch">
+                    <input class="form-check-input float-none changeVisible" data-link="/admin/collections/change-visible" type="checkbox" id="changeVisible-Section<?=$item->id?>" data-id="<?=$item->id?>" <?=$item->display?"checked":""?>>
+                </div>
+            </div>
+            <div>
+                <a class="btn btn-primary btn-sm" href="<?=base_url("admin/sections/edit/$item->id")?>"><i class="bi bi-pencil"></i></a>
+            </div>
+            <div>
+                <a class="btn btn-danger btn-sm" href="<?=base_url("admin/sections/edit/$item->id")?>"><i class="bi bi-trash3"></i></a>
             </div>
         <?php endforeach;?>
     </div>

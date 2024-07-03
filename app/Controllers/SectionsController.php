@@ -100,9 +100,15 @@ class SectionsController extends BaseController
 
         if($form->action=="add"){
             $this->model->db->table("sections")->insert($sql);
+            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Коллекция добавлена: #".$this->db->insertID().": $form->id"]);
         }
         elseif($form->action=="edit"){
             $this->model->db->table("sections")->update($sql,["id"=>$form->id]);
+            $this->session->setFlashdata("message",(object)[
+                "type"=>"success",
+                "class"=>"callout-success",
+                "message"=>"Коллекция добавлена: #".$this->model->db->insertID().": $form->id"  ]
+            );
         }
 
         return redirect()->to(base_url("/admin/sections/"));

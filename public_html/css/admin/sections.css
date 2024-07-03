@@ -1,24 +1,27 @@
 .sections-list-grid{
     display: grid;
-    grid-template-columns: 50px 1fr 100px 200px;
+    grid-template-columns: 50px 1fr 100px repeat(3, 50px);
     gap: 5px;
     text-align: center;
+    align-items: center;
 }
 .sections-list-grid > div{
     padding: 3px 10px;
 
 }
-.sections-list-grid > div:nth-child(4n+2){
+.sections-list-grid > div:nth-child(6n+2){
     text-align: left;
 }
 
 .sections-list-grid > div{
     background-color: #0a53be05;
 }
-.sections-list-grid > div:nth-child(8n+1),
-.sections-list-grid > div:nth-child(8n+2),
-.sections-list-grid > div:nth-child(8n+3),
-.sections-list-grid > div:nth-child(8n+4)
+.sections-list-grid > div:nth-child(12n+1),
+.sections-list-grid > div:nth-child(12n+2),
+.sections-list-grid > div:nth-child(12n+3),
+.sections-list-grid > div:nth-child(12n+4),
+.sections-list-grid > div:nth-child(12n+5),
+.sections-list-grid > div:nth-child(12n+6)
 {
     background-color: #0a53be10;
 }
