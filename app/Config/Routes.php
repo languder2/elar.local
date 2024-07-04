@@ -48,10 +48,11 @@ $routes->post('/admin/sources/change-visible/', [SourcesController::class, 'chan
 $routes->post('/admin/sources/set-filter', [SourcesController::class, 'setFilter']);
 
 /** ADMIN: PUBLICATIONS */
-$routes->get('/admin/publications', [PublicationsController::class, 'adminList']);
-$routes->get('/admin/publications/add', [PublicationsController::class, 'form/add']);
-$routes->post('/admin/publications/form-processing', [PublicationsController::class, 'formProcessing']);
-$routes->get('/admin/publications/edit/(:num)', [PublicationsController::class, 'form/edit/$1/$2']);
+$routes->get(   '/admin/publications',                  [PublicationsController::class, 'adminList']);
+$routes->get(   '/admin/publications/add',              [PublicationsController::class, 'form/add']);
+$routes->post(  '/admin/publications/form-processing',  [PublicationsController::class, 'formProcessing']);
+$routes->get(   '/admin/publications/edit/(:num)',      [PublicationsController::class, 'form/edit/$1/$2']);
+$routes->get(   '/admin/publications/delete/(:num)',    [PublicationsController::class, 'delete/$1']);
 
 /** PUBLIC: PUBLICATIONS */
 $routes->get('/', [PublicController::class, 'MainList']);

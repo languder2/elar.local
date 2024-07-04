@@ -218,24 +218,20 @@ class PublicationsController extends BaseController
         return redirect()->to(base_url("/admin/publications/"));
     }
 
-    /*
         public function delete($id=false):RedirectResponse|string
         {
             if(!$this->model->hasAuth())
                 return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
 
-            $current= $this->db->table("sections")->where(['id'=>$id])->get()->getFirstRow();
+            $current= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
 
-            if($current->cnt)
-                $this->session->setFlashdata("message",(object)["type"=>"error","class"=>"callout-error","message"=>"Раздел не может быть удален, т.к. содержит публикации.<br>Раздел #$current->id: $current->name"]);
-            elseif($this->db->table("sections")->where(['parent'=>$current->id])->get()->getNumRows())
-                $this->session->setFlashdata("message",(object)["type"=>"error","class"=>"callout-error","message"=>"Раздел не может быть удален, т.к. содержит подразделы.<br>Раздел #$current->id: $current->name"]);
-            else{
-                $this->model->db->table("sections")->delete(["id"=>$id]);
-                $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел удален: #$current->id $current->name"]);
-            }
+            $this->model->db->table("publications")->delete(["id"=>$id]);
 
-            return redirect()->to(base_url("/admin/sections/"));
+            if(file_exists($current->pdf)) unlink($current->pdf);
+
+            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Публикация удалена: #$current->id $current->name"]);
+
+            return redirect()->to(base_url("/admin/publications/"));
         }
         public function setFilter():RedirectResponse|string
         {
@@ -255,5 +251,4 @@ class PublicationsController extends BaseController
             $this->model->db->table("sections")->update(["display"=>$form->display],["id"=>$form->id]);
             return true;
         }
-    */
 }
