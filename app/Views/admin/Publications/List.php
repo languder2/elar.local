@@ -9,7 +9,6 @@
         <div class="col col-lg-2 col-sm-4 pt-2 fs-5 text-end">
             <a href="<?=base_url('admin/publications/add')?>" class="btn btn-primary">
                 Создать
-                <i class="bi bi-plus-square-dotted"></i>
             </a>
         </div>
     </div>
@@ -76,3 +75,6 @@
         </div>
     <?php endif;?>
 </div>
+
+<?=$paginator??""?>
+
