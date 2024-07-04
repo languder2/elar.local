@@ -183,8 +183,3 @@
         </div>
     </form>
 </div>
-<pre>
-    <?php print_r($form->data??"")?>
-    <hr>
-    <?php print_r($form??"")?>
-</pre>

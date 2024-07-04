@@ -1,15 +1,23 @@
 .list-grid{
     display: grid;
-    grid-template-columns: 50px 1fr 100px repeat(3, 50px);
+    grid-template-columns: 50px 100px 200px 1fr repeat(5, 50px);
     gap: 5px;
     text-align: center;
     align-items: center;
 }
 .list-grid > div{
     padding: 3px 10px;
-
 }
-.list-grid > div:nth-child(6n+2){
+.list-grid .grid-title{
+    --bs-bg-opacity:1;
+    background-color:rgba(var(--bs-primary-rgb),var(--bs-bg-opacity))!important;
+    text-align: center !important;
+    color: white;
+    font-weight: bold;
+}
+.list-grid > div:nth-child(9n+3),
+.list-grid > div:nth-child(9n+4)
+{
     text-align: left;
 }
 
@@ -17,12 +25,15 @@
     background-color: #0a53be05;
     height: 100%;
 }
-.list-grid > div:nth-child(12n+1),
-.list-grid > div:nth-child(12n+2),
-.list-grid > div:nth-child(12n+3),
-.list-grid > div:nth-child(12n+4),
-.list-grid > div:nth-child(12n+5),
-.list-grid > div:nth-child(12n+6)
+.list-grid > div:nth-child(18n+1),
+.list-grid > div:nth-child(18n+2),
+.list-grid > div:nth-child(18n+3),
+.list-grid > div:nth-child(18n+4),
+.list-grid > div:nth-child(18n+5),
+.list-grid > div:nth-child(18n+6),
+.list-grid > div:nth-child(18n+7),
+.list-grid > div:nth-child(18n+8),
+.list-grid > div:nth-child(18n+9)
 {
     background-color: #0a53be10;
 }

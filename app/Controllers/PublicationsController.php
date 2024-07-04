@@ -14,7 +14,7 @@ class PublicationsController extends BaseController
         $this->page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
         return true;
     }
-    public function adminList(): string
+    public function adminList($page= 1): string
     {
         if($this->model->hasAuth() === false)
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
@@ -36,6 +36,26 @@ class PublicationsController extends BaseController
             ->table("publications")
             ->like($filter)
             ->get()->getResult();
+
+        /** get sections:  tree->list  */
+        $this->page['data']['sections']= $this->model->convertTree2List(
+            $this->model->db->table("sections")
+                ->orderBy("parent")->orderBy("name")
+                ->get()->getResult()
+        );
+
+        /** get sources:  list  */
+        $this->page['data']['sources']=
+            $this->model->db->table("sources")
+                ->orderBy("title")
+                ->get()->getResult();
+
+        /** get collections:  list  */
+        $this->page['data']['collections']=
+            $this->model->db->table("collections")
+                ->orderBy("title")
+                ->get()->getResult();
+
 
         $this->page['filter']= view("admin/Publications/Filter",["filter"=>(object)$filter]);
 
@@ -97,7 +117,7 @@ class PublicationsController extends BaseController
             $publication= $this->model->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
 
             if(!empty($publication->tags))
-            $publication->tags= implode(",",json_decode($publication->tags));
+                $publication->tags= implode(",",json_decode($publication->tags));
 
             $publication->collections= json_decode($publication->collections);
 
@@ -218,37 +238,38 @@ class PublicationsController extends BaseController
         return redirect()->to(base_url("/admin/publications/"));
     }
 
-        public function delete($id=false):RedirectResponse|string
-        {
-            if(!$this->model->hasAuth())
-                return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
+    public function delete($id=false):RedirectResponse|string
+    {
+        if(!$this->model->hasAuth())
+            return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
 
-            $current= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
+        $current= $this->model->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
 
-            $this->model->db->table("publications")->delete(["id"=>$id]);
+        $this->model->db->table("publications")->delete(["id"=>$id]);
 
-            if(file_exists($current->pdf)) unlink($current->pdf);
+        if(file_exists($current->pdf)) unlink($current->pdf);
 
-            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Публикация удалена: #$current->id $current->name"]);
+        $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Публикация удалена: #$current->id $current->name"]);
 
-            return redirect()->to(base_url("/admin/publications/"));
-        }
-        public function setFilter():RedirectResponse|string
-        {
-            if(!$this->model->hasAuth())
-                return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
+        return redirect()->to(base_url("/admin/publications/"));
+    }
 
-            $filter= $this->request->getVar('filter')??[];
+    public function changeVisible():bool
+    {
+        $form= (object)$this->request->getVar();
+        if(empty($form->id) or !isset($form->display)) return false;
+        $this->model->db->table("publications")->update(["display"=>$form->display],["id"=>$form->id]);
+        return true;
+    }
 
-            $this->session->set("sectionsFilter",$filter);
-            return redirect()->to(base_url("/admin/sections/"));
-        }
+    public function setFilter():RedirectResponse|string
+    {
+        if(!$this->model->hasAuth())
+            return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
 
-        public function changeVisible():bool
-        {
-            $form= (object)$this->request->getVar();
-            if(empty($form->id) or !isset($form->display)) return false;
-            $this->model->db->table("publications")->update(["display"=>$form->display],["id"=>$form->id]);
-            return true;
-        }
+        $filter= $this->request->getVar('filter')??[];
+
+        $this->session->set("sectionsFilter",$filter);
+        return redirect()->to(base_url("/admin/sections/"));
+    }
 }

@@ -27,20 +27,37 @@
         </div>
     <?php else:?>
         <div class="list-grid my-3">
-            <div class="grid-title bg-light fw-bold">#</div>
-            <div class="grid-title bg-light fw-bold">Название</div>
-            <div class="grid-title bg-light fw-bold">Кол-во</div>
-            <div class="grid-title bg-light fw-bold">vis</div>
-            <div class="grid-title bg-light fw-bold">edit</div>
-            <div class="grid-title bg-light fw-bold">del</div>
+            <div class="grid-title">#</div>
+            <div class="grid-title">Дата</div>
+            <div class="grid-title">Автор</div>
+            <div class="grid-title">Название</div>
+            <div class="grid-title"> </div>
+            <div class="grid-title"> </div>
+            <div class="grid-title"> </div>
+            <div class="grid-title"> </div>
+            <div class="grid-title"> </div>
             <?php foreach($list as $key=>$item):?>
                 <div>
                     <?=$item->id?>
                 </div>
                 <div>
+                    <?=date("d.m.Y",strtotime($item->date))?>
+                </div>
+                <div>
+                    <?=$item->author?>
+                </div>
+                <div>
                     <?=$item->name?>
                 </div>
                 <div>
+                    <a href="<?=base_url("/publication/$item->id")?>" target="_blank">
+                        <i class="bi bi-box-arrow-up-right"></i>
+                    </a>
+                </div>
+                <div>
+                    <a href="<?=$item->pdf??"#"?>" target="_blank">
+                        <i class="bi bi-filetype-pdf"></i>
+                    </a>
                 </div>
                 <div>
                     <div class="form-check form-switch">
