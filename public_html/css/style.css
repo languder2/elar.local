@@ -184,6 +184,18 @@ footer{
 .list-group.date .list-group-item h5 a{
     font-size: 14px !important;
 }
+
+.list-group-item{
+    display: grid !important;
+    grid-template-columns: 80% 20%;
+    margin-bottom: 5px;
+}
+.list-group-item.chpt{
+    display: grid !important;
+    grid-template-columns: 100%;
+    grid-template-rows: repeat(2, auto);
+    margin-bottom: 5px;
+}
 .count{
     position: absolute;
     right: 0;
