@@ -93,8 +93,18 @@ class PublicationsController extends BaseController
             $this->page['data']['validator']= $this->session->getFlashdata("validator");
             $this->page['data']['validatorErrors']= $this->session->getFlashdata("validatorErrors");
         }
-        elseif($action=="edit")
-            $this->page['data']['form']= $this->model->db->table("sections")->where(['id'=>$id])->get()->getFirstRow();
+        elseif($action=="edit"){
+            $publication= $this->model->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
+
+            if(!empty($publication->tags))
+            $publication->tags= implode(",",json_decode($publication->tags));
+
+            $publication->collections= json_decode($publication->collections);
+
+            $this->page['data']['form']= (object)[
+                "data"=> $publication,
+            ];
+        }
 
         $this->page['pageContent']= view("admin/Publications/Form",$this->page['data']);
         return view(ADMIN."/template/page",$this->page);
@@ -105,21 +115,36 @@ class PublicationsController extends BaseController
         if(!$this->model->hasAuth())
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
         $form= (object)$this->request->getVar('form');
+        $id= $this->request->getVar('id');
 
         $rules= [
             'form.data.name' => 'required',
+            'form.data.author' => 'required',
+            'form.data.section' => 'required',
+            'form.data.source' => 'required',
         ];
         $messages= [
             'form.data.name'=>[
-                "required"=>"Название должно быть указано",
+                "required"=>"Укажите название",
+            ],
+            'form.data.author'=>[
+                "required"=>"Укажите автора",
+            ],
+            'form.data.section'=>[
+                "required"=>"Укажите раздел",
+            ],
+            'form.data.source'=>[
+                "required"=>"Укажите источник",
             ],
         ];
 
         $valid = $this->validate($rules,$messages);
 
         $form->data= (object)$form->data;
+
         if(!empty($form->data->collections))
             $form->data->collections= json_encode($form->data->collections);
+
         if(!empty($form->data->tags))
             $form->data->tags=
                 json_encode(
@@ -148,8 +173,11 @@ class PublicationsController extends BaseController
             if($form->action=="add")
                 return redirect()->to(base_url("/admin/publications/add"));
             else
-                return redirect()->to(base_url("/admin/publications/edit/$form->id"));
+                return redirect()->to(base_url("/admin/publications/edit/$id"));
         }
+
+        if(!isset($form->data->display))
+            $form->data->display= 0;
 
         $section= $this->model->db->table("sections")->where(['id'=>$form->data->section])->get()->getFirstRow();
         $form->data->sections= [$section->id];
@@ -168,26 +196,25 @@ class PublicationsController extends BaseController
             rename($form->data->pdf, $pdf);
             $this->model->db->table("publications")->update(["pdf"=>$pdf],["id"=>$insertID]);
         }
-/*
-        elseif($form->action=="edit"){
-            $current= $this->db->table("sections")->where(['id'=>$form->id])->get()->getFirstRow();
-            if(
-                $current->parent!=$form->parent
-                and $form->parent!=0
-                and $this->db->table("sections")->where(['parent'=>$form->id])->get()->getNumRows()
-            ){
-                $this->session->setFlashdata("message",(object)["type"=>"error","class"=>"callout-error","message"=>"Раздел не может стать дочерним т.к. имеет подразделы"]);
-                return redirect()->to(base_url("/admin/sections/edit/".$form->id));
-            }
 
-            $this->model->db->table("sections")->update($data,["id"=>$form->id]);
+        if($form->action=="edit"){
+            $publication= $this->model->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
+
+            if($form->data->pdf != $publication->pdf){
+                $pdf= WRITEPATH . "/publications/".$id."_".str_replace(" ","_",$form->data->fileName);
+                if(file_exists($pdf)) unlink($pdf);
+                if(file_exists($publication->pdf)) unlink($publication->pdf);
+                rename($form->data->pdf, $pdf);
+                $form->data->pdf= $pdf;
+            }
+            $this->model->db->table("publications")->update($form->data,["id"=>$id]);
+
             $this->session->setFlashdata("message",(object)[
                 "type"=>"success",
                 "class"=>"callout-success",
-                "message"=>"Раздел изменен: #: $form->id: ".($current->name!=$form->name?" $current->name -> ":"")." $form->name",
+                "message"=>"Раздел изменен: #: $id: ".($publication->name!=$form->data->name?" $publication->name -> ":" ").$form->data->name,
             ]);
         }
-        */
         return redirect()->to(base_url("/admin/publications/"));
     }
 

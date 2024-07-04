@@ -26,7 +26,7 @@
             Нет данных
         </div>
     <?php else:?>
-        <div class="sections-list-grid my-3">
+        <div class="list-grid my-3">
             <div class="grid-title bg-light fw-bold">#</div>
             <div class="grid-title bg-light fw-bold">Название</div>
             <div class="grid-title bg-light fw-bold">Кол-во</div>
@@ -45,15 +45,15 @@
                 <div>
                     <div class="form-check form-switch">
                         <label>
-                            <input class="form-check-input float-none change-visible" data-link="/admin/sections/change-visible" data-id="<?=$item->id?>" type="checkbox" <?=$item->display?"checked":""?>>
+                            <input class="form-check-input float-none change-visible" data-link="/admin/publications/change-visible" data-id="<?=$item->id?>" type="checkbox" <?=$item->display?"checked":""?>>
                         </label>
                     </div>
                 </div>
                 <div>
-                    <a class="btn btn-primary btn-sm" href="<?=base_url("admin/sections/edit/$item->id")?>"><i class="bi bi-pencil"></i></a>
+                    <a class="btn btn-primary btn-sm" href="<?=base_url("admin/publications/edit/$item->id")?>"><i class="bi bi-pencil"></i></a>
                 </div>
                 <div>
-                    <a class="btn btn-danger btn-sm" href="<?=base_url("admin/sections/delete/$item->id")?>"><i class="bi bi-trash3"></i></a>
+                    <a class="btn btn-danger btn-sm" href="<?=base_url("admin/publications/delete/$item->id")?>"><i class="bi bi-trash3"></i></a>
                 </div>
             <?php endforeach;?>
         </div>

@@ -51,6 +51,7 @@ $routes->post('/admin/sources/set-filter', [SourcesController::class, 'setFilter
 $routes->get('/admin/publications', [PublicationsController::class, 'adminList']);
 $routes->get('/admin/publications/add', [PublicationsController::class, 'form/add']);
 $routes->post('/admin/publications/form-processing', [PublicationsController::class, 'formProcessing']);
+$routes->get('/admin/publications/edit/(:num)', [PublicationsController::class, 'form/edit/$1/$2']);
 
 /** PUBLIC: PUBLICATIONS */
 $routes->get('/', [PublicController::class, 'MainList']);
