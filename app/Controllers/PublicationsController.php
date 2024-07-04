@@ -248,7 +248,7 @@ class PublicationsController extends BaseController
         {
             $form= (object)$this->request->getVar();
             if(empty($form->id) or !isset($form->display)) return false;
-            $this->model->db->table("sections")->update(["display"=>$form->display],["id"=>$form->id]);
+            $this->model->db->table("publications")->update(["display"=>$form->display],["id"=>$form->id]);
             return true;
         }
 }

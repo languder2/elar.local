@@ -53,6 +53,7 @@ $routes->get(   '/admin/publications/add',              [PublicationsController:
 $routes->post(  '/admin/publications/form-processing',  [PublicationsController::class, 'formProcessing']);
 $routes->get(   '/admin/publications/edit/(:num)',      [PublicationsController::class, 'form/edit/$1/$2']);
 $routes->get(   '/admin/publications/delete/(:num)',    [PublicationsController::class, 'delete/$1']);
+$routes->post(  '/admin/publications/change-visible',   [PublicationsController::class, 'changeVisible']);
 
 /** PUBLIC: PUBLICATIONS */
 $routes->get('/', [PublicController::class, 'MainList']);
