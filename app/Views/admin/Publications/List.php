@@ -76,3 +76,6 @@
         </div>
     <?php endif;?>
 </div>
+
+<?=$paginator??""?>
+

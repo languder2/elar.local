@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 class PublicationsController extends BaseController
 {
     protected array $page;
+    protected int $countInPage = 20;
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger):bool
     {
         parent::initController($request, $response, $logger);
@@ -32,9 +33,30 @@ class PublicationsController extends BaseController
         if($this->session->has("publicationsFilter"))
             $filter= $this->session->get("publicationsFilter");
 
+
+        $count=  $this->model->db
+            ->table("publications")
+            ->like($filter)
+            ->get()->getNumRows();
+
+        $maxPages= ceil($count / $this->countInPage);
+
+        if($maxPages<$page) $page = $maxPages;
+        if($page<1) $page = 1;
+
+        $this->page['paginator']= view("admin/template/paginator",[
+            "maxPages"=>$maxPages,
+            "currentPage"=>$page,
+            "baseLink"=>base_url("/admin/publications/page-"),
+        ]);
+
+
+
+
         $this->page['list']= $this->model->db
             ->table("publications")
             ->like($filter)
+            ->limit($this->countInPage,$this->countInPage*($page-1))
             ->get()->getResult();
 
         /** get sections:  tree->list  */
