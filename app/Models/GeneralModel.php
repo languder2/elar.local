@@ -40,7 +40,7 @@ class GeneralModel extends UserModel{
             if($item->parent == 0) {
                 if(!isset($result[$item->{$field}])){
                     $result[$item->{$field}]= (object)[
-                        "main",
+                        "main"=>(object)[],
                         "sub"=>[]
                     ];
                 }
@@ -52,15 +52,21 @@ class GeneralModel extends UserModel{
         }
         return $result;
     }
-    public function Tree2List(array $list):array
+    public function convertTree2List(array $list,bool $build= true, string $field= 'id'):array
     {
         $result= [];
+
         if(count ($list) == 0) return $result;
+
+        if($build)
+            $list= self::buildTree($list,$field);
+
         foreach($list as $item){
             $result[]= $item->main??$item;
             if(isset($item->sub) && count($item->sub)>0)
-                $result= array_merge($result,self::Tree2List($item->sub));
+                $result= array_merge($result,self::convertTree2List($item->sub,false));
         }
+
         return $result;
     }
 }

@@ -48,4 +48,6 @@ $routes->post('/admin/sources/set-filter', [SourcesController::class, 'setFilter
 
 
 /** ADMIN: PUBLICATIONS */
-$routes->get('/admin/sections', [PublicationsController::class, 'adminList']);
+$routes->get('/admin/publications', [PublicationsController::class, 'adminList']);
+$routes->get('/admin/publications/add', [PublicationsController::class, 'form/add']);
+$routes->post('/admin/publications/form-processing', [PublicationsController::class, 'formProcessing']);

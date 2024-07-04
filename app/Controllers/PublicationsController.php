@@ -2,126 +2,173 @@
 
 namespace App\Controllers;
 use CodeIgniter\HTTP\RedirectResponse;
-
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
 class PublicationsController extends BaseController
 {
+    protected array $page;
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger):bool
+    {
+        parent::initController($request, $response, $logger);
+        $this->page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
+        return true;
+    }
     public function adminList(): string
     {
         if($this->model->hasAuth() === false)
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
 
-        $page['includes']=(object)[
+        $this->page['includes']=(object)[
             'js'=>["/js/admin/change-visible.js"],
             'css'=>["/css/admin/publications.css"],
         ];
-        $page["title"]= "Control Panel: Публикации";
-        $page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
+        $this->page["title"]= "Control Panel: Публикации";
 
         if($this->session->has("message"))
-            $page['message']= $this->session->getFlashdata("message");
+            $this->page['message']= $this->session->getFlashdata("message");
 
         $filter= [];
         if($this->session->has("publicationsFilter"))
-            $filter= $this->session->get("sectionsFilter");
+            $filter= $this->session->get("publicationsFilter");
 
-        $page['list']= $this->model->db
-            ->table("sections")
+        $this->page['list']= $this->model->db
+            ->table("publications")
             ->like($filter)
-            ->orWhere(["parent!="=>0])
-            ->orderBy("parent")
-            ->orderBy("sort")
-            ->orderBy("name")
             ->get()->getResult();
 
-        $page['filter']= view("admin/Sections/Filter",["filter"=>(object)$filter]);
+        $this->page['filter']= view("admin/Publications/Filter",["filter"=>(object)$filter]);
 
-        $page['list']= $this->model->buildTree($page['list'],"id");
-        $page['list']= $this->model->Tree2List($page['list']);
-
-        $page['pageContent']= view("admin/Sections/List",$page);
-        return view("admin/template/page",$page);
+        $this->page['pageContent']= view("admin/Publications/List",$this->page);
+        return view("admin/template/page",$this->page);
     }
-/*
-    public function form($action= "add",$id= false):string
+    public function form($action= "add",$id= false):string|RedirectResponse
     {
         if(!$this->model->hasAuth())
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
 
-        if($action!=="add" && $id===false) return redirect()->to(base_url("/admin/sections/"));
+        if($action!=="add" && $id===false) return redirect()->to(base_url("/admin/publications/"));
 
-        $page['data']["title"] = ($action!=="edit")?"Раздел: Создать":"Раздел: Изменить";
-        $page["title"]= "Control Panel: ".$page['data']["title"];
-        $page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
+        $this->page['data']["title"] = ($action!=="edit")?"Публикация: Создать":"Публикация: Изменить";
+        $this->page["title"]= $this->page['data']["title"];
         if($this->session->has("message"))
-            $page['data']['message']= $this->session->getFlashdata("message");
+            $this->page['data']['message']= $this->session->getFlashdata("message");
 
-        $page['data']['includes']=(object)[
+        $this->page['data']['includes']=(object)[
             'js'=>[],
             'css'=>[],
         ];
 
-        $page['data']["sections"]= $this->model->db
-            ->table("sections")
-            ->where(['parent'=>0])
-            ->orderBy("name")
-            ->get()
-            ->getResult();
+        $this->page['data']['action']= $action;
+        $this->page['data']['id']= $id;
 
-        $page['data']['action']= $action;
-        $page['data']['id']= $id;
+        /** get sections:  tree->list  */
+        $this->page['data']['sections']= $this->model->convertTree2List(
+            $this->model->db->table("sections")
+                ->orderBy("parent")->orderBy("name")
+                ->get()->getResult()
+        );
+
+        /** get sources:  list  */
+        $this->page['data']['sources']=
+            $this->model->db->table("sources")
+                ->orderBy("title")
+                ->get()->getResult();
+
+        /** get collections:  list  */
+        $this->page['data']['collections']=
+            $this->model->db->table("collections")
+                ->orderBy("title")
+                ->get()->getResult();
 
 
         if($this->session->has("form")){
-            $page['data']['form']= (object)$this->session->getFlashdata("form");
-            $page['data']['validator']= $this->session->getFlashdata("validator");
-            $page['data']['errors'] = $this->model->getFormErrors($page['data']['validator']);
+            $this->page['data']['form']= $this->session->getFlashdata("form");
+            if(!empty($this->page['data']['form']->data->tags))
+                $this->page['data']['form']->data->tags= implode(",",json_decode($this->page['data']['form']->data->tags));
+
+            if(!empty($this->page['data']['form']->data->collections))
+                $this->page['data']['form']->data->collections= json_decode($this->page['data']['form']->data->collections);
+
+            $this->page['data']['validator']= $this->session->getFlashdata("validator");
+            $this->page['data']['validatorErrors']= $this->session->getFlashdata("validatorErrors");
         }
         elseif($action=="edit")
-            $page['data']['form']= $this->model->db->table("sections")->where(['id'=>$id])->get()->getFirstRow();
+            $this->page['data']['form']= $this->model->db->table("sections")->where(['id'=>$id])->get()->getFirstRow();
 
-        $page['pageContent']= view("admin/Sections/Form",$page['data']);
-        return view(ADMIN."/template/page",$page);
+        $this->page['pageContent']= view("admin/Publications/Form",$this->page['data']);
+        return view(ADMIN."/template/page",$this->page);
     }
 
     public function formProcessing():string|RedirectResponse
     {
         if(!$this->model->hasAuth())
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
-
         $form= (object)$this->request->getVar('form');
+
         $rules= [
-            'form.name' => 'required|is_unique[sections.name]',
+            'form.data.name' => 'required',
         ];
-        if($form->action=="edit") $rules['form.name']= "required|is_unique[sections.name, id, ".$form->id."]";
         $messages= [
-            'form.name'=>[
-                "required"=>"required",
-                "is_unique"=>"Раздел с названием уже существует: $form->name"
+            'form.data.name'=>[
+                "required"=>"Название должно быть указано",
             ],
         ];
 
-        $inputs = $this->validate($rules,$messages);
+        $valid = $this->validate($rules,$messages);
 
-        if (!$inputs) {
-            $form= json_decode(json_encode($form), FALSE);
-            $this->session->setFlashdata("form",$form);
-            $this->session->setFlashdata("validator",$this->validator);
-            if($form->action=="add")
-                return redirect()->to(base_url("/admin/sections/add"));
-            else
-                return redirect()->to(base_url("/admin/sections/edit/".$form->id));
+        $form->data= (object)$form->data;
+        if(!empty($form->data->collections))
+            $form->data->collections= json_encode($form->data->collections);
+        if(!empty($form->data->tags))
+            $form->data->tags=
+                json_encode(
+                    array_map('trim',
+                        explode(",",$form->data->tags)
+                    )
+                );
+
+        $file = $this->request->getFile('pdf');
+        if($file->isValid() && !$file->hasMoved()){
+            if(file_exists(WRITEPATH . "uploads/publications/tmp.pdf"))
+                unlink(WRITEPATH . "uploads/publications/tmp.pdf");
+
+            $form->data->fileName= $file->getName();
+            $form->data->pdf= WRITEPATH . "uploads/publications/tmp.pdf";
+            $file->move(WRITEPATH . 'uploads/publications/', "tmp.pdf");
         }
 
-        $sql=[
-            "name"=>$form->name,
-            "description"=>$form->description,
-            "parent"=>$form->parent,
-        ];
+        if(empty($form->data->pdf)){
+            $valid= 0;
+        }
+
+        if (!$valid) {
+            $this->session->setFlashdata("form",$form);
+            $this->session->setFlashdata("validatorErrors",(object)$this->validator->getErrors());
+            if($form->action=="add")
+                return redirect()->to(base_url("/admin/publications/add"));
+            else
+                return redirect()->to(base_url("/admin/publications/edit/$form->id"));
+        }
+
+        $section= $this->model->db->table("sections")->where(['id'=>$form->data->section])->get()->getFirstRow();
+        $form->data->sections= [$section->id];
+        if($section->parent)
+            $form->data->sections[]= $section->parent;
+        $form->data->sections= json_encode($form->data->sections);
 
         if($form->action=="add"){
-            $this->model->db->table("sections")->insert($sql);
-            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел добавлена: #".$this->db->insertID().": $form->name"]);
+            $this->model->db->table("publications")->insert($form->data);
+            $insertID= $this->model->db->insertID();
+            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел добавлена: #$insertID: ".$form->data->name]);
+
+            $pdf= WRITEPATH . "/publications/".$insertID."_".str_replace(" ","_",$form->data->fileName);
+            if(file_exists($pdf))
+                unlink($pdf);
+            rename($form->data->pdf, $pdf);
+            $this->model->db->table("publications")->update(["pdf"=>$pdf],["id"=>$insertID]);
         }
+/*
         elseif($form->action=="edit"){
             $current= $this->db->table("sections")->where(['id'=>$form->id])->get()->getFirstRow();
             if(
@@ -133,52 +180,53 @@ class PublicationsController extends BaseController
                 return redirect()->to(base_url("/admin/sections/edit/".$form->id));
             }
 
-            $this->model->db->table("sections")->update($sql,["id"=>$form->id]);
+            $this->model->db->table("sections")->update($data,["id"=>$form->id]);
             $this->session->setFlashdata("message",(object)[
                 "type"=>"success",
                 "class"=>"callout-success",
                 "message"=>"Раздел изменен: #: $form->id: ".($current->name!=$form->name?" $current->name -> ":"")." $form->name",
             ]);
         }
-
-        return redirect()->to(base_url("/admin/sections/"));
+        */
+        return redirect()->to(base_url("/admin/publications/"));
     }
 
-    public function delete($id=false):RedirectResponse|string
-    {
-        if(!$this->model->hasAuth())
-            return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
+    /*
+        public function delete($id=false):RedirectResponse|string
+        {
+            if(!$this->model->hasAuth())
+                return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
 
-        $current= $this->db->table("sections")->where(['id'=>$id])->get()->getFirstRow();
+            $current= $this->db->table("sections")->where(['id'=>$id])->get()->getFirstRow();
 
-        if($current->cnt)
-            $this->session->setFlashdata("message",(object)["type"=>"error","class"=>"callout-error","message"=>"Раздел не может быть удален, т.к. содержит публикации.<br>Раздел #$current->id: $current->name"]);
-        elseif($this->db->table("sections")->where(['parent'=>$current->id])->get()->getNumRows())
-            $this->session->setFlashdata("message",(object)["type"=>"error","class"=>"callout-error","message"=>"Раздел не может быть удален, т.к. содержит подразделы.<br>Раздел #$current->id: $current->name"]);
-        else{
-            $this->model->db->table("sections")->delete(["id"=>$id]);
-            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел удален: #$current->id $current->name"]);
+            if($current->cnt)
+                $this->session->setFlashdata("message",(object)["type"=>"error","class"=>"callout-error","message"=>"Раздел не может быть удален, т.к. содержит публикации.<br>Раздел #$current->id: $current->name"]);
+            elseif($this->db->table("sections")->where(['parent'=>$current->id])->get()->getNumRows())
+                $this->session->setFlashdata("message",(object)["type"=>"error","class"=>"callout-error","message"=>"Раздел не может быть удален, т.к. содержит подразделы.<br>Раздел #$current->id: $current->name"]);
+            else{
+                $this->model->db->table("sections")->delete(["id"=>$id]);
+                $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел удален: #$current->id $current->name"]);
+            }
+
+            return redirect()->to(base_url("/admin/sections/"));
+        }
+        public function setFilter():RedirectResponse|string
+        {
+            if(!$this->model->hasAuth())
+                return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
+
+            $filter= $this->request->getVar('filter')??[];
+
+            $this->session->set("sectionsFilter",$filter);
+            return redirect()->to(base_url("/admin/sections/"));
         }
 
-        return redirect()->to(base_url("/admin/sections/"));
-    }
-    public function setFilter():RedirectResponse|string
-    {
-        if(!$this->model->hasAuth())
-            return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
-
-        $filter= $this->request->getVar('filter')??[];
-
-        $this->session->set("sectionsFilter",$filter);
-        return redirect()->to(base_url("/admin/sections/"));
-    }
-
-    public function changeVisible():bool
-    {
-        $form= (object)$this->request->getVar();
-        if(empty($form->id) or !isset($form->display)) return false;
-        $this->model->db->table("sections")->update(["display"=>$form->display],["id"=>$form->id]);
-        return true;
-    }
-*/
+        public function changeVisible():bool
+        {
+            $form= (object)$this->request->getVar();
+            if(empty($form->id) or !isset($form->display)) return false;
+            $this->model->db->table("sections")->update(["display"=>$form->display],["id"=>$form->id]);
+            return true;
+        }
+    */
 }

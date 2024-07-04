@@ -1,12 +1,13 @@
+
 <div class="container-lg">
     <div class="row">
         <div class="col col-lg-10 col-sm-8">
             <h3 class="mt-2 mb-3">
-                Разделы
+                Публикации
             </h3>
         </div>
         <div class="col col-lg-2 col-sm-4 pt-2 fs-5 text-end">
-            <a href="<?=base_url('admin/sections/add')?>" class="btn btn-primary">
+            <a href="<?=base_url('admin/publications/add')?>" class="btn btn-primary">
                 Создать
                 <i class="bi bi-plus-square-dotted"></i>
             </a>
@@ -20,7 +21,7 @@
 
     <?php echo $filter??""?>
 
-    <?php if(empty($list)):?>
+    <?php if(!isset($list) or empty($list)):?>
         <div class="mb-3 callout callout-error">
             Нет данных
         </div>
@@ -37,13 +38,9 @@
                     <?=$item->id?>
                 </div>
                 <div>
-                    <?php if($item->parent):?>
-                        <i class="bi bi-arrow-return-right ps-1"></i>
-                    <?php endif;?>
                     <?=$item->name?>
                 </div>
                 <div>
-                    <?=$item->cnt?>
                 </div>
                 <div>
                     <div class="form-check form-switch">
