@@ -116,6 +116,6 @@ class CollectionsController extends BaseController
         $this->session->set("collectionsFilter",$filter);
         return redirect()->to(base_url("/admin/collections/"));
     }
-
+/*Public*/
 
 }

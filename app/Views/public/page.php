@@ -5,25 +5,30 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?=$meta['title']??"Абитуриент МелГУ"?></title>
+    <title><?=$meta['title']??"Электронный научный архив МелГУ: "?></title>
     <meta name="description" content="<?=$meta['description']??""?>">
     <meta name="keywords" content="<?=$meta['keywords']??""?>">
-    <link rel="icon" href="img/favicon-1.ico" sizes="32x32">
-    <link rel="icon" href="img/favicon-1.ico" sizes="192x192">
+    <link rel="icon" href="<?= base_url('img/favicon-1.ico');?>" sizes="32x32">
+    <link rel="icon" href="<?= base_url('img/favicon-1.ico');?>" sizes="192x192">
 
-    <link rel="stylesheet" href="css/style.css?t=<?=time()?>">
+    <link rel="stylesheet" href="<?= base_url('css/style.css');?>?t=<?=time()?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="stylesheet" href="css/anim-bg.css?t=<?=time()?>">
+    <link rel="stylesheet" href="<?= base_url('css/anim-bg.css');?>?t=<?=time()?>">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://getbootstrap.com/docs/5.2/assets/css/docs.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
-    <link rel="stylesheet" href="css/fb.css?t=<?=time()?>">
-    <script defer src="js/imask.js?t=<?=time()?>"></script>
-    <script defer src="js/fb.js?t=<?=time()?>"></script>
-    <script defer src="js/edProfiles.js?t=<?=time()?>"></script>
+    <link rel="stylesheet" href="<?= base_url('css/fb.css');?>?t=<?=time()?>">
+    <script defer src="<?= base_url('js/imask.js');?>?t=<?=time()?>"></script>
+    <script defer src="<?= base_url('js/fb.js');?>js/fb.js?t=<?=time()?>"></script>
+    <?php if(!empty($includes->js)) foreach ($includes->js as $js):?>
+        <script defer src="<?= base_url($js);?>?t=<?php echo(microtime(true).rand()); ?>"></script>
+    <?php endforeach; ?>
+    <?php if(!empty($includes->css)) foreach ($includes->css as $css):?>
+        <link href="<?=base_url($css);?>?t=<?php echo(microtime(true).rand()); ?>" rel="stylesheet" type="text/css">
+    <?php endforeach; ?>
 
 </head>
 <body>
@@ -32,9 +37,9 @@
     <div class="col-12 d-flex justify-content-between p-2 pt-0" style="max-width: 1320px; margin: 0 auto;">
         <div class="logo">
             <a class="navbar-brand" href="/">
-                <img class="clr-logo" src="img/full-logo.png" alt="Логотип">
-                <img class="min-logo" src="img/clr-logo.png" alt="Логотип">
-                <img class="white-logo log" src="img/white-logo.png" alt="Логотип">
+                <img class="clr-logo" src="<?= base_url('img/full-logo.png');?>" alt="Логотип">
+                <img class="min-logo" src="<?= base_url('img/clr-logo.png');?>" alt="Логотип">
+                <img class="white-logo log" src="<?= base_url('img/white-logo.png');?>" alt="Логотип">
             </a>
         </div>
         <div class="d-flex upper-bnt" style="align-items: center;">
@@ -73,12 +78,6 @@
     </div>
 </header>
 <div class="container-lg wd main-content">
-    <?php if(!empty($includes->js)) foreach ($includes->js as $js):?>
-        <script defer src="<?= base_url($js);?>?t=<?php echo(microtime(true).rand()); ?>"></script>
-    <?php endforeach; ?>
-    <?php if(!empty($includes->css)) foreach ($includes->css as $css):?>
-        <link href="<?=base_url($css);?>?t=<?php echo(microtime(true).rand()); ?>" rel="stylesheet" type="text/css">
-    <?php endforeach; ?>
     <?=$pageContent??""?>
 </div>
 <div class="area">

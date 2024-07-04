@@ -50,7 +50,3 @@
         <?php endforeach;?>
     </div>
 </div>
-
-<?php
-//if(isset($edProfiles)) dd($edProfiles);
-?>

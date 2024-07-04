@@ -7,6 +7,7 @@ use App\Controllers\SectionsController;
 use App\Controllers\CollectionsController;
 use App\Controllers\SourcesController;
 use App\Controllers\PublicationsController;
+use App\Controllers\PublicController;
 
 /**
  * @var RouteCollection $routes
@@ -46,8 +47,13 @@ $routes->get('/admin/sources/delete/(:num)', [SourcesController::class, 'delete/
 $routes->post('/admin/sources/change-visible/', [SourcesController::class, 'changeVisible']);
 $routes->post('/admin/sources/set-filter', [SourcesController::class, 'setFilter']);
 
-
 /** ADMIN: PUBLICATIONS */
 $routes->get('/admin/publications', [PublicationsController::class, 'adminList']);
 $routes->get('/admin/publications/add', [PublicationsController::class, 'form/add']);
 $routes->post('/admin/publications/form-processing', [PublicationsController::class, 'formProcessing']);
+
+/** PUBLIC: PUBLICATIONS */
+$routes->get('/', [PublicController::class, 'MainList']);
+$routes->get('/sections/(:num)', [PublicController::class, 'ChapterList/$1']);
+$routes->get('/sections/(:num)/page/(:num)', [PublicController::class, 'ChapterList/$1/$2']);
+$routes->get('/sections/(:num)/chapter/(:num)', [PublicController::class, 'SubChapterList/$1/$2']);
