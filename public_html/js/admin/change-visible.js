@@ -4,9 +4,10 @@ document.addEventListener("DOMContentLoaded",function (){
         el.addEventListener("change",e=>{
             let data= new FormData();
             let display= el.checked?"1":"0";
+
             data.append('display', display);
             data.append('id', el.getAttribute("data-id"));
-
+            console.log(el.getAttribute("data-link"));
             fetch(el.getAttribute("data-link"),{
                 method: "POST",
                 body: data,
