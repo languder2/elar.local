@@ -106,7 +106,7 @@ class SourcesController extends BaseController
     }
     public function changeVisible():string|bool{
         if(!$this->sm->hasAuth()) return json_encode(['message'=>"success denied"]);
-        $form= $this->request->getVar();
+        $form= (object)$this->request->getVar();
         $this->sm->dbUpdateFiled("sources",["display"=>(string)$form->display],["id"=>$form->id]);
         return true;
     }
