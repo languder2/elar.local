@@ -34,28 +34,52 @@ class PublicController extends BaseController
 
         $page['data']['edSections']= $this->pbl->getChapterList($id);
         $page['data']['TitleSections']= $this->pbl->getTitleSection($id);
+        $page['data']['edCollections']= $this->pbl->getCollectionsList($id);
 
+        $l = $this->pbl->db->table('sections')->where(['parent'=>$id])->get()->getResult();
 
-        $page['pageContent']= view("public/chapter",$page['data']);
-        return view("public/page",$page);
+        if(empty($l)){
+            $page['pageContent']= view("public/subchapter",$page['data']);
+            return view("public/page",$page);
+        }
+        else{
+            $page['pageContent']= view("public/chapter",$page['data']);
+            return view("public/page",$page);
+        }
+
     }
-    public function SubChapterList($id=false,$pg=0):string|RedirectResponse{
+
+    public function CollectList($id=false,$pg=0):string|RedirectResponse{
         $page['data']["title"]= "Электронный научный архив МелГУ: ";
 
         if($this->session->has("collectionsFilter"))
             $page['data']['filter']= $this->session->get("MainFilter");
 
-        $page['data']['edCollections']= $this->pbl->getSubChapterList($id);
-        $url_path = $_SERVER['REQUEST_URI'];
-        $path = parse_url($url_path);
-        $id = explode('/', $path['path']);
-        $page['data']['TitleChapter']= $this->pbl->getSubTitleChapter($id[4]);
+        $count=  $this->pbl->db
+            ->table("publications")
+            ->get()->getNumRows();
+        $maxPages= ceil($count / 20);
+
+        if($maxPages<$pg) $pg = $maxPages;
+        if($pg<1) $pg = 1;
+
+        $page['data']['paginator']= view("admin/template/paginator",[
+            "maxPages"=>$maxPages,
+            "currentPage"=>$pg,
+            "baseLink"=>base_url("/collections/$id/page-"),
+        ]);
+
+        $list = $this->pbl->db->table('publications')
+            ->where("JSON_CONTAINS(collections, '\"".$id."\"', '$')")
+            ->limit(20,($pg-1)*20)
+            ->get()->getResult();
 
 
-        $page['pageContent']= view("public/subchapter",$page['data']);
+        $page['data']['publications']= view("public/publications",["list"=>$list,"paginator"=>$page['data']['paginator']]);
+        $page['pageContent']= view("public/collections",$page['data']);
         return view("public/page",$page);
     }
-        public function CollectionsList($id=false,$pg=0):string|RedirectResponse{
+    public function CollectionsList($id=false,$pg=0):string|RedirectResponse{
         $page['data']["title"]= "Электронный научный архив МелГУ: ";
 
         if($this->session->has("collectionsFilter"))
@@ -68,5 +92,18 @@ class PublicController extends BaseController
         $page['pageContent']= view("public/subchapter",$page['data']);
         return view("public/page",$page);
     }
+    public function Publication($id=false,$pg=0):string|RedirectResponse{
+        $page['data']["title"]= "Электронный научный архив МелГУ: ";
+
+        if($this->session->has("collectionsFilter"))
+            $page['data']['filter']= $this->session->get("MainFilter");
+
+        $page['data']['Publicate']= $this->pbl->getPublication($id);
+
+
+        $page['pageContent']= view("public/publication",$page['data']);
+        return view("public/page",$page);
+    }
+
 
 }

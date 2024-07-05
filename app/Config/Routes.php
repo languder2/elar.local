@@ -59,5 +59,8 @@ $routes->post(  '/admin/publications/change-visible',   [PublicationsController:
 /** PUBLIC: PUBLICATIONS */
 $routes->get('/', [PublicController::class, 'MainList']);
 $routes->get('/sections/(:num)', [PublicController::class, 'ChapterList/$1']);
-$routes->get('/sections/(:num)/page/(:num)', [PublicController::class, 'ChapterList/$1/$2']);
-$routes->get('/sections/(:num)/chapter/(:num)', [PublicController::class, 'SubChapterList/$1/$2']);
+$routes->get('/sections/(:num)/page-(:num)', [PublicController::class, 'ChapterList/$1/$2']);
+$routes->get('/collections/(:num)', [PublicController::class, 'CollectList/$1']);
+$routes->get('/collections/(:num)/page-(:num)', [PublicController::class, 'CollectList/$1/$2']);
+$routes->get('/publication/(:num)', [PublicController::class, 'Publication/$1']);
+$routes->get('/publication/(:num)/page-(:num)', [PublicController::class, 'Publication/$1/$2']);

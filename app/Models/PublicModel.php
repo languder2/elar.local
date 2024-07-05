@@ -43,7 +43,7 @@ class PublicModel extends GeneralModel {
         return $results;
     }
     public function getSubChapterList($id):array{
-        $q= $this->db->table("collections");
+        $q= $this->db->table("collections")->where(["parent"=>$id]);
         $q= $q->get();
         $results= [];
         foreach($q->getResult() as $record){
@@ -56,6 +56,28 @@ class PublicModel extends GeneralModel {
         $q= $q->get();
         $results= [];
         foreach($q->getResult() as $record){
+            $results[$record->id]= $record;
+        }
+        return $results;
+    }
+    public function getCollectList($id):array{
+        $q= $this->db->table("publications")->where(['id'=>$id]);
+        $q= $q->get();
+        $results= [];
+        if($q->getNumRows()==0) return $results;
+        foreach($q->getResult() as $record){
+            $results[$record->id]= $record;
+        }
+        return $results;
+    }
+    public function getPublication($id):array{
+        $q= $this->db->table("publications")->where(['id'=>$id]);
+        $q= $q->get();
+        $results= [];
+        foreach($q->getResult() as $record){
+            $record->tags = json_decode($record->tags);
+            $record->sections = json_decode($record->sections);
+            $record->collections = json_decode($record->collections);
             $results[$record->id]= $record;
         }
         return $results;

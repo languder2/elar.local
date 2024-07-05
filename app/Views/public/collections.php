@@ -56,55 +56,8 @@
             </div>
     </div>
 </section>
-            <section>
-                <div class="col col-lg-12 box-view">
-                    <div class="col col-lg-12 title-view">
-                        <span class="res">Ресурсы:</span>
-                        <div class="row row-cols-3">
-                            <div class="col"><span>По дате сохранения</span></div>
-                            <div class="col"><span>Название</span></div>
-                            <div class="col"><span>Авторы</span></div>
-                        </div>
-                    </div>
-                    <?php if(isset($edCollections)) foreach ($edCollections as $collection):?>
-                    <div class="row row-cols-1 row-cols-md-3 row-cols-lg-3 g-0 row-view row-view-body">
-                        <div class="col col-md-2 col-lg-2">
-                            <div>
-                                <b class="pe-sm-2">По дате сохранения:</b>
-                                <span><?=$row["date"]?></span>
-                            </div>
-                        </div>
-                        <div class="col col-md-8 col-lg-8">
-                            <div>
-                                <b class="pe-sm-2">Название:</b>
-                                <span><?=$row["title"]?></span>
-                            </div>
-                        </div>
-                        <div class="col col-md-2 col-lg-2">
-                            <div>
-                                <b class="pe-sm-2">Авторы:</b>
-                                <span><?=$row["author"]?></span>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endforeach;?>
-                </div>
-                <nav aria-label="Page navigation example" class="pagination-box mt-3 d-flex">
-                    <ul class="pagination pagination-item">
-                        <li class="page-item <?= ($page <= 1) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $page - 1 ?>">Предыдущая</a>
-                        </li>
-                        <?php for($i = 1; $i <= $pages; $i++) : ?>
-                            <li class="page-item <?= ($page == $i) ? 'active' : '' ?>">
-                                <a class="page-link" href="?page=<?= $i ?>"><?= $i ?></a>
-                            </li>
-                        <?php endfor; ?>
-                        <li class="page-item <?= ($page >= $pages) ? 'disabled' : '' ?>">
-                            <a class="page-link" href="?page=<?= $page + 1 ?>">Следующая</a>
-                        </li>
-                    </ul>
-                </nav>
-            </section>
+
+            <?=$publications?>
         </div>
         <div class="col-lg-3">
             <section>

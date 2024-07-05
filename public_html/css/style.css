@@ -424,6 +424,12 @@ table.iksweb.resource tr:last-child{
 .row-view-body b{
     display: none !important;
 }
+.row-view-body a span{
+    color: #4D5154;
+}
+.row-view-body a:hover span{
+    color: #820000;
+}
 .res{
     display: none;
 }

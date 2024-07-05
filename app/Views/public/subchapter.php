@@ -2,9 +2,9 @@
         <div class="w-100 title-chapter">
             <div class="row">
                 <div class="col-lg-12 d-flex">
-                    <?php if(isset($TitleChapter)) foreach ($TitleChapter as $titleChapter):?>
-                    <h4><?=$titleChapter->name?> :</h4>
-                    <h4 class="count"><?=$titleChapter->cnt?></h4>
+                    <?php if(isset($TitleSections)) foreach ($TitleSections as $titleSection):?>
+                    <h4><?=$titleSection->name?> :</h4>
+                    <h4 class="count"><?=$titleSection->cnt?></h4>
                     <?php endforeach;?>
                 </div>
             </div>
@@ -93,7 +93,7 @@
     <div class="col col-lg-12">
         <div class="row g-3 row-cols-1 row-cols-sm-1 row-cols-lg-1 row-cols-lg-1">
             <div class="col box-inf">
-                <h4>Коллекции этого раздела</h4>
+                <h4>Коллекции</h4>
                 <?php if(isset($edCollections)) foreach ($edCollections as $collection):?>
                 <div class="list-group abstracts">
                     <div class="list-group-item chpt">

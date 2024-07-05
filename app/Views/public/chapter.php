@@ -101,7 +101,7 @@
                         <div>
                         <h5>
                             <?php if(isset($TitleSections)) foreach ($TitleSections as $titleSection):?>
-                            <a href="/sections/<?=$titleSection->id?>/chapter/<?=$section->id?>"><?=$section->name?></a>
+                            <a href="/sections/<?=$section->id?>"><?=$section->name?></a>
                             <?php endforeach;?>
                         </h5>
                         <span class="count"><?=$section->cnt?></span>
@@ -116,20 +116,22 @@
                 </div>
             </div>
             <div class="col box-inf">
-                <h4>Коллекции этого раздела</h4>
-                <div class="list-group abstracts">
-                    <div class="list-group-item chpt">
-                        <div>
-                        <h5><a href="#">Авторефераты и диссертации</a></h5>
-                        <span class="count">1</span>
-                        </div>
-                        <div>
-                        <p class="mt-2">
-                            В разделе размещены электронные версии периодических и продолжающихся изданий.
-                        </p>
+                <h4>Коллекции</h4>
+                <?php if(isset($edCollections)) foreach ($edCollections as $collection):?>
+                    <div class="list-group abstracts">
+                        <div class="list-group-item chpt">
+                            <div>
+                                <h5><a href="#"><?=$collection->title?></a></h5>
+                                <span class="count"><?=$collection->cnt?></span>
+                            </div>
+                            <div>
+                                <p class="mt-2">
+                                    <?=$collection->description?>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <?php endforeach;?>
             </div>
     </div>
 </section>
