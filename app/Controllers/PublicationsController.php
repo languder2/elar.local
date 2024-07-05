@@ -194,7 +194,6 @@ class PublicationsController extends BaseController
                         explode(",",$form->data->tags)
                     )
                 );
-
         $file = $this->request->getFile('pdf');
         if($file->isValid() && !$file->hasMoved()){
             if(file_exists(WRITEPATH . "uploads/publications/tmp.pdf"))
@@ -228,6 +227,7 @@ class PublicationsController extends BaseController
         $form->data->sections= json_encode($form->data->sections);
 
         if($form->action=="add"){
+            $form->data->display= (int)$form->data->display;
             $this->model->db->table("publications")->insert($form->data);
             $insertID= $this->model->db->insertID();
             $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел добавлена: #$insertID: ".$form->data->name]);
