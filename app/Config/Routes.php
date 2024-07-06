@@ -8,6 +8,7 @@ use App\Controllers\CollectionsController;
 use App\Controllers\SourcesController;
 use App\Controllers\PublicationsController;
 use App\Controllers\PublicController;
+use App\Controllers\DownloadController;
 
 /**
  * @var RouteCollection $routes
@@ -64,3 +65,6 @@ $routes->get('/collections/(:num)', [PublicController::class, 'CollectList/$1'])
 $routes->get('/collections/(:num)/page-(:num)', [PublicController::class, 'CollectList/$1/$2']);
 $routes->get('/publication/(:num)', [PublicController::class, 'Publication/$1']);
 $routes->get('/publication/(:num)/page-(:num)', [PublicController::class, 'Publication/$1/$2']);
+
+/* Downloader */
+$routes->get('/download/(:segment)/(:segment)', [DownloadController::class, 'downloadPdf/$1/$2']);

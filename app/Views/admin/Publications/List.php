@@ -54,9 +54,17 @@
                     </a>
                 </div>
                 <div>
-                    <a href="<?=$item->pdf??"#"?>" target="_blank">
-                        <i class="bi bi-filetype-pdf"></i>
-                    </a>
+                    <?php if(!empty($item->pdf) and file_exists($item->pdf)):?>
+                        <a href="<?=base_url("/download/publication/$item->id")?>" target="_blank">
+                            <i class="bi bi-filetype-pdf"></i>
+                        </a>
+                    <?php endif;?>
+                    <?php if(!empty($item->pdf) and !file_exists($item->pdf)):?>
+                        <span class="pdf-error">
+                            <i class="bi bi-filetype-pdf"></i>
+                        </span>
+                    <?php endif;?>
+
                 </div>
                 <div>
                     <div class="form-check form-switch">

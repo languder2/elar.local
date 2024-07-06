@@ -34,7 +34,7 @@ class PublicationsController extends BaseController
             $filter= $this->session->get("publicationsFilter");
 
 
-        $count=  $this->model->db
+        $count=  $this->db
             ->table("publications")
             ->like($filter)
             ->get()->getNumRows();
@@ -53,7 +53,7 @@ class PublicationsController extends BaseController
 
 
 
-        $this->page['list']= $this->model->db
+        $this->page['list']= $this->db
             ->table("publications")
             ->like($filter)
             ->limit($this->countInPage,$this->countInPage*($page-1))
@@ -61,20 +61,20 @@ class PublicationsController extends BaseController
 
         /** get sections:  tree->list  */
         $this->page['data']['sections']= $this->model->convertTree2List(
-            $this->model->db->table("sections")
+            $this->db->table("sections")
                 ->orderBy("parent")->orderBy("name")
                 ->get()->getResult()
         );
 
         /** get sources:  list  */
         $this->page['data']['sources']=
-            $this->model->db->table("sources")
+            $this->db->table("sources")
                 ->orderBy("title")
                 ->get()->getResult();
 
         /** get collections:  list  */
         $this->page['data']['collections']=
-            $this->model->db->table("collections")
+            $this->db->table("collections")
                 ->orderBy("title")
                 ->get()->getResult();
 
@@ -106,20 +106,20 @@ class PublicationsController extends BaseController
 
         /** get sections:  tree->list  */
         $this->page['data']['sections']= $this->model->convertTree2List(
-            $this->model->db->table("sections")
+            $this->db->table("sections")
                 ->orderBy("parent")->orderBy("name")
                 ->get()->getResult()
         );
 
         /** get sources:  list  */
         $this->page['data']['sources']=
-            $this->model->db->table("sources")
+            $this->db->table("sources")
                 ->orderBy("title")
                 ->get()->getResult();
 
         /** get collections:  list  */
         $this->page['data']['collections']=
-            $this->model->db->table("collections")
+            $this->db->table("collections")
                 ->orderBy("title")
                 ->get()->getResult();
 
@@ -136,7 +136,7 @@ class PublicationsController extends BaseController
             $this->page['data']['validatorErrors']= $this->session->getFlashdata("validatorErrors");
         }
         elseif($action=="edit"){
-            $publication= $this->model->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
+            $publication= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
 
             if(!empty($publication->tags))
                 $publication->tags= implode(",",json_decode($publication->tags));
@@ -199,7 +199,7 @@ class PublicationsController extends BaseController
             if(file_exists(WRITEPATH . "uploads/publications/tmp.pdf"))
                 unlink(WRITEPATH . "uploads/publications/tmp.pdf");
 
-            $form->data->fileName= $file->getName();
+            $form->data->fileName= str_replace(" ","_",$file->getName());
             $form->data->pdf= WRITEPATH . "uploads/publications/tmp.pdf";
             $file->move(WRITEPATH . 'uploads/publications/', "tmp.pdf");
         }
@@ -220,7 +220,7 @@ class PublicationsController extends BaseController
         if(!isset($form->data->display))
             $form->data->display= 0;
 
-        $section= $this->model->db->table("sections")->where(['id'=>$form->data->section])->get()->getFirstRow();
+        $section= $this->db->table("sections")->where(['id'=>$form->data->section])->get()->getFirstRow();
         $form->data->sections= [$section->id];
         if($section->parent)
             $form->data->sections[]= $section->parent;
@@ -228,28 +228,28 @@ class PublicationsController extends BaseController
 
         if($form->action=="add"){
             $form->data->display= (int)$form->data->display;
-            $this->model->db->table("publications")->insert($form->data);
-            $insertID= $this->model->db->insertID();
+            $this->db->table("publications")->insert($form->data);
+            $insertID= $this->db->insertID();
             $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел добавлена: #$insertID: ".$form->data->name]);
 
-            $pdf= WRITEPATH . "/publications/".$insertID."_".str_replace(" ","_",$form->data->fileName);
+            $pdf= WRITEPATH . "/publications/".$insertID."_".$form->data->fileName;
             if(file_exists($pdf))
                 unlink($pdf);
             rename($form->data->pdf, $pdf);
-            $this->model->db->table("publications")->update(["pdf"=>$pdf],["id"=>$insertID]);
+            $this->db->table("publications")->update(["pdf"=>$pdf],["id"=>$insertID]);
         }
 
         if($form->action=="edit"){
-            $publication= $this->model->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
+            $publication= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
 
             if($form->data->pdf != $publication->pdf){
-                $pdf= WRITEPATH . "/publications/".$id."_".str_replace(" ","_",$form->data->fileName);
+                $pdf= WRITEPATH . "/publications/".$id."_".$form->data->fileName;
                 if(file_exists($pdf)) unlink($pdf);
                 if(file_exists($publication->pdf)) unlink($publication->pdf);
                 rename($form->data->pdf, $pdf);
                 $form->data->pdf= $pdf;
             }
-            $this->model->db->table("publications")->update($form->data,["id"=>$id]);
+            $this->db->table("publications")->update($form->data,["id"=>$id]);
 
             $this->session->setFlashdata("message",(object)[
                 "type"=>"success",
@@ -265,9 +265,9 @@ class PublicationsController extends BaseController
         if(!$this->model->hasAuth())
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
 
-        $current= $this->model->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
+        $current= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
 
-        $this->model->db->table("publications")->delete(["id"=>$id]);
+        $this->db->table("publications")->delete(["id"=>$id]);
 
         if(file_exists($current->pdf)) unlink($current->pdf);
 
@@ -280,7 +280,7 @@ class PublicationsController extends BaseController
     {
         $form= (object)$this->request->getVar();
         if(empty($form->id) or !isset($form->display)) return false;
-        $this->model->db->table("publications")->update(["display"=>$form->display],["id"=>$form->id]);
+        $this->db->table("publications")->update(["display"=>$form->display],["id"=>$form->id]);
         return true;
     }
 
