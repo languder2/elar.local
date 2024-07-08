@@ -5,6 +5,8 @@ use CodeIgniter\HTTP\RedirectResponse;
 use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
+use App\Models\PublicationsModel;
+
 class PublicationsController extends BaseController
 {
     protected array $page;
@@ -16,10 +18,13 @@ class PublicationsController extends BaseController
         "authors"=>", ",
         "tags"=>false,
     ];
+
+    protected PublicationsModel $PublicationsModel;
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger):bool
     {
         parent::initController($request, $response, $logger);
         $this->page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
+        $this->PublicationsModel= model(PublicationsModel::class);
         return true;
     }
     public function adminList($page= 1): string
@@ -200,21 +205,24 @@ class PublicationsController extends BaseController
 
         $valid = $this->validate($rules,$messages);
 
+
         $form->data= (object)$form->data;
 
+        /* обработка коллекций */
         if(!empty($form->data->collections)){
             $collections= $form->data->collections;
             $form->data->collections= json_encode($form->data->collections);
         }
 
-        if(!empty($form->data->authors))
-            $form->data->authors=
-                json_encode(
-                    array_map('trim',
-                        explode(",",$form->data->authors)
-                    )
-                );
+        /* обработка авторов */
+        if(!empty($form->data->authors)){
+            $authors= array_map('trim',
+                explode(",",$form->data->authors)
+            );
+            $form->data->authors= json_encode($authors);
+        }
 
+        /* обработка тегов */
         if(!empty($form->data->tags))
             $form->data->tags=
                 json_encode(
@@ -222,6 +230,18 @@ class PublicationsController extends BaseController
                         explode(",",$form->data->tags)
                     )
                 );
+
+        /* обработка разделов */
+        $section= $this->db->table("sections")->where(['id'=>$form->data->section])->get()->getFirstRow();
+        if($section->parent)
+            $form->data->sections[]= $section->parent;
+        $form->data->sections[]= $section->id;
+
+        $sections= $form->data->sections;
+
+        $form->data->sections= json_encode($form->data->sections);
+
+        /* обработка pdf файла */
         $file = $this->request->getFile('pdf');
         if($file->isValid() && !$file->hasMoved()){
             if(file_exists(WRITEPATH . "uploads/publications/tmp.pdf"))
@@ -236,6 +256,7 @@ class PublicationsController extends BaseController
             $valid= 0;
         }
 
+        /* ошибка формы */
         if (!$valid) {
             $this->session->setFlashdata("form",$form);
             $this->session->setFlashdata("validatorErrors",(object)$this->validator->getErrors());
@@ -248,15 +269,7 @@ class PublicationsController extends BaseController
         if(!isset($form->data->display))
             $form->data->display= 0;
 
-        $section= $this->db->table("sections")->where(['id'=>$form->data->section])->get()->getFirstRow();
-        if($section->parent)
-            $form->data->sections[]= $section->parent;
-        $form->data->sections[]= $section->id;
-
-        $sections= $form->data->sections;
-
-        $form->data->sections= json_encode($form->data->sections);
-
+        /* добавление публикации */
         if($form->action=="add"){
             $form->data->display= (int)$form->data->display;
             $this->db->table("publications")->insert($form->data);
@@ -276,6 +289,7 @@ class PublicationsController extends BaseController
             $this->db->table("publications")->update(["pdf"=>$pdf],["id"=>$insertID]);
         }
 
+        /* изменение публикации */
         if($form->action=="edit"){
             $publication= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
             if($form->data->pdf != $publication->pdf){
@@ -300,28 +314,38 @@ class PublicationsController extends BaseController
                 "message"=>"Раздел изменен: #: $id: ".($publication->name!=$form->data->name?" $publication->name -> ":" ").$form->data->name,
             ]);
 
+            /* пониженеие счетчиков в коллекциях */
             $publication->collections= json_decode($publication->collections);
             if(!empty($publication->collections))
                 foreach($publication->collections as $cID)
                     $this->model->updateCount("collections",$cID,false);
 
+            /* пониженеие счетчиков в разделах */
             $publication->sections= json_decode($publication->sections);
             if(!empty($publication->sections))
                 foreach($publication->sections as $sID)
                     $this->model->updateCount("sections",$sID,false);
 
+            /* пониженеие счетчика в источниках */
             $this->model->updateCount("sources",$publication->source,false);
         }
 
+        /* повышение счетчиков в коллекциях */
         if(!empty($collections))
             foreach($collections as $cID)
                 $this->model->updateCount("collections", $cID);
 
+        /* повышение счетчиков в разделах */
         if(!empty($sections))
             foreach($sections as $sID)
                 $this->model->updateCount("sections",$sID);
 
+        /* повышение счетчика в источниках */
         $this->model->updateCount("sources",$form->data->source);
+
+        /* переучет авторов */
+        if(!empty($authors))
+            $this->PublicationsModel->AuthorAudit($authors);
 
         return redirect()->to(base_url("/admin/publications/"));
     }
