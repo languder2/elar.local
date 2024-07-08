@@ -41,7 +41,10 @@
                     placeholder="Автор"
                     required
             >
-            <label class="h-auto w-auto" for="form-authors">Автор</label>
+            <label class="h-auto w-auto" for="form-authors">
+                Укажите авторов, разделив запятой
+                <span class="text-danger fw-bold">*</span>
+            </label>
         </div>
 
         <div class="form-floating my-2 px-1">
@@ -54,7 +57,10 @@
                     class="form-control h-auto <?=empty($validatorErrors->{"form.data.name"})?"":"is-invalid"?>"
 
             >
-            <label class="h-auto w-auto" for="form-name">Название</label>
+            <label class="h-auto w-auto" for="form-name">
+                Название
+                <span class="text-danger fw-bold">*</span>
+            </label>
         </div>
 
         <div class="form-floating my-2 px-1">
@@ -106,6 +112,30 @@
             <label class="h-auto w-auto" for="form-tags">Укажите теги, разделив запятой</label>
         </div>
 
+        <div class="form-floating my-2 px-1">
+            <input  type="text"
+                    name="form[data][supervisor]"
+                    id="form-tags"
+                    placeholder="Научный руководитель"
+                    value="<?=$form->data->supervisor??""?>"
+                    class="form-control h-auto"
+            >
+            <label class="h-auto w-auto" for="form-tags">
+                Научный руководитель
+            </label>
+        </div>
+
+        <div class="form-floating my-2 px-1">
+            <input  type="text"
+                    name="form[data][speciality]"
+                    id="form-tags"
+                    placeholder="Специальность"
+                    value="<?=$form->data->supervisor??""?>"
+                    class="form-control h-auto"
+            >
+            <label class="h-auto w-auto" for="form-tags">Специальность</label>
+        </div>
+
         <div class="my-2 px-1">
             <div class="main-container">
                 <div class="editor-container editor-container_classic-editor editor-container_include-style" id="editor-container">
@@ -124,7 +154,10 @@
 
         <div class="mb-3">
             <div class="my-2 px-1">
-                <label for="form-section">Раздел</label>
+                <label for="form-section">
+                    Раздел
+                    <span class="text-danger fw-bold">*</span>
+                </label>
                 <select class="form-select"
                         name="form[data][section]"
                         size="5"
@@ -145,7 +178,10 @@
 
         <div class="mb-3">
             <div class="my-2 px-1">
-                <label for="form-source">Источник</label>
+                <label for="form-source">
+                    Источник
+                    <span class="text-danger fw-bold">*</span>
+                </label>
                 <select class="form-select"
                         name="form[data][source]"
                         required
@@ -165,7 +201,9 @@
 
         <div class="mb-3">
             <div class="my-2 px-1">
-                <label for="form-collections">Выберите коллекции</label>
+                <label for="form-collections">
+                    Выберите коллекции
+                </label>
                 <select class="form-select"
                         name="form[data][collections][]"
                         multiple
