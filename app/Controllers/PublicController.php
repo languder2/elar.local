@@ -69,6 +69,18 @@ class PublicController extends BaseController
         }
 
     }
+    public function browse($search='',$id=false,$pg=0,):string|RedirectResponse
+    {
+        $page['data']["title"] = "Электронный научный архив МелГУ: ";
+        $page['data']['search'] = $search;
+        if ($this->session->has("MainFilter"))
+            $page['data']['filter'] = $this->session->get("MainFilter");
+        $page['data']['filterSection'] = view("public/FilterSection", $page['data']);
+        $page['data']['Publicate']= $this->pbl->getPublication((array)($page['data']['filter']??[]));
+
+        $page['pageContent']= view("public/browse",$page['data']);
+        return view("public/page",$page);
+    }
 
     public function CollectList($id=false,$pg=0):string|RedirectResponse{
         $page['data']["title"]= "Электронный научный архив МелГУ: ";
@@ -147,5 +159,11 @@ class PublicController extends BaseController
         return view("public/page",$page);
     }
 
+    public function setFilter($search){
+        if(!$this->pbl->hasAuth()) return json_encode(['message'=>"success denied"]);
+        $filter= (object)$this->request->getVar('filter');
+        $this->session->set("MainFilter",$filter);
+        return redirect()->to(base_url("/browse/$search"));
+    }
 
 }

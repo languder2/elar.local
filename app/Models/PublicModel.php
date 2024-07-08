@@ -100,6 +100,18 @@ class PublicModel extends GeneralModel {
         }
         return $results;
     }
+    public function getSearch($filter= []):array{
+        $q= $this->db->table("publications")->like($filter);
+        $q= $q->get();
+        $results= [];
+        foreach($q->getResult() as $record){
+            $record->tags = json_decode($record->tags);
+            $record->sections = json_decode($record->sections);
+            $record->collections = json_decode($record->collections);
+            $results[$record->id]= $record;
+        }
+        return $results;
+    }
     function rowJsonDecode(&$row,$jArr):bool{
         if(!is_object($row) or count($jArr) === 0) return false;
         foreach ($jArr as $field)

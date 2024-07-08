@@ -65,6 +65,8 @@ $routes->get('/collections/(:num)', [PublicController::class, 'CollectList/$1'])
 $routes->get('/collections/(:num)/page-(:num)', [PublicController::class, 'CollectList/$1/$2']);
 $routes->get('/publication/(:num)', [PublicController::class, 'Publication/$1']);
 $routes->get('/publication/(:num)/page-(:num)', [PublicController::class, 'Publication/$1/$2']);
+$routes->get('/browse/(:segment)', [PublicController::class, 'browse/$1']);
+$routes->post('/browse/(:segment)/set-filter', [PublicController::class, 'setFilter/$1']);
 
 /* Downloader */
 $routes->get('/download/(:segment)/(:segment)', [DownloadController::class, 'downloadPdf/$1/$2']);
