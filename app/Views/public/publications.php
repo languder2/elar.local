@@ -25,12 +25,15 @@
                 <div class="col col-md-2 col-lg-2">
                     <div>
                         <b class="pe-sm-2">Авторы:</b>
-                        <span><?=$item->author?></span>
+                        <span><?php //(", ",$item->authors??[])?></span>
                     </div>
                 </div>
             </div>
         <?php endforeach;?>
     </div>
+    <?php if (empty($list)){
+        echo '<h4 class="text-center mb-4 py-2 bg-white">Публикацйи нет</h4>';
+    } ?>
     <?=$paginator?? "" ?>
     <style>
         .page-link.active{

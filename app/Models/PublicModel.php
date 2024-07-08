@@ -42,6 +42,15 @@ class PublicModel extends GeneralModel {
         }
         return $results;
     }
+    public function getTitleCollection($id):array{
+        $q= $this->db->table("collections")->where(["id"=>$id]);
+        $q= $q->get();
+        $results= [];
+        foreach($q->getResult() as $record){
+            $results[$record->id]= $record;
+        }
+        return $results;
+    }
     public function getSubChapterList($id):array{
         $q= $this->db->table("collections")->where(["parent"=>$id]);
         $q= $q->get();

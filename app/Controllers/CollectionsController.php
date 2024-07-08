@@ -96,7 +96,7 @@ class CollectionsController extends BaseController
         if (!$this->clm->hasAuth()) return redirect()->to(base_url(ADMIN));
         if (!$id) return redirect()->to(base_url("/admin/collections/"));
         $collection = $this->clm->dbGetRow("collections", ["id" => $id]);
-        if ($collection->cnt == "") {
+        if ($collection->cnt == 0) {
         $this->session->setFlashdata("message", (object)["type" => "success", "class" => "callout-success", "message" => "Коллекция удалена: #$collection->id: $collection->title"]);
         $this->clm->dbDelete("collections", ["id" => $id]);
         }

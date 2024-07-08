@@ -181,7 +181,7 @@
                 </div>
             </div>
             <div class="col">
-                <div><a class="btn-opn" target="_blank" href="<?=$item->pdf?>">Открыть</a></div>
+                <div><a class="btn-opn" target="_blank" href="<?=base_url($item->pdf)?>">Открыть</a></div>
             </div>
         </div>
         <?php endforeach;?>

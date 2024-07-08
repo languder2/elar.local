@@ -89,6 +89,9 @@
         </div>
     </div>
 </section>
+<sections>
+    <?=$publications?>
+</sections>
 <section>
     <div class="col col-lg-12">
         <div class="row g-3 row-cols-1 row-cols-sm-1 row-cols-lg-1 row-cols-lg-1">
