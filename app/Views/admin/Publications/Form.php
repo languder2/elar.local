@@ -106,15 +106,20 @@
             <label class="h-auto w-auto" for="form-tags">Укажите теги, разделив запятой</label>
         </div>
 
-        <div class="form-floating my-2 px-1">
-            <textarea   name="form[data][description]"
-                        id="form-description"
-                        class="form-control h-auto"
-                        rows="5"
-                        style="resize: none;"
-                        placeholder="Аннотация"
-            ><?=$form->data->description??""?></textarea>
-            <label class="h-auto w-auto" for="form-description">Аннотация</label>
+        <div class="my-2 px-1">
+            <div class="main-container">
+                <div class="editor-container editor-container_classic-editor editor-container_include-style" id="editor-container">
+                    <div class="editor-container__editor">
+                        <textarea   name="form[data][description]"
+                                    id="form-description"
+                                    class="form-control"
+                                    style="resize: none; height: 200px"
+                                    placeholder="Аннотация"
+                        ><?=$form->data->description??""?></textarea>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <div class="mb-3">
@@ -128,7 +133,7 @@
                 >
                     <?php if(!empty($sections)) foreach($sections as $section):?>
                         <option value="<?=$section->id?>"
-                                <?=(!empty($form->data->section) && $form->data->section==$section->id)?"selected":""?>
+                            <?=(!empty($form->data->section) && $form->data->section==$section->id)?"selected":""?>
                                 class="<?=$section->parent?"bi bi-arrow-return-right ps-2":""?>"
                         >
                             <?=$section->name?>
@@ -149,7 +154,7 @@
                     <option value=''>Выбрать источник</option>
                     <?php if(!empty($sources)) foreach($sources as $source):?>
                         <option value="<?=$source->id?>"
-                                <?=(!empty($form->data->source) && $form->data->source==$source->id)?"selected":""?>
+                            <?=(!empty($form->data->source) && $form->data->source==$source->id)?"selected":""?>
                         >
                             <?=$source->title?>
                         </option>
@@ -169,7 +174,7 @@
                 >
                     <?php if(!empty($collections)) foreach($collections as $collection):?>
                         <option value="<?=$collection->id?>"
-                                <?=(!empty($form->data->collections) && in_array($collection->id,$form->data->collections))?"selected":""?>
+                            <?=(!empty($form->data->collections) && in_array($collection->id,$form->data->collections))?"selected":""?>
                         >
                             <?=$collection->title?>
                         </option>
@@ -183,3 +188,4 @@
         </div>
     </form>
 </div>
+<?=$ckeditor??""?>

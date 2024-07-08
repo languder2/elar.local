@@ -69,4 +69,12 @@ class GeneralModel extends UserModel{
 
         return $result;
     }
+    public function updateCount($table,$id,$inc= true):bool
+    {
+        $this->db->table($table)
+            ->set("cnt",$inc?"cnt+1":"cnt-1",false)
+            ->where("id",$id)
+            ->update();
+        return true;
+    }
 }

@@ -165,6 +165,7 @@ class PublicationsController extends BaseController
             ];
         }
 
+        $this->page['data']['ckeditor']= view("admin/template/CKEditor");
         $this->page['pageContent']= view("admin/Publications/Form",$this->page['data']);
         return view(ADMIN."/template/page",$this->page);
     }
@@ -201,8 +202,18 @@ class PublicationsController extends BaseController
 
         $form->data= (object)$form->data;
 
-        if(!empty($form->data->collections))
+        if(!empty($form->data->collections)){
+            $collections= $form->data->collections;
             $form->data->collections= json_encode($form->data->collections);
+        }
+
+        if(!empty($form->data->authors))
+            $form->data->authors=
+                json_encode(
+                    array_map('trim',
+                        explode(",",$form->data->authors)
+                    )
+                );
 
         if(!empty($form->data->tags))
             $form->data->tags=
@@ -259,7 +270,6 @@ class PublicationsController extends BaseController
                     explode(",",$form->data->authors)
                 )
             );
-
             $this->db->table("publications")->update(["pdf"=>$pdf],["id"=>$insertID]);
         }
 
@@ -286,7 +296,19 @@ class PublicationsController extends BaseController
                 "class"=>"callout-success",
                 "message"=>"Раздел изменен: #: $id: ".($publication->name!=$form->data->name?" $publication->name -> ":" ").$form->data->name,
             ]);
+
+            $publication->collections= json_decode($publication->collections);
+            if(!empty($publication->collections))
+                foreach($publication->collections as $cID){
+                    $this->model->updateCount("collections",$cID,false);
+                }
         }
+
+
+        if(!empty($collections))
+            foreach($collections as $cID) {
+                $this->model->updateCount("collections", $cID);
+            }
         return redirect()->to(base_url("/admin/publications/"));
     }
 
