@@ -34,14 +34,14 @@
 
         <div class="form-floating my-2 px-1">
             <input  type="text"
-                    id="form-author"
-                    name="form[data][author]"
-                    class="form-control h-auto <?=empty($validatorErrors->{"form.data.author"})?"":"is-invalid"?>"
-                    value="<?=$form->data->author??""?>"
+                    id="form-authors"
+                    name="form[data][authors]"
+                    class="form-control h-auto <?=empty($validatorErrors->{"form.data.authors"})?"":"is-invalid"?>"
+                    value="<?=$form->data->authors??""?>"
                     placeholder="Автор"
                     required
             >
-            <label class="h-auto w-auto" for="form-author">Автор</label>
+            <label class="h-auto w-auto" for="form-authors">Автор</label>
         </div>
 
         <div class="form-floating my-2 px-1">
@@ -61,11 +61,11 @@
             <input  type="date"
                     name="form[data][date]"
                     id="form-date"
-                    placeholder="Название"
+                    placeholder="Дата публикации"
                     value="<?=$form->data->date??date("Y-m-d")?>"
                     required
                     class="form-control h-auto">
-            <label class="h-auto w-auto" for="form-date">Название</label>
+            <label class="h-auto w-auto" for="form-date">Дата публикации</label>
         </div>
 
         <div class="my-2 px-1">
@@ -112,9 +112,9 @@
                         class="form-control h-auto"
                         rows="5"
                         style="resize: none;"
-                        placeholder="Описание"
+                        placeholder="Аннотация"
             ><?=$form->data->description??""?></textarea>
-            <label class="h-auto w-auto" for="form-description">Описание</label>
+            <label class="h-auto w-auto" for="form-description">Аннотация</label>
         </div>
 
         <div class="mb-3">

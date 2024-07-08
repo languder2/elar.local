@@ -36,4 +36,21 @@ class DownloadController extends BaseController
         $this->data['pageContent']= view("public/download/error");
         return view("public/page",$this->data);
     }
+
+    public function readPDF($type= "link",$op= ""){
+        echo $file = WRITEPATH."publications/373_test_1.pdf";
+        echo $file2 = "publications/373_test_1.pdf";
+        rename ($file, $file2);
+        $filename = '373_test_1.pdf';
+// Header content type
+        //header('Content-type: application/pdf');
+
+//        header('Content-Disposition: inline; filename="' . $filename . '"');
+
+  //      header('Content-Transfer-Encoding: binary');
+
+//        header('Accept-Ranges: bytes');
+        header ("Location: /admin");
+        //return @readfile($file);
+    }
 }

@@ -1,6 +1,6 @@
 .list-grid{
     display: grid;
-    grid-template-columns: 50px 100px 200px 1fr repeat(5, 50px);
+    grid-template-columns: 50px 100px 1fr 2fr repeat(5, 50px);
     gap: 5px;
     text-align: center;
     align-items: center;

@@ -9,6 +9,13 @@ class PublicationsController extends BaseController
 {
     protected array $page;
     protected int $countInPage = 20;
+
+    protected array $json= [
+        "collections"=>false,
+        "sections"=>false,
+        "authors"=>", ",
+        "tags"=>false,
+    ];
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger):bool
     {
         parent::initController($request, $response, $logger);
@@ -33,7 +40,6 @@ class PublicationsController extends BaseController
         if($this->session->has("publicationsFilter"))
             $filter= $this->session->get("publicationsFilter");
 
-
         $count=  $this->db
             ->table("publications")
             ->like($filter)
@@ -50,14 +56,21 @@ class PublicationsController extends BaseController
             "baseLink"=>base_url("/admin/publications/page-"),
         ]);
 
-
-
-
         $this->page['list']= $this->db
             ->table("publications")
             ->like($filter)
             ->limit($this->countInPage,$this->countInPage*($page-1))
             ->get()->getResult();
+
+        foreach ($this->page['list'] as $key=>$publication){
+            foreach ($this->json as $filed=>$separator)
+                if(!empty($publication->{$filed})){
+                    $publication->{$filed}= json_decode($publication->{$filed});
+                    if($separator !== false)
+                        $publication->{$filed}= implode($separator,$publication->{$filed});
+                }
+            $this->page['list'][$key]= $publication;
+        }
 
         /** get sections:  tree->list  */
         $this->page['data']['sections']= $this->model->convertTree2List(
@@ -139,7 +152,10 @@ class PublicationsController extends BaseController
             $publication= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
 
             if(!empty($publication->tags))
-                $publication->tags= implode(",",json_decode($publication->tags));
+                $publication->tags= implode(", ",json_decode($publication->tags));
+
+            if(!empty($publication->authors))
+                $publication->authors= implode(", ",json_decode($publication->authors));
 
             $publication->collections= json_decode($publication->collections);
 
@@ -161,7 +177,7 @@ class PublicationsController extends BaseController
 
         $rules= [
             'form.data.name' => 'required',
-            'form.data.author' => 'required',
+            'form.data.authors' => 'required',
             'form.data.section' => 'required',
             'form.data.source' => 'required',
         ];
@@ -169,7 +185,7 @@ class PublicationsController extends BaseController
             'form.data.name'=>[
                 "required"=>"Укажите название",
             ],
-            'form.data.author'=>[
+            'form.data.authors'=>[
                 "required"=>"Укажите автора",
             ],
             'form.data.section'=>[
@@ -221,9 +237,9 @@ class PublicationsController extends BaseController
             $form->data->display= 0;
 
         $section= $this->db->table("sections")->where(['id'=>$form->data->section])->get()->getFirstRow();
-        $form->data->sections= [$section->id];
         if($section->parent)
             $form->data->sections[]= $section->parent;
+        $form->data->sections[]= $section->id;
         $form->data->sections= json_encode($form->data->sections);
 
         if($form->action=="add"){
@@ -232,23 +248,36 @@ class PublicationsController extends BaseController
             $insertID= $this->db->insertID();
             $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел добавлена: #$insertID: ".$form->data->name]);
 
-            $pdf= WRITEPATH . "/publications/".$insertID."_".$form->data->fileName;
+            $pdf= "publications/".$insertID."_".$form->data->fileName;
             if(file_exists($pdf))
                 unlink($pdf);
             rename($form->data->pdf, $pdf);
+
+            $form->data->authors= json_encode(
+                array_map('trim',
+                    explode(",",$form->data->authors)
+                )
+            );
+
             $this->db->table("publications")->update(["pdf"=>$pdf],["id"=>$insertID]);
         }
 
         if($form->action=="edit"){
             $publication= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
-
             if($form->data->pdf != $publication->pdf){
-                $pdf= WRITEPATH . "/publications/".$id."_".$form->data->fileName;
+                $pdf= "publications/".$id."_".$form->data->fileName;
                 if(file_exists($pdf)) unlink($pdf);
                 if(file_exists($publication->pdf)) unlink($publication->pdf);
                 rename($form->data->pdf, $pdf);
                 $form->data->pdf= $pdf;
             }
+
+            $form->data->authors= json_encode(
+                array_map('trim',
+                    explode(",",$form->data->authors)
+                )
+            );
+
             $this->db->table("publications")->update($form->data,["id"=>$id]);
 
             $this->session->setFlashdata("message",(object)[

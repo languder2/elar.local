@@ -68,3 +68,4 @@ $routes->get('/publication/(:num)/page-(:num)', [PublicController::class, 'Publi
 
 /* Downloader */
 $routes->get('/download/(:segment)/(:segment)', [DownloadController::class, 'downloadPdf/$1/$2']);
+$routes->get('/link/', [DownloadController::class, 'readPDF']);

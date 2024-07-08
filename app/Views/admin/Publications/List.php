@@ -43,7 +43,7 @@
                     <?=date("d.m.Y",strtotime($item->date))?>
                 </div>
                 <div>
-                    <?=$item->author?>
+                    <?=$item->authors?>
                 </div>
                 <div>
                     <?=$item->name?>
@@ -55,16 +55,14 @@
                 </div>
                 <div>
                     <?php if(!empty($item->pdf) and file_exists($item->pdf)):?>
-                        <a href="<?=base_url("/download/publication/$item->id")?>" target="_blank">
+                        <a href="<?=base_url($item->pdf)?>" target="_blank">
                             <i class="bi bi-filetype-pdf"></i>
                         </a>
-                    <?php endif;?>
-                    <?php if(!empty($item->pdf) and !file_exists($item->pdf)):?>
+                    <?php elseif(!empty($item->pdf) and !file_exists($item->pdf)):?>
                         <span class="pdf-error">
                             <i class="bi bi-filetype-pdf"></i>
                         </span>
                     <?php endif;?>
-
                 </div>
                 <div>
                     <div class="form-check form-switch">
