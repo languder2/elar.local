@@ -5,8 +5,10 @@
         <div class="w-100 title-chapter">
             <div class="row">
                 <div class="col-lg-12 d-flex">
-                    <h4 class="headline-chapter">Авторефераты и диссертации :</h4>
-                    <h4 class="count">1231</h4>
+                    <?php if(isset($edCollections)) foreach ($edCollections as $collection):?>
+                        <h4><?=$collection->title?> :</h4>
+                        <h4 class="count"><?=$collection->cnt?></h4>
+                    <?php endforeach;?>
                 </div>
             </div>
         </div>

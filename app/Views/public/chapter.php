@@ -3,7 +3,6 @@
             <div class="row">
                 <div class="col-lg-12 d-flex">
                     <?php if(isset($TitleSections)) foreach ($TitleSections as $titleSection):?>
-                    <h4 class="id"><?=$titleSection->id?>.</h4>
                     <h4><?=$titleSection->name?> :</h4>
                     <h4 class="count"><?=$titleSection->cnt?></h4>
                     <?php endforeach;?>
@@ -90,6 +89,9 @@
         </div>
     </div>
 </section>
+<sections>
+    <?=$publications?>
+</sections>
 <section>
     <div class="col col-lg-12">
         <div class="row g-3 row-cols-1 row-cols-sm-1 row-cols-lg-1 row-cols-lg-2">

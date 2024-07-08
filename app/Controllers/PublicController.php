@@ -37,12 +37,33 @@ class PublicController extends BaseController
         $page['data']['edCollections']= $this->pbl->getCollectionsList($id);
 
         $l = $this->pbl->db->table('sections')->where(['parent'=>$id])->get()->getResult();
+        $count=  $this->pbl->db
+            ->table("publications")
+            ->get()->getNumRows();
+        $maxPages= ceil($count / 20);
+
+        if($maxPages<$pg) $pg = $maxPages;
+        if($pg<1) $pg = 1;
+
+        $page['data']['paginator']= view("admin/template/paginator",[
+            "maxPages"=>$maxPages,
+            "currentPage"=>$pg,
+            "baseLink"=>base_url("/collections/$id/page-"),
+        ]);
+
+        $list = $this->pbl->db->table('publications')
+            ->where("JSON_CONTAINS(sections, '\"".$id."\"', '$')")
+            ->limit(20,($pg-1)*20)
+            ->get()->getResult();
+
 
         if(empty($l)){
+            $page['data']['publications']= view("public/publications",["list"=>$list,"paginator"=>$page['data']['paginator']]);
             $page['pageContent']= view("public/subchapter",$page['data']);
             return view("public/page",$page);
         }
         else{
+            $page['data']['publications']= view("public/publications",["list"=>$list,"paginator"=>$page['data']['paginator']]);
             $page['pageContent']= view("public/chapter",$page['data']);
             return view("public/page",$page);
         }
@@ -74,7 +95,7 @@ class PublicController extends BaseController
             ->limit(20,($pg-1)*20)
             ->get()->getResult();
 
-
+        $page['data']['edCollections']= $this->pbl->getTitleCollection($id);
         $page['data']['publications']= view("public/publications",["list"=>$list,"paginator"=>$page['data']['paginator']]);
         $page['pageContent']= view("public/collections",$page['data']);
         return view("public/page",$page);
@@ -106,13 +127,8 @@ class PublicController extends BaseController
         if(empty($publication))
             return redirect()->to(base_url("/"));
 
-        /* преобразованию json */
-        foreach(["authors","collections","sections","tags"] as $field)
-            $publication->{$field}= json_decode($publication->{$field});
+        $page['data']['Publicate']= $this->pbl->getPublication($id);
 
-        /* проверка доступоности файла и получение его размера */
-        if(!empty($publication->pdf) and file_exists($publication->pdf))
-            $publication->filesize= $this->model->sizePDF($publication->pdf);
 
         // подготовка источника
         if(!empty($publication->source))
