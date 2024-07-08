@@ -408,8 +408,8 @@ table.iksweb.resource tr:last-child{
 .resource p{
     margin: 0;
 }
-.resource > div > div{
-    width: 100%;
+
+.resource > div{
     background-color: #FFFFFF;
     border-bottom: 1px solid #820000;
     padding: 24px;

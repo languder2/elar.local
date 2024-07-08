@@ -215,12 +215,13 @@ class PublicationsController extends BaseController
         }
 
         /* обработка авторов */
-        if(!empty($form->data->authors)){
-            $authors= array_map('trim',
-                explode(",",$form->data->authors)
-            );
-            $form->data->authors= json_encode($authors);
-        }
+        if(!empty($form->data->authors))
+            $form->data->authors=
+                json_encode(
+                    array_map('trim',
+                        explode(",",$form->data->authors)
+                    )
+                );
 
         /* обработка тегов */
         if(!empty($form->data->tags))
@@ -281,11 +282,6 @@ class PublicationsController extends BaseController
                 unlink($pdf);
             rename($form->data->pdf, $pdf);
 
-            $form->data->authors= json_encode(
-                array_map('trim',
-                    explode(",",$form->data->authors)
-                )
-            );
             $this->db->table("publications")->update(["pdf"=>$pdf],["id"=>$insertID]);
         }
 
@@ -299,12 +295,6 @@ class PublicationsController extends BaseController
                 rename($form->data->pdf, $pdf);
                 $form->data->pdf= $pdf;
             }
-
-            $form->data->authors= json_encode(
-                array_map('trim',
-                    explode(",",$form->data->authors)
-                )
-            );
 
             $this->db->table("publications")->update($form->data,["id"=>$id]);
 

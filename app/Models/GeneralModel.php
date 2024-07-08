@@ -77,4 +77,17 @@ class GeneralModel extends UserModel{
             ->update();
         return true;
     }
+
+    public function sizePDF($pdf):string
+    {
+        if(!file_exists($pdf)) return 0;
+        $size= filesize($pdf);
+        $a = array("B", "KB", "MB", "GB", "TB", "PB");
+        $pos = 0;
+        while ($size >= 1024) {
+            $size /= 1024;
+            $pos++;
+        }
+        return round($size,2)." ".$a[$pos];
+    }
 }

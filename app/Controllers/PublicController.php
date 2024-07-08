@@ -93,15 +93,41 @@ class PublicController extends BaseController
         return view("public/page",$page);
     }
     public function Publication($id=false,$pg=0):string|RedirectResponse{
+        /* meta */
         $page['data']["title"]= "Электронный научный архив МелГУ: ";
 
-        if($this->session->has("collectionsFilter"))
-            $page['data']['filter']= $this->session->get("MainFilter");
+        /* получение публикацию */
+        $publication= $this->db->table("publications")
+            ->where("id",$id)
+            ->get()
+            ->getFirstRow();
 
-        $page['data']['Publicate']= $this->pbl->getPublication($id);
+        /* проверка если публикации с таким id нет */
+        if(empty($publication))
+            return redirect()->to(base_url("/"));
 
+        /* преобразованию json */
+        foreach(["authors","collections","sections","tags"] as $field)
+            $publication->{$field}= json_decode($publication->{$field});
 
-        $page['pageContent']= view("public/publication",$page['data']);
+        /* проверка доступоности файла и получение его размера */
+        if(!empty($publication->pdf) and file_exists($publication->pdf))
+            $publication->filesize= $this->model->sizePDF($publication->pdf);
+
+        // подготовка источника
+        if(!empty($publication->source))
+            $publication->source= $this->db
+                ->table("sources")
+                ->where("id",$publication->source)
+                ->get()->getFirstRow();
+
+        // подготовка разделов
+        $publication->sections= $this->db->table("sections")
+            ->where("id IN (".implode(",",$publication->sections).")")
+            ->orderBy("parent","asc")
+            ->get()->getResult();
+        /* вывод */
+        $page['pageContent']= view("public/publication",["publication"=>$publication]);
         return view("public/page",$page);
     }
 
