@@ -121,7 +121,7 @@
                     <div class="list-group abstracts">
                         <div class="list-group-item chpt">
                             <div>
-                                <h5><a href="#"><?=$collection->title?></a></h5>
+                                <h5><a href="/collections/<?=$section->id?>"><?=$collection->title?></a></h5>
                                 <span class="count"><?=$collection->cnt?></span>
                             </div>
                             <div>

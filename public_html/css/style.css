@@ -436,6 +436,15 @@ table.iksweb.resource tr:last-child{
 .pagination-box{
     justify-content: flex-end !important;
 }
+.tag{
+    color: #820000;
+    transition: .3s linear;
+}
+.tag:hover {
+    color: #c10f1a;
+    transition: .3s linear;
+    border-bottom: 1px solid #c10f1a;
+}
 @media screen and (max-width: 1399px) {
 
 }

@@ -93,9 +93,14 @@
         <div class="col col-6 col-sm-6 col-md-6 col-lg-10 d-flex align-items-stretch">
             <div class="d-flex align-items-stretch">
             <p>
-                <?php foreach ($item->tags as $tag)  :?>
-                <?=$tag?>
-                <?php endforeach;?>
+                <?php if($item->tags !=0){
+                    foreach ($item->tags as $tag)  :?>
+                    <a href="" class="tag"> <?=$tag?></a>
+                <?php endforeach; }
+                    else{
+                        echo '<span>Ключевые слова отсутствуют</span>';
+                    }
+                ?>
             </p>
             </div>
         </div>
@@ -176,7 +181,7 @@
                 </div>
             </div>
             <div class="col">
-                <div><a class="btn-opn" href="<?=$item->id?>">Открыть</a></div>
+                <div><a class="btn-opn" href="">Открыть</a></div>
             </div>
         </div>
         <?php endforeach;?>
