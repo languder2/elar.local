@@ -252,6 +252,9 @@ class PublicationsController extends BaseController
         if($section->parent)
             $form->data->sections[]= $section->parent;
         $form->data->sections[]= $section->id;
+
+        $sections= $form->data->sections;
+
         $form->data->sections= json_encode($form->data->sections);
 
         if($form->action=="add"){
@@ -299,16 +302,27 @@ class PublicationsController extends BaseController
 
             $publication->collections= json_decode($publication->collections);
             if(!empty($publication->collections))
-                foreach($publication->collections as $cID){
+                foreach($publication->collections as $cID)
                     $this->model->updateCount("collections",$cID,false);
-                }
+
+            $publication->sections= json_decode($publication->sections);
+            if(!empty($publication->sections))
+                foreach($publication->sections as $sID)
+                    $this->model->updateCount("sections",$sID,false);
+
+            $this->model->updateCount("sources",$publication->source,false);
         }
 
-
         if(!empty($collections))
-            foreach($collections as $cID) {
+            foreach($collections as $cID)
                 $this->model->updateCount("collections", $cID);
-            }
+
+        if(!empty($sections))
+            foreach($sections as $sID)
+                $this->model->updateCount("sections",$sID);
+
+        $this->model->updateCount("sources",$form->data->source);
+
         return redirect()->to(base_url("/admin/publications/"));
     }
 
@@ -318,6 +332,19 @@ class PublicationsController extends BaseController
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
 
         $current= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
+
+        $current->collections= json_decode($current->collections);
+        if(!empty($current->collections))
+            foreach($current->collections as $cID)
+                $this->model->updateCount("collections",$cID,false);
+
+        $current->sections= json_decode($current->sections);
+        if(!empty($current->sections))
+            foreach($current->sections as $sID)
+                $this->model->updateCount("sections",$sID,false);
+
+        $this->model->updateCount("sources",$current->source,false);
+
 
         $this->db->table("publications")->delete(["id"=>$id]);
 
