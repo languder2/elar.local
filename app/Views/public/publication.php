@@ -33,7 +33,7 @@
         <div class="col col-6 col-sm-6 col-md-6 col-lg-10 d-flex align-items-stretch">
             <div class="d-flex align-items-stretch">
             <p>
-                <?=$item->author?>
+                <?php // implode(", ",$item->authors)?>
             </p>
             </div>
         </div>
@@ -181,7 +181,7 @@
                 </div>
             </div>
             <div class="col">
-                <div><a class="btn-opn" href="">Открыть</a></div>
+                <div><a class="btn-opn" target="_blank" href="<?=$item->pdf?>">Открыть</a></div>
             </div>
         </div>
         <?php endforeach;?>
