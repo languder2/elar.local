@@ -67,7 +67,8 @@ class PublicationsController extends BaseController
                 if(!empty($publication->{$filed})){
                     $publication->{$filed}= json_decode($publication->{$filed});
                     if($separator !== false)
-                        $publication->{$filed}= implode($separator,$publication->{$filed});
+                        if(is_array($publication->{$filed}))
+                            $publication->{$filed}= implode($separator,$publication->{$filed});
                 }
             $this->page['list'][$key]= $publication;
         }
