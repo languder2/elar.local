@@ -151,9 +151,6 @@ class PublicController extends BaseController
         if(empty($publication))
             return redirect()->to(base_url("/"));
 
-        $page['data']['Publicate']= $this->pbl->getPublication($id);
-
-
         // подготовка источника
         if(!empty($publication->source))
             $publication->source= $this->db
