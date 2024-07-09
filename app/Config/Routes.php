@@ -59,8 +59,8 @@ $routes->get(   '/admin/publications/delete/(:num)',    [PublicationsController:
 $routes->post(  '/admin/publications/change-visible',   [PublicationsController::class, 'changeVisible']);
 
 /** PUBLIC: PUBLICATIONS */
-$routes->get(   '/publication/(:num)',                  [PublicationsController::class, 'publication/$1']);
-$routes->get(   '/correct',                             [PublicationsController::class, 'correct']);
+$routes->get(   '/publication/(:num)',                  [PublicationsController::class, 'publication']);
+$routes->get(   '/correct/',                             [PublicationsController::class, 'correct']);
 
 /** PUBLIC: PAGES */
 $routes->get(   '/',                                    [PublicController::class, 'MainList']);

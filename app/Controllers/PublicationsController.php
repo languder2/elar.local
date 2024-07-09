@@ -246,7 +246,6 @@ class PublicationsController extends BaseController
 
         /* добавление публикации */
         if($form->action=="add"){
-            $form->data->display= (int)$form->data->display;
             $this->db->table("publications")->insert($form->data);
             $insertID= $this->db->insertID();
             $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Публикация добавлена: #$insertID: ".$form->data->name]);
@@ -361,9 +360,6 @@ class PublicationsController extends BaseController
             'css'=>["/css/public/publications.css"],
         ];
 
-
-
-
         /* получение публикацию */
         $publication= $this->db->table("publications")
             ->where("id",$id)
@@ -402,12 +398,25 @@ class PublicationsController extends BaseController
         return view("public/page",$this->page);
     }
 
-    public function correct()
+    public function correct():bool
     {
 
+        /*
+        $query= "
+            UPDATE sections SET cnt= (
+                SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(sections,CONCAT('\"',sections.id,'\"'),'$')
+            );
+        ";
+        $this->db->query($query);
 
-        dd();
+        $query= "
+            UPDATE types SET cnt= (
+                SELECT COUNT(id) FROM publications WHERE type= types.id
+            );        
+        ";
+        $this->db->query($query);
         /* правака имен: строка -> json */
+        /*
         $res= $this->db->table("publications")->get()->getResult();
         foreach($res as $publication){
             $publication->authors=
@@ -419,6 +428,8 @@ class PublicationsController extends BaseController
                 );
             $this->db->table("publications")->update(["authors"=>$publication->authors],["id"=>$publication->id]);
         }
+        */
+        return true;
     }
 
 }

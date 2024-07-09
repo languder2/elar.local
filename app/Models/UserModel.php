@@ -42,6 +42,25 @@ class UserModel extends Model{
            "adminAuthULogin"=>$user->login,
            "adminAuthUPerm"=>$user->perm,
         ]);
+        self::recountPublications();
+        return true;
+    }
+
+    public function recountPublications():bool
+    {
+        $query= "
+            UPDATE sections SET cnt= (
+                SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(sections,CONCAT('\"',sections.id,'\"'),'$')
+            );        
+        ";
+        $this->db->query($query);
+
+        $query= "
+            UPDATE types SET cnt= (
+                SELECT COUNT(id) FROM publications WHERE type= types.id
+            );        
+        ";
+        $this->db->query($query);
         return true;
     }
 }
