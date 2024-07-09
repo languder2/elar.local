@@ -12,8 +12,12 @@
                     <span>По автору</span>
                     <div class="list-group author">
                         <div class="list-group-item">
+                            <div>
                             <h5><a href="#">Шур. В. Я.</a></h5>
-                            <span class="count">1</span>
+                            </div>
+                            <div class="cnt-box position-relative">
+                            <span class="count">2</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -21,8 +25,12 @@
                     <span>По тематике</span>
                     <div class="list-group subject">
                         <div class="list-group-item">
+                            <div>
                             <h5><a href="#">ПЕРИОДИЧЕСКАЯ ПЕЧАТЬ (ГАЗЕТЫ)</a></h5>
-                            <span class="count">1</span>
+                            </div>
+                            <div class="cnt-box position-relative">
+                            <span class="count">2</span>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -30,8 +38,12 @@
                     <span>По дате</span>
                     <div class="list-group date">
                         <div class="list-group-item">
+                            <div>
                             <h5><a href="#">2020-2024</a></h5>
-                            <span class="count">1</span>
+                            </div>
+                            <div class="cnt-box position-relative">
+                            <span class="count">2</span>
+                            </div>
                         </div>
                     </div>
                 </div>

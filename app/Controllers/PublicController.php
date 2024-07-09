@@ -79,7 +79,7 @@ class PublicController extends BaseController
         if ($this->session->has("MainFilter"))
             $page['data']['filter'] = $this->session->get("MainFilter");
         $page['data']['filterSection'] = view("public/FilterSection", $page['data']);
-        $page['data']['Publicate']= $this->pbl->getPublication((array)($page['data']['filter']??[]));
+        $page['data']['Publicate']= $this->pbl->getSearch((array)($page['data']['filter']??[]));
 
         $page['pageContent']= view("public/browse",$page['data']);
         return view("public/page",$page);
