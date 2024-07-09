@@ -135,6 +135,16 @@ class PublicController extends BaseController
             ->get()
             ->getFirstRow();
 
+        $jsons= [
+            "tags",
+            "collections",
+            "authors",
+            "sections",
+        ];
+        foreach ($jsons as $json)
+            if(!empty($publication->{$json}))
+                $publication->{$json}= json_decode($publication->{$json});
+
         /* проверка если публикации с таким id нет */
         if(empty($publication))
             return redirect()->to(base_url("/"));
@@ -148,6 +158,8 @@ class PublicController extends BaseController
                 ->table("sources")
                 ->where("id",$publication->source)
                 ->get()->getFirstRow();
+
+        $publication->filesize= $this->model->sizePDF($publication->pdf);
 
         // подготовка разделов
         $publication->sections= $this->db->table("sections")
