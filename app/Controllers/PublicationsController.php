@@ -220,7 +220,8 @@ class PublicationsController extends BaseController
                 json_encode(
                     array_map('trim',
                         explode(",",$form->data->authors)
-                    )
+                    ),
+                    JSON_UNESCAPED_UNICODE
                 );
 
         /* обработка тегов */
@@ -229,7 +230,8 @@ class PublicationsController extends BaseController
                 json_encode(
                     array_map('trim',
                         explode(",",$form->data->tags)
-                    )
+                    ),
+                    JSON_UNESCAPED_UNICODE
                 );
 
         /* обработка разделов */
