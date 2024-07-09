@@ -389,4 +389,76 @@ class PublicationsController extends BaseController
         $this->session->set("sectionsFilter",$filter);
         return redirect()->to(base_url("/admin/sections/"));
     }
+
+    public function publication($id=false):string|RedirectResponse{
+
+        /* meta */
+        $page['data']["title"]= "Электронный научный архив МелГУ: ";
+
+        /* получение публикацию */
+        $publication= $this->db->table("publications")
+            ->where("id",$id)
+            ->get()
+            ->getFirstRow();
+
+        /* преобразование json в массивы */
+        $jsons= [
+            "tags",
+            "collections",
+            "authors",
+            "sections",
+        ];
+        foreach ($jsons as $json)
+            if(!empty($publication->{$json}))
+                $publication->{$json}= json_decode($publication->{$json});
+
+        /* проверка если публикации с таким id нет */
+        if(empty($publication))
+            return redirect()->to(base_url("/"));
+
+        /* подготовка источника */
+        if(!empty($publication->source))
+            $publication->source= $this->db
+                ->table("sources")
+                ->where("id",$publication->source)
+                ->get()->getFirstRow();
+
+        /* определение размера файла */
+        if(!empty($publication->pdf))
+            $publication->filesize= $this->model->sizePDF($publication->pdf);
+
+        /* подготовка разделов */
+        if(!empty($publication->sections))
+            $publication->sections= $this->db->table("sections")
+                ->where("id IN (".implode(",",$publication->sections).")")
+                ->orderBy("parent","asc")
+                ->get()->getResult();
+
+        /* подготовка коллекций */
+        if(!empty($publication->collections))
+            $publication->collections= $this->db->table("collections")
+                ->where("id IN (".implode(",",$publication->collections).")")
+                ->orderBy("title","asc")
+                ->get()->getResult();
+
+        /* вывод */
+        $page['pageContent']= view("public/publication",["publication"=>$publication]);
+        return view("public/page",$page);
+    }
+
+    public function correct()
+    {
+        $res= $this->db->table("publications")->get()->getResult();
+        foreach($res as $publication){
+            $publication->authors=
+                json_encode(
+                    array_map('trim',
+                        explode(",",$publication->authors)
+                    ),
+                    JSON_UNESCAPED_UNICODE
+                );
+            $this->db->table("publications")->update(["authors"=>$publication->authors],["id"=>$publication->id]);
+        }
+    }
+
 }

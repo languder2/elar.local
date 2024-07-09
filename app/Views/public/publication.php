@@ -106,6 +106,19 @@
                     <?php endforeach;?>
                 </div>
             <?php endif;?>
+            <?php if(!empty($publication->collections)):?>
+                <div class="col-12 col-md-4 col-lg-3 ">
+                    Ключевые слова:
+                </div>
+                <div class="col-12 col-md-8 col-lg-9">
+                    <?php foreach ($publication->collections as $key=>$collection):?>
+                        <a href="<?=base_url("/collection/$collection->id")?>">
+                            <?=$collection->title?>
+                            <?=(count($publication->collections)-$key>1)?",":""?>
+                        </a>
+                    <?php endforeach;?>
+                </div>
+            <?php endif;?>
         </div>
     </div>
 </section>

@@ -55,6 +55,8 @@ class PublicController extends BaseController
         $list = $this->pbl->db->table('publications')
             ->where("JSON_CONTAINS(sections, '\"".$id."\"', '$')")
             ->limit(20,($pg-1)*20)
+            ->orderBy("date","desc")
+            ->orderBy("name","asc")
             ->get()->getResult();
 
 
@@ -126,49 +128,7 @@ class PublicController extends BaseController
         $page['pageContent']= view("public/subchapter",$page['data']);
         return view("public/page",$page);
     }
-    public function Publication($id=false,$pg=0):string|RedirectResponse{
 
-        /* meta */
-        $page['data']["title"]= "Электронный научный архив МелГУ: ";
-
-        /* получение публикацию */
-        $publication= $this->db->table("publications")
-            ->where("id",$id)
-            ->get()
-            ->getFirstRow();
-
-        $jsons= [
-            "tags",
-            "collections",
-            "authors",
-            "sections",
-        ];
-        foreach ($jsons as $json)
-            if(!empty($publication->{$json}))
-                $publication->{$json}= json_decode($publication->{$json});
-
-        /* проверка если публикации с таким id нет */
-        if(empty($publication))
-            return redirect()->to(base_url("/"));
-
-        // подготовка источника
-        if(!empty($publication->source))
-            $publication->source= $this->db
-                ->table("sources")
-                ->where("id",$publication->source)
-                ->get()->getFirstRow();
-
-        $publication->filesize= $this->model->sizePDF($publication->pdf);
-
-        // подготовка разделов
-        $publication->sections= $this->db->table("sections")
-            ->where("id IN (".implode(",",$publication->sections).")")
-            ->orderBy("parent","asc")
-            ->get()->getResult();
-        /* вывод */
-        $page['pageContent']= view("public/publication",["publication"=>$publication]);
-        return view("public/page",$page);
-    }
 
     public function applyFilter($type= false, $search=""){
         $where= [];
