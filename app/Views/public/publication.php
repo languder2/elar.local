@@ -41,22 +41,6 @@
                     <?php endforeach;?>
                 </div>
             <?php endif;?>
-            <?php if(!empty($publication->name)):?>
-                <div class="col-12 col-md-4 col-lg-3 ">
-                    Название:
-                </div>
-                <div class="col-12 col-md-8 col-lg-9">
-                    <?=$publication->name?>
-                </div>
-            <?php endif;?>
-            <?php if(!empty($publication->supervisor)):?>
-                <div class="col-12 col-md-4 col-lg-3 ">
-                    Научный руководитель:
-                </div>
-                <div class="col-12 col-md-8 col-lg-9">
-                    <?=$publication->supervisor?>
-                </div>
-            <?php endif;?>
             <?php if(!empty($publication->date)):?>
                 <div class="col-12 col-md-4 col-lg-3 ">
                     Дата публикации:
@@ -65,6 +49,22 @@
                     <p>
                         <?=date("d/m/Y",strtotime($publication->date))?>
                     </p>
+                </div>
+            <?php endif;?>
+            <?php if(!empty($publication->name)):?>
+                <div class="col-12 col-md-4 col-lg-3 ">
+                    Название:
+                </div>
+                <div class="col-12 col-md-8 col-lg-9">
+                    <?=$publication->name?>
+                </div>
+            <?php endif;?>
+            <?php if(!empty($publication->description)):?>
+                <div class="col-12 col-md-4 col-lg-3 ">
+                    Библиографическое описание:
+                </div>
+                <div class="col-12 col-md-8 col-lg-9">
+                    <?=$publication->description?>
                 </div>
             <?php endif;?>
             <?php if(!empty($publication->source)):?>
@@ -77,12 +77,20 @@
                     </a>
                 </div>
             <?php endif;?>
-            <?php if(!empty($publication->description)):?>
+            <?php if(!empty($publication->supervisor)):?>
                 <div class="col-12 col-md-4 col-lg-3 ">
-                    Библиографическое описание:
+                    Научный руководитель:
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
-                    <?=$publication->description?>
+                    <?=$publication->supervisor?>
+                </div>
+            <?php endif;?>
+            <?php if(!empty($publication->speciality)):?>
+                <div class="col-12 col-md-4 col-lg-3 ">
+                    Специальность:
+                </div>
+                <div class="col-12 col-md-8 col-lg-9">
+                    <?=$publication->speciality?>
                 </div>
             <?php endif;?>
             <?php if(!empty($publication->tags)):?>
@@ -96,14 +104,6 @@
                             <?=(count($publication->tags)-$key>1)?",":""?>
                         </a>
                     <?php endforeach;?>
-                </div>
-            <?php endif;?>
-            <?php if(!empty($publication->speciality)):?>
-                <div class="col-12 col-md-4 col-lg-3 ">
-                    Специальность:
-                </div>
-                <div class="col-12 col-md-8 col-lg-9">
-                    <?=$publication->speciality?>
                 </div>
             <?php endif;?>
         </div>
