@@ -67,10 +67,9 @@
                             <h6 class="dropdown-header">Посмотреть:</h6>
                         </li>
                         <li><a class="dropdown-item" href="/browse/date">По дате</a></li>
-                        <li><a class="dropdown-item" href="/browse/author">По автору</a></li>
-                        <li><a class="dropdown-item" href="/browse/title">По заглавию</a></li>
-                        <li><a class="dropdown-item" href="/browse/subject">По тематике</a></li>
-                        <li><a class="dropdown-item" href="/browse/sources">Источники</a></li>
+                        <li><a class="dropdown-item" href="/browse/authors">По автору</a></li>
+                        <li><a class="dropdown-item" href="/browse/name">По заглавию</a></li>
+                        <li><a class="dropdown-item" href="/browse/tags">Источники</a></li>
                     </ul>
                 </div>
             </ul>

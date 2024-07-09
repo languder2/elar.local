@@ -72,19 +72,79 @@ class PublicController extends BaseController
         }
 
     }
-    public function browse($search='',$id=false,$pg=0,):string|RedirectResponse
+    public function browse($type='',$search='',$id=false,$pg=0,):string|RedirectResponse
     {
-        $page['data']["title"] = "Электронный научный архив МелГУ: ";
-        $page['data']['search'] = $search;
+        $where= [];
+        $like= [];
         if ($this->session->has("MainFilter"))
             $page['data']['filter'] = $this->session->get("MainFilter");
+        $search = $page['data']['filter'];
+        $page['data']["title"] = "Электронный научный архив МелГУ: ";
+        $page['data']['type'] = $type;
+        switch ($type){
+            case "authors":
+                $template = 'publications-authors';
+                $table = 'authors';
+                $page['data']['typeName'] = 'По автору';
+                $like= ["fio"=>$search->title];
+                break;
+            case "date":
+                $template = 'publications';
+                $table = 'publications';
+                $page['data']['typeName'] = 'По дате';
+                if (!empty($search->title))
+                    $where= [$type=>$search->title];
+                break;
+            case "name":
+                $template = 'publications';
+                $table = 'publications';
+                $page['data']['typeName'] = 'По заглавию';
+                $like= [$type=>$search->title];
+                break;
+            case "tags":
+                $template = 'publications-tags';
+                $table = 'tags';
+                $page['data']['typeName'] = 'По источникам';
+                $like= [$type=>$search->title];
+                break;
+        }
         $page['data']['filterSection'] = view("public/FilterSection", $page['data']);
-        $page['data']['Publicate']= $this->pbl->getSearch((array)($page['data']['filter']??[]));
 
+
+        $publications= $this->db->table($table);
+
+        if(!empty($where))
+            $publications= $publications->where($where);
+
+        if(!empty($like))
+            $publications= $publications->like($like);
+
+        $publications= $publications->get()->getResult();
+
+        $count = $this->pbl->db
+            ->table("$table")
+            ->get()->getNumRows();
+        $maxPages= ceil($count / 20);
+
+        if($maxPages<$pg) $pg = $maxPages;
+        if($pg<1) $pg = 1;
+
+        $page['data']['paginator']= view("admin/template/paginator",[
+            "maxPages"=>$maxPages,
+            "currentPage"=>$pg,
+            "baseLink"=>base_url("/collections/$id/page-"),
+        ]);
+
+        $page['data']['publications']= view("public/search-template/$template",["list"=>$publications,"paginator"=>$page['data']['paginator']]);
         $page['pageContent']= view("public/browse",$page['data']);
         return view("public/page",$page);
     }
-
+    public function setFilter($type=''){
+        if(!$this->pbl->hasAuth()) return json_encode(['message'=>"success denied"]);
+        $filter= (object)$this->request->getVar('filter');
+        $this->session->set("MainFilter",$filter);
+        return redirect()->to(base_url("/browse/$type"));
+    }
     public function CollectList($id=false,$pg=0):string|RedirectResponse{
         $page['data']["title"]= "Электронный научный архив МелГУ: ";
 
@@ -133,8 +193,6 @@ class PublicController extends BaseController
     public function applyFilter($type= false, $search=""){
         $where= [];
         $like= [];
-        $search= "Сул"; // что искать
-        $type= "author"; // тип поиска
         switch ($type){
             case "author":
                 $like= ["JSON_EXTRACT(authors, '$')"=>$search]; // форма запроса  для автора

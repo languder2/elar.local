@@ -1,4 +1,4 @@
-<form method="post" action="/browse/<?=$search?>/set-filter" class="formFilter">
+<form method="post" action="/browse/<?=$type?>/set-filter" class="formFilter">
     <div class="row row-cols-1 row-cols-lg-2">
         <div class="col col-lg-6">
             <div class="input-group rounded">
