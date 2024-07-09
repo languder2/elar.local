@@ -121,7 +121,7 @@ INSERT INTO `menu` (`id`, `parent`, `name`, `link`, `op`, `section`, `sort`, `ex
 (2, 0, 'Справочники', '/admin/', NULL, 'admin', 40, 0, 'false', '', '1'),
 (3, 2, 'Разделы', '/admin/sections', NULL, 'admin', 10, 0, 'false', '', '1'),
 (4, 2, 'Коллекции', '/admin/collections', NULL, 'admin', 30, 0, 'false', '', '1'),
-(5, 2, 'Источники', '/admin/sources', NULL, 'admin', 40, 0, 'false', '', '1'),
+(5, 2, 'Источники', '/admin/Types', NULL, 'admin', 40, 0, 'false', '', '1'),
 (6, 0, 'Публикации', '/admin/publications', NULL, 'admin', 20, 0, 'false', '', '1');
 
 -- --------------------------------------------------------
@@ -187,7 +187,7 @@ INSERT INTO `sections` (`id`, `name`, `parent`, `description`, `sort`, `display`
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `sources`
+-- Структура таблицы `Types`
 --
 
 DROP TABLE IF EXISTS `sources`;
@@ -200,7 +200,7 @@ CREATE TABLE `sources` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Дамп данных таблицы `sources`
+-- Дамп данных таблицы `Types`
 --
 
 INSERT INTO `sources` (`id`, `cnt`, `title`, `description`, `display`) VALUES
@@ -271,7 +271,7 @@ ALTER TABLE `sections`
   ADD PRIMARY KEY (`id`);
 
 --
--- Индексы таблицы `sources`
+-- Индексы таблицы `Types`
 --
 ALTER TABLE `sources`
   ADD PRIMARY KEY (`id`);
@@ -323,7 +323,7 @@ ALTER TABLE `sections`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
--- AUTO_INCREMENT для таблицы `sources`
+-- AUTO_INCREMENT для таблицы `Types`
 --
 ALTER TABLE `sources`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;

@@ -283,9 +283,9 @@ if (! function_exists('video')) {
      * Video
      *
      * Generates a video element to embed videos. The video element can
-     * contain one or more video sources
+     * contain one or more video Types
      *
-     * @param array|string $src                Either a source string or an array of sources
+     * @param array|string $src                Either a source string or an array of Types
      * @param string       $unsupportedMessage The message to display if the media tag is not supported by the browser
      * @param string       $attributes         HTML attributes
      */
@@ -331,7 +331,7 @@ if (! function_exists('audio')) {
      *
      * Generates an audio element to embed sounds
      *
-     * @param array|string $src                Either a source string or an array of sources
+     * @param array|string $src                Either a source string or an array of Types
      * @param string       $unsupportedMessage The message to display if the media tag is not supported by the browser.
      * @param string       $attributes         HTML attributes
      */

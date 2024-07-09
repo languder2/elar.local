@@ -1,35 +1,24 @@
-
-<section>
-    <div class="w-100 title-chapter">
-        <div class="row">
-            <div class="col-lg-12 d-flex">
-                <h4><?=$publication->name??""?></h4>
-            </div>
+<section class="">
+    <?php if(!empty($publication->sections)):?>
+        <div class="col col-lg-12">
+                <?php foreach ($publication->sections as $key=>$section):?>
+                    <?php if($key!=0):?>
+                        <span class="px-1">/</span>
+                    <?php endif;?>
+                    <a href="<?=base_url("/section/$section->id")?>">
+                        <?=$section->name?>
+                    </a>
+                <?php endforeach;?>
         </div>
-    </div>
+    <?php endif;?>
+    <h4><?=$publication->name??""?></h4>
 </section>
-
 
 <section>
     <div class="col col-lg-12">
         <div class="row resource g-0">
-            <?php if(!empty($publication->sections)):?>
-                <div class="col-12 col-md-4 col-lg-3 ">
-                    Раздел:
-                </div>
-                <div class="col-12 col-md-8 col-lg-9">
-                    <?php foreach ($publication->sections as $key=>$section):?>
-                        <a href="<?=base_url("/section/$section->id")?>">
-                            <?php if($key):?>
-                                <br><i class="bi bi-arrow-return-right ps-1"></i>
-                            <?php endif;?>
-                            <?=$section->name?>
-                        </a>
-                    <?php endforeach;?>
-                </div>
-            <?php endif;?>
             <?php if(!empty($publication->authors)):?>
-                <div class="col-12 col-md-4 col-lg-3 ">
+                <div class="col-12 col-md-4 col-lg-3">
                     Авторы:
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
@@ -67,13 +56,13 @@
                     <?=$publication->description?>
                 </div>
             <?php endif;?>
-            <?php if(!empty($publication->source)):?>
+            <?php if(!empty($publication->type)):?>
                 <div class="col-12 col-md-4 col-lg-3 ">
                     Издатель:
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
-                    <a href="<?=base_url("/source/".$publication->source->id);?>">
-                        <?=$publication->source->title?>
+                    <a href="<?=base_url("/type/".$publication->type->id);?>">
+                        <?=$publication->type->title?>
                     </a>
                 </div>
             <?php endif;?>
@@ -102,19 +91,6 @@
                         <a href="<?=base_url("/tag/$tag")?>">
                             <?=$tag?>
                             <?=(count($publication->tags)-$key>1)?",":""?>
-                        </a>
-                    <?php endforeach;?>
-                </div>
-            <?php endif;?>
-            <?php if(!empty($publication->collections)):?>
-                <div class="col-12 col-md-4 col-lg-3 ">
-                    Ключевые слова:
-                </div>
-                <div class="col-12 col-md-8 col-lg-9">
-                    <?php foreach ($publication->collections as $key=>$collection):?>
-                        <a href="<?=base_url("/collection/$collection->id")?>">
-                            <?=$collection->title?>
-                            <?=(count($publication->collections)-$key>1)?",":""?>
                         </a>
                     <?php endforeach;?>
                 </div>

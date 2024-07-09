@@ -109,7 +109,7 @@ class ContentSecurityPolicy extends BaseConfig
     public $formAction = 'self';
 
     /**
-     * Specifies the sources that can embed the current page.
+     * Specifies the Types that can embed the current page.
      * This directive applies to `<frame>`, `<iframe>`, `<embed>`,
      * and `<applet>` tags. This directive can't be used in
      * `<meta>` tags and applies only to non-HTML resources.

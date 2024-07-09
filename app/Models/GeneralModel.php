@@ -90,4 +90,13 @@ class GeneralModel extends UserModel{
         }
         return round($size,2)." ".$a[$pos];
     }
+
+    public function createPassword($password):string
+    {
+        $password= password_hash($password, PASSWORD_BCRYPT);
+        return  $password;
+
+    }
 }
+
+

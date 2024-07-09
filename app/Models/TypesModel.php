@@ -6,7 +6,7 @@ use CodeIgniter\Model;
 use CodeIgniter\Session\Session;
 use CodeIgniter\Validation\ValidationInterface;
 use Config\Services;
-class SourcesModel extends GeneralModel {
+class TypesModel extends GeneralModel {
     protected Session $session ;
     public function __construct(?ConnectionInterface $db = null, ?ValidationInterface $validation = null)
     {
@@ -19,7 +19,7 @@ class SourcesModel extends GeneralModel {
             "title"=>$form->title,
             "description"=>$form->description,
         ];
-        $this->db->table("sources")->insert($sql);
+        $this->db->table("Types")->insert($sql);
         $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Источник добавлен: #".$this->db->insertID().": $form->id"]);
         return true;
     }
@@ -29,12 +29,12 @@ class SourcesModel extends GeneralModel {
             "description"=>$form->description,
 
         ];
-        $this->db->table("sources")->update($sql,["id"=>$form->id]);
+        $this->db->table("Types")->update($sql,["id"=>$form->id]);
         $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Источник изменен: #$form->id: $form->title"]);
         return true;
     }
     public function getSourcesList($filter= []):array{
-        $q= $this->db->table("sources")
+        $q= $this->db->table("Types")
             ->like($filter);
         $q= $q->get();
         $results= [];

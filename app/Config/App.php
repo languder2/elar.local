@@ -16,7 +16,7 @@ class App extends BaseConfig
      *
      * E.g., http://example.com/
      */
-    public string $baseURL = 'http://elar.mgu-mlt.ru/';
+    public string $baseURL = 'https://elar.mgu-mlt.ru/';
     public string $localURL = 'https://elar.local/';
 
     /**
@@ -188,7 +188,7 @@ class App extends BaseConfig
      * Content Security Policy
      * --------------------------------------------------------------------------
      *
-     * Enables the Response's Content Secure Policy to restrict the sources that
+     * Enables the Response's Content Secure Policy to restrict the Types that
      * can be used for images, scripts, CSS files, audio, video, etc. If enabled,
      * the Response object will populate default values for the policy from the
      * `ContentSecurityPolicy.php` file. Controllers can always add to those

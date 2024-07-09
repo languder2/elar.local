@@ -13,10 +13,9 @@ class PublicationsController extends BaseController
     protected int $countInPage = 20;
 
     protected array $json= [
-        "collections"=>false,
-        "sections"=>false,
-        "authors"=>", ",
-        "tags"=>false,
+        "sections",
+        "authors",
+        "tags",
     ];
 
     protected PublicationsModel $PublicationsModel;
@@ -64,17 +63,14 @@ class PublicationsController extends BaseController
         $this->page['list']= $this->db
             ->table("publications")
             ->like($filter)
+            ->orderBy("id","DESC")
             ->limit($this->countInPage,$this->countInPage*($page-1))
             ->get()->getResult();
 
         foreach ($this->page['list'] as $key=>$publication){
-            foreach ($this->json as $filed=>$separator)
-                if(!empty($publication->{$filed})){
-                    $publication->{$filed}= json_decode($publication->{$filed});
-                    if($separator !== false)
-                        if(is_array($publication->{$filed}))
-                            $publication->{$filed}= implode($separator,$publication->{$filed});
-                }
+            foreach ($this->json as $json)
+                if(!empty($publication->{$json}))
+                    $publication->{$json}= json_decode($publication->{$json});
             $this->page['list'][$key]= $publication;
         }
 
@@ -85,18 +81,11 @@ class PublicationsController extends BaseController
                 ->get()->getResult()
         );
 
-        /** get sources:  list  */
-        $this->page['data']['sources']=
-            $this->db->table("sources")
+        /** get types:  list  */
+        $this->page['data']['types']=
+            $this->db->table("types")
                 ->orderBy("title")
                 ->get()->getResult();
-
-        /** get collections:  list  */
-        $this->page['data']['collections']=
-            $this->db->table("collections")
-                ->orderBy("title")
-                ->get()->getResult();
-
 
         $this->page['filter']= view("admin/Publications/Filter",["filter"=>(object)$filter]);
 
@@ -130,15 +119,9 @@ class PublicationsController extends BaseController
                 ->get()->getResult()
         );
 
-        /** get sources:  list  */
-        $this->page['data']['sources']=
-            $this->db->table("sources")
-                ->orderBy("title")
-                ->get()->getResult();
-
-        /** get collections:  list  */
-        $this->page['data']['collections']=
-            $this->db->table("collections")
+        /** get types:  list  */
+        $this->page['data']['types']=
+            $this->db->table("types")
                 ->orderBy("title")
                 ->get()->getResult();
 
@@ -147,9 +130,6 @@ class PublicationsController extends BaseController
             $this->page['data']['form']= $this->session->getFlashdata("form");
             if(!empty($this->page['data']['form']->data->tags))
                 $this->page['data']['form']->data->tags= implode(",",json_decode($this->page['data']['form']->data->tags));
-
-            if(!empty($this->page['data']['form']->data->collections))
-                $this->page['data']['form']->data->collections= json_decode($this->page['data']['form']->data->collections);
 
             $this->page['data']['validator']= $this->session->getFlashdata("validator");
             $this->page['data']['validatorErrors']= $this->session->getFlashdata("validatorErrors");
@@ -162,8 +142,6 @@ class PublicationsController extends BaseController
 
             if(!empty($publication->authors))
                 $publication->authors= implode(", ",json_decode($publication->authors));
-
-            $publication->collections= json_decode($publication->collections);
 
             $this->page['data']['form']= (object)[
                 "data"=> $publication,
@@ -186,7 +164,7 @@ class PublicationsController extends BaseController
             'form.data.name' => 'required',
             'form.data.authors' => 'required',
             'form.data.section' => 'required',
-            'form.data.source' => 'required',
+            'form.data.type' => 'required',
         ];
         $messages= [
             'form.data.name'=>[
@@ -198,7 +176,7 @@ class PublicationsController extends BaseController
             'form.data.section'=>[
                 "required"=>"Укажите раздел",
             ],
-            'form.data.source'=>[
+            'form.data.type'=>[
                 "required"=>"Укажите источник",
             ],
         ];
@@ -207,12 +185,6 @@ class PublicationsController extends BaseController
 
 
         $form->data= (object)$form->data;
-
-        /* обработка коллекций */
-        if(!empty($form->data->collections)){
-            $collections= $form->data->collections;
-            $form->data->collections= json_encode($form->data->collections);
-        }
 
         /* обработка авторов */
         if(!empty($form->data->authors))
@@ -277,25 +249,30 @@ class PublicationsController extends BaseController
             $form->data->display= (int)$form->data->display;
             $this->db->table("publications")->insert($form->data);
             $insertID= $this->db->insertID();
-            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Раздел добавлена: #$insertID: ".$form->data->name]);
+            $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Публикация добавлена: #$insertID: ".$form->data->name]);
 
-            $pdf= "publications/".$insertID."_".$form->data->fileName;
+            $pdf= "publications/".$insertID."_publication.pdf";
+            $fileName= $insertID."_publication.pdf";
+
             if(file_exists($pdf))
                 unlink($pdf);
             rename($form->data->pdf, $pdf);
 
-            $this->db->table("publications")->update(["pdf"=>$pdf],["id"=>$insertID]);
+            $this->db->table("publications")->update(["pdf"=>$pdf,"fileName"=>$fileName],["id"=>$insertID]);
         }
 
         /* изменение публикации */
         if($form->action=="edit"){
             $publication= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
             if($form->data->pdf != $publication->pdf){
-                $pdf= "publications/".$id."_".$form->data->fileName;
+
+                $pdf= "publications/".$id."_publication.pdf";
                 if(file_exists($pdf)) unlink($pdf);
                 if(file_exists($publication->pdf)) unlink($publication->pdf);
                 rename($form->data->pdf, $pdf);
+
                 $form->data->pdf= $pdf;
+                $form->data->fileName= $id."_publication.pdf";
             }
 
             $this->db->table("publications")->update($form->data,["id"=>$id]);
@@ -303,14 +280,8 @@ class PublicationsController extends BaseController
             $this->session->setFlashdata("message",(object)[
                 "type"=>"success",
                 "class"=>"callout-success",
-                "message"=>"Раздел изменен: #: $id: ".($publication->name!=$form->data->name?" $publication->name -> ":" ").$form->data->name,
+                "message"=>"Публикация изменена: #: $id: ".($publication->name!=$form->data->name?" $publication->name -> ":" ").$form->data->name,
             ]);
-
-            /* пониженеие счетчиков в коллекциях */
-            $publication->collections= json_decode($publication->collections);
-            if(!empty($publication->collections))
-                foreach($publication->collections as $cID)
-                    $this->model->updateCount("collections",$cID,false);
 
             /* пониженеие счетчиков в разделах */
             $publication->sections= json_decode($publication->sections);
@@ -319,13 +290,8 @@ class PublicationsController extends BaseController
                     $this->model->updateCount("sections",$sID,false);
 
             /* пониженеие счетчика в источниках */
-            $this->model->updateCount("sources",$publication->source,false);
+            $this->model->updateCount("types",$publication->type,false);
         }
-
-        /* повышение счетчиков в коллекциях */
-        if(!empty($collections))
-            foreach($collections as $cID)
-                $this->model->updateCount("collections", $cID);
 
         /* повышение счетчиков в разделах */
         if(!empty($sections))
@@ -333,7 +299,7 @@ class PublicationsController extends BaseController
                 $this->model->updateCount("sections",$sID);
 
         /* повышение счетчика в источниках */
-        $this->model->updateCount("sources",$form->data->source);
+        $this->model->updateCount("types",$form->data->type);
 
         /* переучет авторов */
         if(!empty($authors))
@@ -349,17 +315,12 @@ class PublicationsController extends BaseController
 
         $current= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
 
-        $current->collections= json_decode($current->collections);
-        if(!empty($current->collections))
-            foreach($current->collections as $cID)
-                $this->model->updateCount("collections",$cID,false);
-
         $current->sections= json_decode($current->sections);
         if(!empty($current->sections))
             foreach($current->sections as $sID)
                 $this->model->updateCount("sections",$sID,false);
 
-        $this->model->updateCount("sources",$current->source,false);
+        $this->model->updateCount("types",$current->type,false);
 
 
         $this->db->table("publications")->delete(["id"=>$id]);
@@ -390,10 +351,18 @@ class PublicationsController extends BaseController
         return redirect()->to(base_url("/admin/sections/"));
     }
 
-    public function publication($id=false):string|RedirectResponse{
-
+    public function publication($id=false):string|RedirectResponse
+    {
         /* meta */
-        $page['data']["title"]= "Электронный научный архив МелГУ: ";
+        $this->page['data']["title"]= "Электронный научный архив МелГУ: ";
+
+        $this->page['includes']=(object)[
+            'js'=>[""],
+            'css'=>["/css/public/publications.css"],
+        ];
+
+
+
 
         /* получение публикацию */
         $publication= $this->db->table("publications")
@@ -402,13 +371,7 @@ class PublicationsController extends BaseController
             ->getFirstRow();
 
         /* преобразование json в массивы */
-        $jsons= [
-            "tags",
-            "collections",
-            "authors",
-            "sections",
-        ];
-        foreach ($jsons as $json)
+        foreach ($this->json as $json)
             if(!empty($publication->{$json}))
                 $publication->{$json}= json_decode($publication->{$json});
 
@@ -417,10 +380,10 @@ class PublicationsController extends BaseController
             return redirect()->to(base_url("/"));
 
         /* подготовка источника */
-        if(!empty($publication->source))
-            $publication->source= $this->db
-                ->table("sources")
-                ->where("id",$publication->source)
+        if(!empty($publication->type))
+            $publication->type= $this->db
+                ->table("types")
+                ->where("id",$publication->type)
                 ->get()->getFirstRow();
 
         /* определение размера файла */
@@ -434,20 +397,17 @@ class PublicationsController extends BaseController
                 ->orderBy("parent","asc")
                 ->get()->getResult();
 
-        /* подготовка коллекций */
-        if(!empty($publication->collections))
-            $publication->collections= $this->db->table("collections")
-                ->where("id IN (".implode(",",$publication->collections).")")
-                ->orderBy("title","asc")
-                ->get()->getResult();
-
         /* вывод */
-        $page['pageContent']= view("public/publication",["publication"=>$publication]);
-        return view("public/page",$page);
+        $this->page['pageContent']= view("public/publication",["publication"=>$publication]);
+        return view("public/page",$this->page);
     }
 
     public function correct()
     {
+
+
+        dd();
+        /* правака имен: строка -> json */
         $res= $this->db->table("publications")->get()->getResult();
         foreach($res as $publication){
             $publication->authors=

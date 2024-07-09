@@ -487,7 +487,7 @@ class ContentSecurityPolicy
     }
 
     /**
-     * Adds a new valid endpoint for valid frame sources. Can be either
+     * Adds a new valid endpoint for valid frame Types. Can be either
      * a URI class or a simple string.
      *
      * @see http://www.w3.org/TR/CSP/#directive-frame-src
@@ -504,7 +504,7 @@ class ContentSecurityPolicy
     }
 
     /**
-     * Adds a new valid endpoint for valid image sources. Can be either
+     * Adds a new valid endpoint for valid image Types. Can be either
      * a URI class or a simple string.
      *
      * @see http://www.w3.org/TR/CSP/#directive-img-src
@@ -538,7 +538,7 @@ class ContentSecurityPolicy
     }
 
     /**
-     * Adds a new valid endpoint for manifest sources. Can be either
+     * Adds a new valid endpoint for manifest Types. Can be either
      * a URI class or simple string.
      *
      * @see https://www.w3.org/TR/CSP/#directive-manifest-src
@@ -555,7 +555,7 @@ class ContentSecurityPolicy
     }
 
     /**
-     * Adds a new valid endpoint for Flash and other plugin sources. Can be either
+     * Adds a new valid endpoint for Flash and other plugin Types. Can be either
      * a URI class or a simple string.
      *
      * @see http://www.w3.org/TR/CSP/#directive-object-src
@@ -621,7 +621,7 @@ class ContentSecurityPolicy
     }
 
     /**
-     * Adds a new valid endpoint for javascript file sources. Can be either
+     * Adds a new valid endpoint for javascript file Types. Can be either
      * a URI class or a simple string.
      *
      * @see http://www.w3.org/TR/CSP/#directive-connect-src
@@ -638,7 +638,7 @@ class ContentSecurityPolicy
     }
 
     /**
-     * Adds a new valid endpoint for CSS file sources. Can be either
+     * Adds a new valid endpoint for CSS file Types. Can be either
      * a URI class or a simple string.
      *
      * @see http://www.w3.org/TR/CSP/#directive-connect-src

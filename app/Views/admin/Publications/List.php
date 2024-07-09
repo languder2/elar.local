@@ -43,7 +43,7 @@
                     <?=date("d.m.Y",strtotime($item->date))?>
                 </div>
                 <div>
-                    <?=$item->authors?>
+                    <?=implode(", ",$item->authors)?>
                 </div>
                 <div>
                     <?=$item->name?>

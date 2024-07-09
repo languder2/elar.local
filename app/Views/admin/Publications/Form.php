@@ -90,6 +90,7 @@
                 <?=empty($form->pdf)?"":"required"?>
                     class="form-control"
                     type="file"
+                    <?=empty($form->data->pdf)?"required":""?>
                     accept="application/pdf"
             >
         </div>
@@ -100,6 +101,30 @@
                 <?=$form->data->fileName?>
             </div>
         <?php endif;?>
+
+        <div class="mb-3">
+            <div class="my-2 px-1">
+                <label for="form-section">
+                    Раздел
+                    <span class="text-danger fw-bold">*</span>
+                </label>
+                <select class="form-select"
+                        name="form[data][section]"
+                        size="10"
+                        required
+                        id="form-section"
+                >
+                    <?php if(!empty($sections)) foreach($sections as $section):?>
+                        <option value="<?=$section->id?>"
+                            <?=(!empty($form->data->section) && $form->data->section==$section->id)?"selected":""?>
+                                class="<?=$section->parent?"bi bi-arrow-return-right ps-2":""?>"
+                        >
+                            <?=$section->name?>
+                        </option>
+                    <?php endforeach;?>
+                </select>
+            </div>
+        </div>
 
         <div class="form-floating my-2 px-1">
             <input  type="text"
@@ -154,67 +179,21 @@
 
         <div class="mb-3">
             <div class="my-2 px-1">
-                <label for="form-section">
-                    Раздел
+                <label for="form-type">
+                    Тип публикации
                     <span class="text-danger fw-bold">*</span>
                 </label>
                 <select class="form-select"
-                        name="form[data][section]"
-                        size="5"
+                        name="form[data][type]"
                         required
-                        id="form-section"
+                        id="form-type"
                 >
-                    <?php if(!empty($sections)) foreach($sections as $section):?>
-                        <option value="<?=$section->id?>"
-                            <?=(!empty($form->data->section) && $form->data->section==$section->id)?"selected":""?>
-                                class="<?=$section->parent?"bi bi-arrow-return-right ps-2":""?>"
+                    <option value=''>Выбрать тип</option>
+                    <?php if(!empty($types)) foreach($types as $type):?>
+                        <option value="<?=$type->id?>"
+                            <?=(!empty($form->data->type) && $form->data->type==$type->id)?"selected":""?>
                         >
-                            <?=$section->name?>
-                        </option>
-                    <?php endforeach;?>
-                </select>
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <div class="my-2 px-1">
-                <label for="form-source">
-                    Источник
-                    <span class="text-danger fw-bold">*</span>
-                </label>
-                <select class="form-select"
-                        name="form[data][source]"
-                        required
-                        id="form-source"
-                >
-                    <option value=''>Выбрать источник</option>
-                    <?php if(!empty($sources)) foreach($sources as $source):?>
-                        <option value="<?=$source->id?>"
-                            <?=(!empty($form->data->source) && $form->data->source==$source->id)?"selected":""?>
-                        >
-                            <?=$source->title?>
-                        </option>
-                    <?php endforeach;?>
-                </select>
-            </div>
-        </div>
-
-        <div class="mb-3">
-            <div class="my-2 px-1">
-                <label for="form-collections">
-                    Выберите коллекции
-                </label>
-                <select class="form-select"
-                        name="form[data][collections][]"
-                        multiple
-                        size="5"
-                        id="form-collections"
-                >
-                    <?php if(!empty($collections)) foreach($collections as $collection):?>
-                        <option value="<?=$collection->id?>"
-                            <?=(!empty($form->data->collections) && in_array($collection->id,$form->data->collections))?"selected":""?>
-                        >
-                            <?=$collection->title?>
+                            <?=$type->title?>
                         </option>
                     <?php endforeach;?>
                 </select>

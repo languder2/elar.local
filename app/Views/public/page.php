@@ -23,6 +23,7 @@
     <link rel="stylesheet" href="<?= base_url('css/fb.css');?>?t=<?=time()?>">
     <script defer src="<?= base_url('js/imask.js');?>?t=<?=time()?>"></script>
     <script defer src="<?= base_url('js/fb.js');?>js/fb.js?t=<?=time()?>"></script>
+
     <?php if(!empty($includes->js)) foreach ($includes->js as $js):?>
         <script defer src="<?= base_url($js);?>?t=<?php echo(microtime(true).rand()); ?>"></script>
     <?php endforeach; ?>

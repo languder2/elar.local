@@ -22,7 +22,7 @@ use RuntimeException;
 use Throwable;
 
 /**
- * Publishers read in file paths from a variety of sources and copy
+ * Publishers read in file paths from a variety of Types and copy
  * the files out to different destinations. This class acts both as
  * a base for individual publication directives as well as the mode
  * of discovery for said instances. In this class a "file" is a full
@@ -190,7 +190,7 @@ class Publisher extends FileCollection
     }
 
     /**
-     * Reads files from the sources and copies them out to their destinations.
+     * Reads files from the Types and copies them out to their destinations.
      * This method should be reimplemented by child classes intended for
      * discovery.
      *
