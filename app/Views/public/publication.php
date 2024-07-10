@@ -28,9 +28,8 @@
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
                     <?php foreach ($publication->authors as $key=>$author):?>
-                        <a href="<?=base_url("/author/$author")?>">
-                            <?=$author?>
-                            <?=(count($publication->authors)-$key>1)?",":""?>
+                        <a href="<?=base_url("/author/$author->id")?>">
+                            <?=$author->name?><?=(count($publication->authors)-$key>1)?", ":""?>
                         </a>
                     <?php endforeach;?>
                 </div>
@@ -47,7 +46,7 @@
             <?php endif;?>
             <?php if(!empty($publication->name)):?>
                 <div class="col-12 col-md-4 col-lg-3 ">
-                    Название:
+                        Название:
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
                     <?=$publication->name?>
@@ -76,7 +75,9 @@
                     Научный руководитель:
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
-                    <?=$publication->advisor?>
+                    <a href="<?=base_url("/author/".$publication->advisor->id)?>">
+                        <?=$publication->advisor->name?>
+                    </a>
                 </div>
             <?php endif;?>
             <?php if(!empty($publication->speciality)):?>
@@ -93,9 +94,8 @@
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
                     <?php foreach ($publication->tags as $key=>$tag):?>
-                        <a href="<?=base_url("/tag/$tag")?>">
-                            <?=$tag?>
-                            <?=(count($publication->tags)-$key>1)?",":""?>
+                        <a href="<?=base_url("/tag/$tag->id")?>">
+                            <?=$tag->name?><?=(count($publication->authors)-$key>1)?", ":""?>
                         </a>
                     <?php endforeach;?>
                 </div>

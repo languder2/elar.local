@@ -313,9 +313,9 @@ class PublicationsController extends BaseController
 
 
         /* пересчет счетчиков */
-        foreach ($this->toCountUpdate as $by)
+        foreach ($this->toCountUpdate as $by){
             $this->PublicationsModel->recountPublications($by);
-
+        }
         return redirect()->to(base_url("/admin/publications/"));
     }
 
@@ -398,9 +398,27 @@ class PublicationsController extends BaseController
         /* подготовка разделов */
         if(!empty($publication->sections))
             $publication->sections= $this->db->table("sections")
-                ->where("id IN (".implode(",",$publication->sections).")")
+                ->whereIn("id",$publication->sections)
                 ->orderBy("parent","asc")
                 ->get()->getResult();
+
+        /* получение авторов*/
+        if(!empty($publication->authors))
+            $publication->authors= $this->db->table("authors")
+                ->whereIn("id",$publication->authors)
+                ->get()->getResult();
+
+        /* получение тегов */
+        if(!empty($publication->tags))
+            $publication->tags= $this->db->table("tags")
+                ->whereIn("id",$publication->tags)
+                ->get()->getResult();
+
+        /* получение руководителя*/
+        if(!empty($publication->advisor))
+            $publication->advisor= $this->db->table("advisors")
+                ->where("name",$publication->advisor)
+                ->get()->getFirstRow();
 
         /* вывод */
         $this->page['pageContent']= view("public/publication",["publication"=>$publication]);

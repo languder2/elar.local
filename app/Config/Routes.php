@@ -64,7 +64,7 @@ $routes->get(   '/correct/',                             [PublicationsController
 
 /** PUBLIC: PAGES */
 $routes->get(   '/',                                    [PublicController::class, 'MainList']);
-$routes->get(   '/sections/(:num)',                     [PublicController::class, 'ChapterList/$1']);
+$routes->get(   '/sections/(:num)',                     [PublicController::class, 'ChapterList']);
 $routes->get(   '/sections/(:num)/page-(:num)',         [PublicController::class, 'ChapterList/$1/$2']);
 /*$routes->get(   '/collections/(:num)',                  [PublicController::class, 'CollectList/$1']);
 $routes->get(   '/collections/(:num)/page-(:num)',      [PublicController::class, 'CollectList/$1/$2']);*/

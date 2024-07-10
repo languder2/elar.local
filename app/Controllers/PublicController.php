@@ -53,7 +53,7 @@ class PublicController extends BaseController
         ]);
 
         $list = $this->pbl->db->table('publications')
-            ->where("JSON_CONTAINS(sections, '\"".$id."\"', '$')")
+            ->where("JSON_CONTAINS(sections, '".$id."', '$')")
             ->limit(20,($pg-1)*20)
             ->orderBy("date","desc")
             ->orderBy("name","asc")
