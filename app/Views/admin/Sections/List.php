@@ -8,7 +8,6 @@
         <div class="col col-lg-2 col-sm-4 pt-2 fs-5 text-end">
             <a href="<?=base_url('admin/sections/add')?>" class="btn btn-primary">
                 Создать
-                <i class="bi bi-plus-square-dotted"></i>
             </a>
         </div>
     </div>
@@ -26,23 +25,23 @@
         </div>
     <?php else:?>
         <div class="sections-list-grid my-3">
-            <div class="grid-title bg-light fw-bold">#</div>
-            <div class="grid-title bg-light fw-bold">Название</div>
-            <div class="grid-title bg-light fw-bold">Кол-во</div>
-            <div class="grid-title bg-light fw-bold">vis</div>
-            <div class="grid-title bg-light fw-bold">edit</div>
-            <div class="grid-title bg-light fw-bold">del</div>
+            <div class="grid-title bg-primary text-white">#</div>
+            <div class="grid-title bg-primary text-white">Название</div>
+            <div class="grid-title bg-primary text-white">Кол-во</div>
+            <div class="grid-title bg-primary text-white">vis</div>
+            <div class="grid-title bg-primary text-white">edit</div>
+            <div class="grid-title bg-primary text-white">del</div>
             <?php foreach($list as $key=>$item):?>
-                <div>
+                <div class="<?=empty($item->parent)?"fw-bold":""?>">
                     <?=$item->id?>
                 </div>
-                <div>
+                <div class="<?=empty($item->parent)?"fw-bold":""?>">
                     <?php if($item->parent):?>
-                        <i class="bi bi-arrow-return-right ps-1"></i>
+                        <i class="bi bi-arrow-return-right ps-4"></i>
                     <?php endif;?>
                     <?=$item->name?>
                 </div>
-                <div>
+                <div class="<?=empty($item->parent)?"fw-bold":""?>">
                     <?=$item->cnt?>
                 </div>
                 <div>

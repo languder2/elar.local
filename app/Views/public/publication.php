@@ -73,12 +73,12 @@
                     </a>
                 </div>
             <?php endif;?>
-            <?php if(!empty($publication->supervisor)):?>
+            <?php if(!empty($publication->advisor)):?>
                 <div class="col-12 col-md-4 col-lg-3 ">
                     Научный руководитель:
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
-                    <?=$publication->supervisor?>
+                    <?=$publication->advisor?>
                 </div>
             <?php endif;?>
             <?php if(!empty($publication->speciality)):?>

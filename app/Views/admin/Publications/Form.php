@@ -139,10 +139,10 @@
 
         <div class="form-floating my-2 px-1">
             <input  type="text"
-                    name="form[data][supervisor]"
+                    name="form[data][advisor]"
                     id="form-tags"
                     placeholder="Научный руководитель"
-                    value="<?=$form->data->supervisor??""?>"
+                    value="<?=$form->data->advisor??""?>"
                     class="form-control h-auto"
             >
             <label class="h-auto w-auto" for="form-tags">
@@ -155,7 +155,7 @@
                     name="form[data][speciality]"
                     id="form-tags"
                     placeholder="Специальность"
-                    value="<?=$form->data->supervisor??""?>"
+                    value="<?=$form->data->advisor??""?>"
                     class="form-control h-auto"
             >
             <label class="h-auto w-auto" for="form-tags">Специальность</label>

@@ -18,6 +18,13 @@ class PublicationsController extends BaseController
         "tags",
     ];
 
+    protected array $toCountUpdate= [
+        "sections",
+        "types",
+        "authors",
+        "tags",
+    ];
+
     protected PublicationsModel $PublicationsModel;
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger):bool
     {
@@ -35,6 +42,7 @@ class PublicationsController extends BaseController
             'js'=>["/js/admin/change-visible.js"],
             'css'=>["/css/admin/publications.css"],
         ];
+
         $this->page["title"]= "Control Panel: Публикации";
 
         if($this->session->has("message"))
@@ -87,6 +95,9 @@ class PublicationsController extends BaseController
                 ->orderBy("title")
                 ->get()->getResult();
 
+        /** get authors:  list  */
+        $this->page['authors']= $this->model->getList("authors","id","name");
+
         $this->page['filter']= view("admin/Publications/Filter",["filter"=>(object)$filter]);
 
         $this->page['pageContent']= view("admin/Publications/List",$this->page);
@@ -127,21 +138,30 @@ class PublicationsController extends BaseController
 
 
         if($this->session->has("form")){
+
             $this->page['data']['form']= $this->session->getFlashdata("form");
-            if(!empty($this->page['data']['form']->data->tags))
-                $this->page['data']['form']->data->tags= implode(",",json_decode($this->page['data']['form']->data->tags));
 
             $this->page['data']['validator']= $this->session->getFlashdata("validator");
+
             $this->page['data']['validatorErrors']= $this->session->getFlashdata("validatorErrors");
+
         }
         elseif($action=="edit"){
             $publication= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
 
-            if(!empty($publication->tags))
-                $publication->tags= implode(", ",json_decode($publication->tags));
+            if(!empty($publication->authors)) {
+                $authors= json_decode($publication->authors);
+                $authors= $this->db->table("authors")->whereIn('id',$authors)->get()->getResult();
+                $authors= $this->model->getList("authors", "id","name",$authors);
+                $publication->authors= implode(", ",$authors);
+            }
 
-            if(!empty($publication->authors))
-                $publication->authors= implode(", ",json_decode($publication->authors));
+            if(!empty($publication->tags)) {
+                $tags= json_decode($publication->tags);
+                $tags= $this->db->table("tags")->whereIn('id',$tags)->get()->getResult();
+                $tags= $this->model->getList("tags", "id","name",$tags);
+                $publication->tags= implode(", ",$tags);
+            }
 
             $this->page['data']['form']= (object)[
                 "data"=> $publication,
@@ -186,35 +206,18 @@ class PublicationsController extends BaseController
 
         $form->data= (object)$form->data;
 
-        /* обработка авторов */
-        if(!empty($form->data->authors))
-            $form->data->authors=
-                json_encode(
-                    array_map('trim',
-                        explode(",",$form->data->authors)
-                    ),
-                    JSON_UNESCAPED_UNICODE
-                );
-
-        /* обработка тегов */
-        if(!empty($form->data->tags))
-            $form->data->tags=
-                json_encode(
-                    array_map('trim',
-                        explode(",",$form->data->tags)
-                    ),
-                    JSON_UNESCAPED_UNICODE
-                );
-
         /* обработка разделов */
-        $section= $this->db->table("sections")->where(['id'=>$form->data->section])->get()->getFirstRow();
+        $section= $this->db
+            ->table("sections")
+            ->where(['id'=>$form->data->section])
+            ->get()->getFirstRow();
+
         if($section->parent)
             $form->data->sections[]= $section->parent;
+
         $form->data->sections[]= $section->id;
 
-        $sections= $form->data->sections;
-
-        $form->data->sections= json_encode($form->data->sections);
+        $form->data->sections= json_encode($form->data->sections,JSON_NUMERIC_CHECK|JSON_UNESCAPED_UNICODE);
 
         /* обработка pdf файла */
         $file = $this->request->getFile('pdf');
@@ -243,6 +246,31 @@ class PublicationsController extends BaseController
 
         if(!isset($form->data->display))
             $form->data->display= 0;
+
+        /* обработка авторов */
+        $form->data->authors=
+            $this->PublicationsModel->getRelationships(
+                "authors",
+                "name",
+                $form->data->authors
+            );
+
+        /* обработка научного реководителя */
+        if(!empty($form->data->advisor))
+            $this->PublicationsModel->getRelationships(
+                    "advisors",
+                    "name",
+                    $form->data->advisor
+                );
+
+        /* обработка тегов */
+        if(!empty($form->data->tags))
+            $form->data->tags=
+                $this->PublicationsModel->getRelationships(
+                    "tags",
+                    "name",
+                    $form->data->tags
+                );
 
         /* добавление публикации */
         if($form->action=="add"){
@@ -283,15 +311,10 @@ class PublicationsController extends BaseController
             ]);
         }
 
-        /* пересчет счетчиков разделов */
-        $this->PublicationsModel->recountPublications("sections");
 
-        /* пересчет счетчика типа */
-        $this->PublicationsModel->recountPublications("types");
-
-        /* переучет авторов */
-        if(!empty($authors))
-            $this->PublicationsModel->AuthorAudit($authors);
+        /* пересчет счетчиков */
+        foreach ($this->toCountUpdate as $by)
+            $this->PublicationsModel->recountPublications($by);
 
         return redirect()->to(base_url("/admin/publications/"));
     }
@@ -303,15 +326,12 @@ class PublicationsController extends BaseController
 
         $current= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
 
-        $current->sections= json_decode($current->sections);
-        if(!empty($current->sections))
-            foreach($current->sections as $sID)
-                $this->PublicationsModel->recountPublications("sections", $sID);
-
-        $this->PublicationsModel->recountPublications("types", $current->type);
-
 
         $this->db->table("publications")->delete(["id"=>$id]);
+
+        /* пересчет счетчиков */
+        foreach ($this->toCountUpdate as $by)
+            $this->PublicationsModel->recountPublications($by);
 
         if(file_exists($current->pdf)) unlink($current->pdf);
 
@@ -389,7 +409,7 @@ class PublicationsController extends BaseController
 
     public function correct():bool
     {
-
+        echo "test";
         /*
         $query= "
             UPDATE sections SET cnt= (

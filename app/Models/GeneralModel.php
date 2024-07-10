@@ -89,6 +89,18 @@ class GeneralModel extends UserModel{
         return  $password;
 
     }
+
+    public function getList($table= false,$key= false,$field= false,?array $list= []):array
+    {
+        $results= [];
+        if(!$list)
+            $list= $this->db->table($table)->get()->getResult();
+
+        foreach($list as $item)
+            $results[$item->{$key}]= $field?$item->{$field}:$item->id;
+
+        return $results;
+    }
 }
 
 

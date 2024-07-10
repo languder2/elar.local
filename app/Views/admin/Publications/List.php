@@ -43,7 +43,12 @@
                     <?=date("d.m.Y",strtotime($item->date))?>
                 </div>
                 <div>
-                    <?=implode(", ",$item->authors)?>
+                    <?php if(!empty($item->authors)):?>
+                        <?php foreach ($item->authors as $key=>$author):
+                            echo $key?", ":"";
+                            echo $authors[$author]??$author;
+                        endforeach;?>
+                    <?php endif;?>
                 </div>
                 <div>
                     <?=$item->name?>

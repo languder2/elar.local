@@ -35,7 +35,7 @@ class PublicController extends BaseController
 
         $page['data']['edSections']= $this->pbl->getChapterList($id);
         $page['data']['TitleSections']= $this->pbl->getTitleSection($id);
-        $page['data']['edCollections']= $this->pbl->getCollectionsList($id);
+        //$page['data']['edCollections']= $this->pbl->getCollectionsList($id);
 
         $l = $this->pbl->db->table('sections')->where(['parent'=>$id])->get()->getResult();
         $count=  $this->pbl->db
