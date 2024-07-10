@@ -94,7 +94,7 @@
 </sections>
 <section>
     <div class="col col-lg-12">
-        <div class="row g-3 row-cols-1 row-cols-sm-1 row-cols-lg-1 row-cols-lg-2">
+        <div class="row g-3 row-cols-1 row-cols-sm-1 row-cols-lg-1 row-cols-lg-1">
             <div class="col box-inf">
                 <h4>Подразделы этого раздела</h4>
                 <div class="list-group subChapter">
@@ -106,7 +106,9 @@
                             <a href="/sections/<?=$section->id?>"><?=$section->name?></a>
                             <?php endforeach;?>
                         </h5>
-                        <span class="count"><?=$section->cnt?></span>
+                        </div>
+                        <div class="cnt-box position-relative">
+                            <span class="count"><?=$section->cnt?></span>
                         </div>
                         <div>
                         <p class="mt-2">
@@ -116,24 +118,6 @@
                     </div>
                     <?php endforeach;?>
                 </div>
-            </div>
-            <div class="col box-inf">
-                <h4>Коллекции</h4>
-                <?php if(isset($edCollections)) foreach ($edCollections as $collection):?>
-                    <div class="list-group abstracts">
-                        <div class="list-group-item chpt">
-                            <div>
-                                <h5><a href="/collections/<?=$section->id?>"><?=$collection->title?></a></h5>
-                                <span class="count"><?=$collection->cnt?></span>
-                            </div>
-                            <div>
-                                <p class="mt-2">
-                                    <?=$collection->description?>
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                <?php endforeach;?>
             </div>
     </div>
 </section>

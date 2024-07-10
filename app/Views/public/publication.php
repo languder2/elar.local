@@ -1,17 +1,24 @@
 <section class="">
     <?php if(!empty($publication->sections)):?>
-        <div class="col col-lg-12">
-                <?php foreach ($publication->sections as $key=>$section):?>
-                    <?php if($key!=0):?>
-                        <span class="px-1">/</span>
-                    <?php endif;?>
-                    <a href="<?=base_url("/section/$section->id")?>">
-                        <?=$section->name?>
-                    </a>
-                <?php endforeach;?>
+        <div class="col col-lg-12 title_publication">
+            <h4><?=$publication->name??""?></h4>
+            <div class="w-auto d-flex justify-content-end">
+                <i class="bi bi-newspaper"></i>
+            </div>
         </div>
-    <?php endif;?>
-    <h4><?=$publication->name??""?></h4>
+    <div class="col col-lg-12 mt-4">
+        <a class="crumb" href="/">Главная</a>
+        <i class="bi bi-chevron-right" style="color: #820000;"></i>
+        <?php foreach ($publication->sections as $key=>$section):?>
+        <?php if($key!=0):?>
+                <i class="bi bi-chevron-right" style="color: #820000;"></i>
+        <?php endif;?>
+        <a class="crumb" href="<?=base_url("/sections/$section->id")?>">
+            <?=$section->name?>
+        </a>
+        <?php endforeach;?>
+        <?php endif;?>
+    </div>
 </section>
 
 <section>

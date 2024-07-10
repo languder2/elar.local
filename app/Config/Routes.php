@@ -66,8 +66,8 @@ $routes->get(   '/correct/',                             [PublicationsController
 $routes->get(   '/',                                    [PublicController::class, 'MainList']);
 $routes->get(   '/sections/(:num)',                     [PublicController::class, 'ChapterList/$1']);
 $routes->get(   '/sections/(:num)/page-(:num)',         [PublicController::class, 'ChapterList/$1/$2']);
-$routes->get(   '/collections/(:num)',                  [PublicController::class, 'CollectList/$1']);
-$routes->get(   '/collections/(:num)/page-(:num)',      [PublicController::class, 'CollectList/$1/$2']);
+/*$routes->get(   '/collections/(:num)',                  [PublicController::class, 'CollectList/$1']);
+$routes->get(   '/collections/(:num)/page-(:num)',      [PublicController::class, 'CollectList/$1/$2']);*/
 $routes->get(   '/browse/(:segment)',                   [PublicController::class, 'browse/$1']);
 $routes->post(  '/browse/(:segment)/set-filter',        [PublicController::class, 'setFilter/$1']);
 
