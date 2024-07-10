@@ -281,24 +281,13 @@ class PublicationsController extends BaseController
                 "class"=>"callout-success",
                 "message"=>"Публикация изменена: #: $id: ".($publication->name!=$form->data->name?" $publication->name -> ":" ").$form->data->name,
             ]);
-
-            /* пониженеие счетчиков в разделах */
-            $publication->sections= json_decode($publication->sections);
-            if(!empty($publication->sections))
-                foreach($publication->sections as $sID)
-                    $this->model->updateCount("sections",$sID,false);
-
-            /* пониженеие счетчика в источниках */
-            $this->model->updateCount("types",$publication->type,false);
         }
 
-        /* повышение счетчиков в разделах */
-        if(!empty($sections))
-            foreach($sections as $sID)
-                $this->model->updateCount("sections",$sID);
+        /* пересчет счетчиков разделов */
+        $this->PublicationsModel->recountPublications("sections");
 
-        /* повышение счетчика в источниках */
-        $this->model->updateCount("types",$form->data->type);
+        /* пересчет счетчика типа */
+        $this->PublicationsModel->recountPublications("types");
 
         /* переучет авторов */
         if(!empty($authors))
@@ -317,9 +306,9 @@ class PublicationsController extends BaseController
         $current->sections= json_decode($current->sections);
         if(!empty($current->sections))
             foreach($current->sections as $sID)
-                $this->model->updateCount("sections",$sID,false);
+                $this->PublicationsModel->recountPublications("sections", $sID);
 
-        $this->model->updateCount("types",$current->type,false);
+        $this->PublicationsModel->recountPublications("types", $current->type);
 
 
         $this->db->table("publications")->delete(["id"=>$id]);
