@@ -320,11 +320,9 @@ table.iksweb td:hover{
 }
 .resource a {
     color: #820000;
-    transition: .3s linear;
 }
 .resource a:hover{
-    color: #c10f1a;
-    transition: .3s linear;
+    color: red;
 }
 table.iksweb.resource tr:nth-child(1){
     border-top: 1px solid #820000;
@@ -469,11 +467,9 @@ table.iksweb.resource tr:last-child{
     padding: 12px;
     border-radius: 15px;
     color: #820000;
-    transition: .3s linear;
 }
 .crumb:hover{
-    color: #c10f1a;
-    transition: .3s linear;
+    color: red;
 }
 @media screen and (max-width: 1399px) {
 

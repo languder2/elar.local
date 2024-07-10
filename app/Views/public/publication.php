@@ -7,8 +7,6 @@
             </div>
         </div>
     <div class="col col-lg-12 mt-4">
-        <a class="crumb" href="/">Главная</a>
-        <i class="bi bi-chevron-right" style="color: #820000;"></i>
         <?php foreach ($publication->sections as $key=>$section):?>
         <?php if($key!=0):?>
                 <i class="bi bi-chevron-right" style="color: #820000;"></i>
