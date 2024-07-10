@@ -76,9 +76,11 @@ class PublicController extends BaseController
     {
         $where= [];
         $like= [];
+        $page['data']['filter'] = (object)['title'=>''];
         if ($this->session->has("MainFilter"))
             $page['data']['filter'] = $this->session->get("MainFilter");
         $search = $page['data']['filter'];
+
         $page['data']["title"] = "Электронный научный архив МелГУ: ";
         $page['data']['type'] = $type;
         switch ($type){
@@ -122,7 +124,7 @@ class PublicController extends BaseController
         $publications= $publications->get()->getResult();
 
         $count = $this->pbl->db
-            ->table("$table")
+            ->table($table)
             ->get()->getNumRows();
         $maxPages= ceil($count / 20);
 
