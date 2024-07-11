@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `publications`
+-- Структура таблицы `Publications`
 --
 
 CREATE TABLE `publications` (
@@ -44,18 +44,18 @@ CREATE TABLE `publications` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Дамп данных таблицы `publications`
+-- Дамп данных таблицы `Publications`
 --
 
 INSERT INTO `publications` (`id`, `date`, `authors`, `name`, `pdf`, `fileName`, `tags`, `description`, `section`, `sections`, `collections`, `source`, `display`) VALUES
-(1, '2024-07-08', '[\"Sultan SV\",\"asdasd\",\"123\"]', 'asdasdas', 'publications/1_pamyatka-dlya-studenta.pdf', 'pamyatka-dlya-studenta.pdf', '[\"gf\",\"da d\",\"dff\",\"sd ff\",\"ds .31\"]', 'asd', 6, '[\"1\",\"6\"]', '[\"4\"]', 1, 0);
+(1, '2024-07-08', '[\"Sultan SV\",\"asdasd\",\"123\"]', 'asdasdas', 'Publications/1_pamyatka-dlya-studenta.pdf', 'pamyatka-dlya-studenta.pdf', '[\"gf\",\"da d\",\"dff\",\"sd ff\",\"ds .31\"]', 'asd', 6, '[\"1\",\"6\"]', '[\"4\"]', 1, 0);
 
 --
 -- Индексы сохранённых таблиц
 --
 
 --
--- Индексы таблицы `publications`
+-- Индексы таблицы `Publications`
 --
 ALTER TABLE `publications`
   ADD PRIMARY KEY (`id`);
@@ -65,7 +65,7 @@ ALTER TABLE `publications`
 --
 
 --
--- AUTO_INCREMENT для таблицы `publications`
+-- AUTO_INCREMENT для таблицы `Publications`
 --
 ALTER TABLE `publications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;

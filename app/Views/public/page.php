@@ -5,9 +5,9 @@
     <meta name="viewport"
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title><?=$meta['title']??"Электронный научный архив МелГУ: "?></title>
-    <meta name="description" content="<?=$meta['description']??""?>">
-    <meta name="keywords" content="<?=$meta['keywords']??""?>">
+    <title><?=$meta->title??"Электронный научный архив МелГУ: "?></title>
+    <meta name="description" content="<?=$meta->description??""?>">
+    <meta name="keywords" content="<?=$meta->keywords??""?>">
     <link rel="icon" href="<?= base_url('img/favicon-1.ico');?>" sizes="32x32">
     <link rel="icon" href="<?= base_url('img/favicon-1.ico');?>" sizes="192x192">
 

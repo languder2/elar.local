@@ -122,12 +122,12 @@ INSERT INTO `menu` (`id`, `parent`, `name`, `link`, `op`, `section`, `sort`, `ex
 (3, 2, 'Разделы', '/admin/sections', NULL, 'admin', 10, 0, 'false', '', '1'),
 (4, 2, 'Коллекции', '/admin/collections', NULL, 'admin', 30, 0, 'false', '', '1'),
 (5, 2, 'Источники', '/admin/Types', NULL, 'admin', 40, 0, 'false', '', '1'),
-(6, 0, 'Публикации', '/admin/publications', NULL, 'admin', 20, 0, 'false', '', '1');
+(6, 0, 'Публикации', '/admin/Publications', NULL, 'admin', 20, 0, 'false', '', '1');
 
 -- --------------------------------------------------------
 
 --
--- Структура таблицы `publications`
+-- Структура таблицы `Publications`
 --
 
 DROP TABLE IF EXISTS `publications`;
@@ -150,14 +150,14 @@ CREATE TABLE `publications` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Дамп данных таблицы `publications`
+-- Дамп данных таблицы `Publications`
 --
 
 INSERT INTO `publications` (`id`, `date`, `authors`, `name`, `supervisor`, `speciality`, `pdf`, `fileName`, `tags`, `description`, `section`, `sections`, `collections`, `source`, `display`) VALUES
-(1, '2024-07-08', '[\"Sultan SV\",\"test\"]', 'azsdasd', '', '', 'publications/1_38-46.pdf', '38-46.pdf', '[\"asdasd\",\"asd a\"]', '<p>asdasdas&nbsp;</p>', 2, '[\"1\",\"2\"]', '[\"1\"]', 1, 1),
-(2, '2024-07-08', '[\"Sultan SV\",\"test\"]', 'azsdasd', NULL, NULL, 'publications/2_38-46.pdf', '38-46.pdf', '[\"asdasd\",\"asd a\"]', '<p>asdasdas&nbsp;</p>', 1, '[\"1\"]', '[\"1\"]', 1, 1),
-(3, '2024-07-08', '[\"Sultan SV\",\"test\"]', 'azsdasd', NULL, NULL, 'publications/3_38-46.pdf', '38-46.pdf', '[\"asdasd\",\"asd a\"]', '<p>asdasdas&nbsp;</p>', 1, '[\"1\"]', '[\"1\"]', 1, 1),
-(6, '2024-07-08', '[\"\\u043f\\u0430\\u0440\\u0438\\u0432\\u0435\\u0442\"]', 'фывфывфыфыв', 'явыфывфы', 'явыфывфы', 'publications/6_NJD_78_(2).pdf', 'NJD_78_(2).pdf', '[\"\\u0442\\u0435\\u0433 1\",\"\\u0442\\u0435\\u04333\"]', '<p>фывфыв</p>', 2, '[\"1\",\"2\"]', '[\"1\"]', 1, 1);
+(1, '2024-07-08', '[\"Sultan SV\",\"test\"]', 'azsdasd', '', '', 'Publications/1_38-46.pdf', '38-46.pdf', '[\"asdasd\",\"asd a\"]', '<p>asdasdas&nbsp;</p>', 2, '[\"1\",\"2\"]', '[\"1\"]', 1, 1),
+(2, '2024-07-08', '[\"Sultan SV\",\"test\"]', 'azsdasd', NULL, NULL, 'Publications/2_38-46.pdf', '38-46.pdf', '[\"asdasd\",\"asd a\"]', '<p>asdasdas&nbsp;</p>', 1, '[\"1\"]', '[\"1\"]', 1, 1),
+(3, '2024-07-08', '[\"Sultan SV\",\"test\"]', 'azsdasd', NULL, NULL, 'Publications/3_38-46.pdf', '38-46.pdf', '[\"asdasd\",\"asd a\"]', '<p>asdasdas&nbsp;</p>', 1, '[\"1\"]', '[\"1\"]', 1, 1),
+(6, '2024-07-08', '[\"\\u043f\\u0430\\u0440\\u0438\\u0432\\u0435\\u0442\"]', 'фывфывфыфыв', 'явыфывфы', 'явыфывфы', 'Publications/6_NJD_78_(2).pdf', 'NJD_78_(2).pdf', '[\"\\u0442\\u0435\\u0433 1\",\"\\u0442\\u0435\\u04333\"]', '<p>фывфыв</p>', 2, '[\"1\",\"2\"]', '[\"1\"]', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -259,7 +259,7 @@ ALTER TABLE `menu`
   ADD PRIMARY KEY (`id`);
 
 --
--- Индексы таблицы `publications`
+-- Индексы таблицы `Publications`
 --
 ALTER TABLE `publications`
   ADD PRIMARY KEY (`id`);
@@ -311,7 +311,7 @@ ALTER TABLE `menu`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
--- AUTO_INCREMENT для таблицы `publications`
+-- AUTO_INCREMENT для таблицы `Publications`
 --
 ALTER TABLE `publications`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;

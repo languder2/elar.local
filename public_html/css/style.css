@@ -133,8 +133,8 @@ footer{
     background-color: #FFFFFF;
 }
 .main-content{
-    min-height: calc(100vh - 265px) !important;
-    padding-top: 300px;
+    min-height: calc(100vh - 289px) !important;
+    padding-top: 200px;
 }
 .list-group{
     background-color: #FFFFFF;
@@ -374,24 +374,6 @@ table.iksweb.resource tr:nth-child(1){
 table.iksweb.resource tr:last-child{
     border-bottom: none !important;
 }
-.btn-opn{
-    display: block;
-    background-color: #820000;
-    width: 100%;
-    text-align: center;
-    border: 1px solid #820000;
-    border-radius: 15px;
-    padding: 5px;
-    color: #FFFFFF;
-    transition: .3s linear;
-}
-.btn-opn:hover{
-    background-color: #FFFFFF;
-    color: #820000;
-    border: 1px solid #820000;
-    border-radius: 15px;
-    transition: .3s linear;
-}
 .pagination-item .active>.page-link{
     background-color: #820000 !important;
     border-color: #820000 !important;
@@ -420,15 +402,8 @@ table.iksweb.resource tr:last-child{
     border-bottom: 1px solid #820000;
     padding: 24px;
 }
-.row-view > div {
-    background-color: #FFFFFF;
-    padding: 24px;
-}
 .row-view-body{
     border-bottom: 1px solid #820000;
-}
-.row-view-body b{
-    display: none !important;
 }
 .row-view-body a span{
     color: #4D5154;
@@ -496,13 +471,7 @@ table.iksweb.resource tr:last-child{
     }
 }
 @media screen and (max-width: 767px){
-    .row-view b{
-        display: inline-block !important;
-    }
     .row-view-head{
-        display: none !important;
-    }
-    .title-view .row{
         display: none !important;
     }
     .res{

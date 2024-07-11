@@ -49,28 +49,36 @@ $routes->get(   '/admin/types/delete/(:num)',           [TypesController::class,
 $routes->post(  '/admin/types/change-visible/',         [TypesController::class, 'changeVisible']);
 $routes->post(  '/admin/types/set-filter',              [TypesController::class, 'setFilter']);
 
-/** ADMIN: PUBLICATIONS */
+/** Admin: Publications */
 $routes->get(   '/admin/publications/',                 [PublicationsController::class, 'adminList']);
-$routes->get(   '/admin/publications/page-(:num)/',     [PublicationsController::class, 'adminList/$1']);
+$routes->get(   '/admin/publications/page-(:num)/',     [PublicationsController::class, 'adminList']);
 $routes->get(   '/admin/publications/add',              [PublicationsController::class, 'form/add']);
 $routes->post(  '/admin/publications/form-processing',  [PublicationsController::class, 'formProcessing']);
-$routes->get(   '/admin/publications/edit/(:num)',      [PublicationsController::class, 'form/edit/$1/$2']);
-$routes->get(   '/admin/publications/delete/(:num)',    [PublicationsController::class, 'delete/$1']);
+$routes->get(   '/admin/publications/edit/(:num)',      [PublicationsController::class, 'form/edit']);
+$routes->get(   '/admin/publications/delete/(:num)',    [PublicationsController::class, 'delete']);
 $routes->post(  '/admin/publications/change-visible',   [PublicationsController::class, 'changeVisible']);
 
-/** PUBLIC: PUBLICATIONS */
+/** Public: Publications */
 $routes->get(   '/publication/(:num)',                  [PublicationsController::class, 'publication']);
-$routes->get(   '/correct/',                             [PublicationsController::class, 'correct']);
+$routes->get(   '/correct/',                            [PublicationsController::class, 'correct']);
+
+/** Public: Section */
+$routes->get(   '/section/(:num)',                      [SectionsController::class, 'showSection']);
+$routes->get(   '/section/(:num)/page-(:num)/',         [SectionsController::class, 'showSection']);
+
 
 /** PUBLIC: PAGES */
-$routes->get(   '/',                                    [PublicController::class, 'MainList']);
+//$routes->get(   '/',                                    [PublicController::class, 'MainList']);
+$routes->get(   '/',                                    [PublicController::class, 'index']);
 $routes->get(   '/sections/(:num)',                     [PublicController::class, 'ChapterList']);
-$routes->get(   '/sections/(:num)/page-(:num)',         [PublicController::class, 'ChapterList/$1/$2']);
-/*$routes->get(   '/collections/(:num)',                  [PublicController::class, 'CollectList/$1']);
-$routes->get(   '/collections/(:num)/page-(:num)',      [PublicController::class, 'CollectList/$1/$2']);*/
+$routes->get(   '/sections/(:num)/page-(:num)',         [PublicController::class, 'ChapterList']);
 $routes->get(   '/browse/(:segment)',                   [PublicController::class, 'browse/$1']);
 $routes->post(  '/browse/(:segment)/set-filter',        [PublicController::class, 'setFilter/$1']);
 
-/* Downloader */
+/** Downloader */
 $routes->get(   '/download/(:segment)/(:segment)',      [DownloadController::class, 'downloadPdf/$1/$2']);
 $routes->get(   '/link/',                               [DownloadController::class, 'readPDF']);
+
+
+/** Other */
+$routes->get(   '/(:any)',                              [PublicController::class, 'MainList']);

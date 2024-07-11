@@ -1,10 +1,23 @@
 <?php
 
 namespace App\Controllers;
+use App\Models\PublicationsModel;
 use CodeIgniter\HTTP\RedirectResponse;
+use CodeIgniter\HTTP\RequestInterface;
+use CodeIgniter\HTTP\ResponseInterface;
+use Psr\Log\LoggerInterface;
 
 class SectionsController extends BaseController
 {
+    protected array $page;
+    protected int $countInPage= 20;
+    protected PublicationsModel $PublicationsModel;
+    public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger):bool
+    {
+        parent::initController($request, $response, $logger);
+        $this->PublicationsModel= model(PublicationsModel::class);
+        return true;
+    }
     public function adminList(): string
     {
         if($this->model->hasAuth() === false)
@@ -178,4 +191,90 @@ class SectionsController extends BaseController
         return true;
     }
 
+    public function showSection($sid= false, $currenPage= 1):string|RedirectResponse
+    {
+        $this->page['includes']=(object)[
+            'js'=>[],
+            'css'=>[
+                "/css/public/sections.css",
+                "/css/public/publications.css",
+            ],
+        ];
+
+        $this->page['meta']= (object)[
+            "title"=> "Control Panel: Разделы"
+        ];
+
+        /* get section */
+        $section= $this->db
+            ->table("sections")
+            ->where(['id'=>$sid])
+            ->get()
+            ->getFirstRow();
+
+        if(empty($section)) return redirect()->to(base_url("/"));
+
+        /* get parent */
+        $section->parent= $this->db
+            ->table("sections")
+            ->where(['id'=>$section->parent])
+            ->get()
+            ->getFirstRow();
+
+        /* get subsections */
+        $section->sub= $this->db
+            ->table("sections")
+            ->where(['parent'=>$section->id])
+            ->get()
+            ->getResult();
+
+        $this->page['section']= $section;
+
+        /* paginator */
+        $count=  $this->db
+            ->table("publications")
+            ->where("JSON_CONTAINS(sections, '".$sid."', '$')")
+            ->get()
+            ->getNumRows();
+
+        $maxPages= ceil($count / $this->countInPage);
+
+        if($maxPages<$currenPage) $currenPage = $maxPages;
+        if($currenPage<1) $currenPage = 1;
+        if($maxPages>1)
+            $paginator= view("admin/template/paginator",[
+                "maxPages"=>$maxPages,
+                "currentPage"=>$currenPage,
+                "baseLink"=>base_url("/section/$sid/page-"),
+            ]);
+
+        /* get Publications */
+        $publications= $this->db
+            ->table("publications")
+            ->where("JSON_CONTAINS(sections, '".$sid."', '$')")
+            ->limit($this->countInPage,($currenPage-1)*$this->countInPage)
+            ->orderBy("date","desc")
+            ->orderBy("name","asc")
+            ->get()
+            ->getResult();
+
+        $this->PublicationsModel->prepareToShow($publications);
+
+        $this->page['sort']= view("public/Templates/Sort",[]);
+
+        $this->page['subsections']= view("public/Sections/List",[
+            "title"=>"Подразделы",
+            "list"=>$section->sub,
+        ]);
+
+        $this->page['publication']= view("public/Publications/List",[
+            "list"=>$publications,
+            "paginator"=>$paginator??"",
+        ]);
+
+
+       $this->page['pageContent']= view("public/Sections/Simple",$this->page);
+
+        return  view("public/page",$this->page);
+    }
 }

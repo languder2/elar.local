@@ -70,7 +70,7 @@ class PublicModel extends GeneralModel {
         return $results;
     }
     public function getCollectList($id):array{
-        $q= $this->db->table("publications")->where(['id'=>$id]);
+        $q= $this->db->table("Publications")->where(['id'=>$id]);
         $q= $q->get();
         $results= [];
         if($q->getNumRows()==0) return $results;
@@ -80,7 +80,7 @@ class PublicModel extends GeneralModel {
         return $results;
     }
     public function getPublication($id):array{
-        $q= $this->db->table("publications")->where(['id'=>$id]);
+        $q= $this->db->table("Publications")->where(['id'=>$id]);
         $q= $q->get();
         $results= [];
         foreach($q->getResult() as $record){
@@ -101,7 +101,7 @@ class PublicModel extends GeneralModel {
         return $results;
     }
     public function getSearch($filter= []):array{
-        $q= $this->db->table("publications")->like($filter);
+        $q= $this->db->table("Publications")->like($filter);
         $q= $q->get();
         $results= [];
         foreach($q->getResult() as $record){

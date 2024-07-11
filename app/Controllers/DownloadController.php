@@ -22,12 +22,12 @@ class DownloadController extends BaseController
         $file= "";
         switch($type){
             case "publication":
-                $publication= $this->db->table("publications")->where("id",$op)->get();
+                $publication= $this->db->table("Publications")->where("id",$op)->get();
                 if(!$publication->getNumRows()) break;
                 $file= $publication->getFirstRow()->pdf;
             break;
             default:
-                $file= WRITEPATH ."publications/$op";
+                $file= WRITEPATH ."Publications/$op";
             break;
         }
         if(!empty($file) and file_exists($file)) {
@@ -38,8 +38,8 @@ class DownloadController extends BaseController
     }
 
     public function readPDF($type= "link",$op= ""){
-        echo $file = WRITEPATH."publications/373_test_1.pdf";
-        echo $file2 = "publications/373_test_1.pdf";
+        echo $file = WRITEPATH."Publications/373_test_1.pdf";
+        echo $file2 = "Publications/373_test_1.pdf";
         rename ($file, $file2);
         $filename = '373_test_1.pdf';
 // Header content type

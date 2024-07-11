@@ -162,6 +162,12 @@ class PublicationsController extends BaseController
                 $tags= $this->model->getList("tags", "id","name",$tags);
                 $publication->tags= implode(", ",$tags);
             }
+            if(!empty($publication->advisor)) {
+                $advisors= json_decode($publication->advisor);
+                $advisors= $this->db->table("advisors")->whereIn('id',$advisors)->get()->getResult();
+                $advisors= $this->model->getList("advisors", "id","name",$advisors);
+                $publication->advisor= implode(", ",$advisors);
+            }
 
             $this->page['data']['form']= (object)[
                 "data"=> $publication,
@@ -257,7 +263,8 @@ class PublicationsController extends BaseController
 
         /* обработка научного реководителя */
         if(!empty($form->data->advisor))
-            $this->PublicationsModel->getRelationships(
+            $form->data->advisor=
+                $this->PublicationsModel->getRelationships(
                     "advisors",
                     "name",
                     $form->data->advisor
@@ -431,20 +438,20 @@ class PublicationsController extends BaseController
         /*
         $query= "
             UPDATE sections SET cnt= (
-                SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(sections,CONCAT('\"',sections.id,'\"'),'$')
+                SELECT COUNT(id) FROM Publications WHERE JSON_CONTAINS(sections,CONCAT('\"',sections.id,'\"'),'$')
             );
         ";
         $this->db->query($query);
 
         $query= "
             UPDATE types SET cnt= (
-                SELECT COUNT(id) FROM publications WHERE type= types.id
+                SELECT COUNT(id) FROM Publications WHERE type= types.id
             );        
         ";
         $this->db->query($query);
         /* правака имен: строка -> json */
         /*
-        $res= $this->db->table("publications")->get()->getResult();
+        $res= $this->db->table("Publications")->get()->getResult();
         foreach($res as $publication){
             $publication->authors=
                 json_encode(
@@ -453,7 +460,7 @@ class PublicationsController extends BaseController
                     ),
                     JSON_UNESCAPED_UNICODE
                 );
-            $this->db->table("publications")->update(["authors"=>$publication->authors],["id"=>$publication->id]);
+            $this->db->table("Publications")->update(["authors"=>$publication->authors],["id"=>$publication->id]);
         }
         */
         return true;

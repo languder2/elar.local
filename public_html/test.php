@@ -1,6 +1,6 @@
 <?php
 
-$file = '../writable/publications/373_test_1.pdf';
+$file = '../writable/Publications/373_test_1.pdf';
 $filename = '373_test_1.pdf';
 
 // Header content type

@@ -101,6 +101,14 @@ class GeneralModel extends UserModel{
 
         return $results;
     }
+
+    public function getIDs():array
+    {
+        $results= [];
+        return $results;
+    }
+
+
 }
 
 

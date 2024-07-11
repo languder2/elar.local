@@ -155,7 +155,7 @@
                     name="form[data][speciality]"
                     id="form-tags"
                     placeholder="Специальность"
-                    value="<?=$form->data->advisor??""?>"
+                    value="<?=$form->data->speciality??""?>"
                     class="form-control h-auto"
             >
             <label class="h-auto w-auto" for="form-tags">Специальность</label>

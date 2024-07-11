@@ -59,6 +59,72 @@ class PublicationsModel extends Model{
         return "test";
     }
 
+    public function prepareToShow(&$list):bool
+    {
+        if(!$list) return false;
+        $ops= (object)[
+            "authors"=>(object)[
+                "field"=>"authors",
+                "list"=>[],
+                "ids"=>[]
+            ],
+            "advisors"=>(object)[
+                "field"=>"advisor",
+                "list"=>[],
+                "ids"=>[]
+            ],
+            "tags"=>(object)[
+                "field"=>"tags",
+                "list"=>[],
+                "ids"=>[]
+            ],
+            "types"=>(object)[
+                "field"=>"type",
+                "list"=>[],
+                "ids"=>[]
+            ],
+            "sections"=>(object)[
+                "field"=>"sections",
+                "list"=>[],
+                "ids"=>[]
+            ]
+        ];
+
+
+
+        foreach ($list as $key=>$publication){
+            foreach ($ops as $code=>$op){
+                $publication->{$op->field}= json_decode($publication->{$op->field},true);
+                if(is_array($publication->{$op->field}))
+                    $ops->{$code}->ids= array_merge($ops->{$code}->list,$publication->{$op->field});
+                elseif($publication->{$op->field})
+                    $ops->{$code}->ids[]= $publication->{$op->field};
+                $list[$key]= $publication;
+            }
+        }
+        foreach ($ops as $code=>$op) {
+            $res = $this->db
+                ->table($code)
+                ->whereIn("id", array_unique($op->ids))
+                ->get()->getResult();
+
+            foreach ($res as $rec)
+                $ops->{$code}->list[$rec->id] = $rec;
+
+            foreach ($list as $key => $publication){
+
+                if (is_array($publication->{$op->field}))
+                    foreach ($publication->{$op->field} as $tas => $row)
+                        $publication->{$op->field}[$tas] = $ops->{$code}->list[$row] ?? $row;
+
+                elseif ($publication->{$op->field})
+                    $publication->{$op->field} = $ops->{$code}->list[$publication->{$op->field}];
+
+                $list[$key] = $publication;
+            }
+        }
+        return true;
+    }
 
 
 
