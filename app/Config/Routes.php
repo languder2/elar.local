@@ -56,7 +56,7 @@ $routes->get(   '/correct/',                                    [PublicationsCon
 /** Public: Section */
 $routes->get(   '/section/(:num)',                              [SectionsController::class, 'showSection']);
 $routes->get(   '/section/(:num)/page-(:num)/',                 [SectionsController::class, 'showSection']);
-$routes->get(   '/section/(:num)/sort/(:segment)-(:segment)/',  [SectionsController::class, 'showSection']);
+$routes->get(   '/section/(:num)/sort/(:segment)-(:segment)/',  [SectionsController::class, 'setSort']);
 
 
 /** PUBLIC: PAGES */
@@ -73,4 +73,5 @@ $routes->get(   '/link/',                                       [DownloadControl
 
 
 /** Other */
+$routes->get(   '/test',                                        [SectionsController::class, 'test']);
 $routes->get(   '/(:any)',                                      [PublicController::class, 'MainList']);

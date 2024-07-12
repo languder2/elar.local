@@ -205,6 +205,14 @@ class SectionsController extends BaseController
             "title"=> "Control Panel: Разделы"
         ];
 
+
+        /* sort */
+        $this->page['sort']= view("public/Templates/Sort",[
+            "baseurl"=>base_url("/section/$sid/sort/"),
+        ]);
+
+
+
         /* get section */
         $section= $this->db
             ->table("sections")
@@ -264,10 +272,6 @@ class SectionsController extends BaseController
 
         $this->PublicationsModel->prepareToShow($publications);
 
-        /* sort */
-        $this->page['sort']= view("public/Templates/Sort",[
-            "baseurl"=>base_url("/section/$sid/sort/"),
-        ]);
 
         $this->page['subsections']= view("public/Sections/List",[
             "title"=>$sid?"Подразделы":"Разделы",
@@ -283,5 +287,11 @@ class SectionsController extends BaseController
        $this->page['pageContent']= view("public/Sections/Single",$this->page);
 
         return  view("public/page",$this->page);
+    }
+
+    public function setSort($sid= 0, $sort = false, $sortDirection= "asc"):RedirectResponse
+    {
+        echo $sid= "";
+        return redirect()->route('SectionsController::showSection',[5]);
     }
 }

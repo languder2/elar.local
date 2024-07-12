@@ -8,3 +8,6 @@ section.sections{
 section.sections .section:not(:last-child){
     border-bottom: solid 1px #820000;
 }
+section.sections .section{
+    padding-right: 4rem !important;
+}

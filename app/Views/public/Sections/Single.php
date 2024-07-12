@@ -6,7 +6,7 @@
         <?php if(!empty($section->parent)):?>
             <h4 class="position-relative m-0 pt-3 px-4 fs-5">
                 <a href="<?=base_url("/section/".$section->parent->id)?>" class="link">
-                    <?=$section->parent->name??""?>:
+                    <?=$section->parent->name??""?>
                 </a>
                 <a href="<?=base_url("/section/".$section->parent->id)?>" class="current-count">
                     <?=$section->parent->cnt??""?>
@@ -14,7 +14,7 @@
             </h4>
         <?php endif;?>
         <h4 class="position-relative m-0 py-3 px-4 fs-5 <?=!empty($section->parent)?"ps-5":""?>">
-            <?=$section->name??""?>:
+            <?=$section->name??""?>
             <a href="<?=base_url("/section/".$section->id)?>" class="current-count">
                 <?=$section->cnt??""?>
             </a>

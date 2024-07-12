@@ -103,6 +103,7 @@ class PublicationsModel extends Model{
             }
         }
         foreach ($ops as $code=>$op) {
+            if(empty($op->ids)) continue;
             $res = $this->db
                 ->table($code)
                 ->whereIn("id", array_unique($op->ids))

@@ -7,7 +7,10 @@
                 <div class="col col-md-2 col-lg-2">
                     Дата
                 </div>
-                <div class="col-8">
+                <div class="col col-md-2 col-lg-2">
+                    Тип
+                </div>
+                <div class="col-6">
                     Название
                 </div>
                 <div class="col-2">
@@ -24,11 +27,19 @@
                         Дате сохранения:</div>
                     <?=date("d-m-Y",strtotime($item->date))?>
                 </div>
-                <div class="col col-md-8 col-lg-8 py-2">
+                <div class="col col-md-2 col-lg-2 py-2">
+                    <div class="fw-bold d-md-none">
+                        Тип:
+                    </div>
+                    <a href="/publication/<?=$item->id?>" class="red-link">
+                        <?=$item->type->name?>
+                    </a>
+                </div>
+                <div class="col col-md-6 col-lg-6 py-2">
                     <div class="fw-bold d-md-none">
                         Название:
                     </div>
-                    <a href="/publication/<?=$item->id?>" class="red-   link">
+                    <a href="/publication/<?=$item->id?>" class="red-link">
                         <?=$item->name?>
                     </a>
                 </div>
