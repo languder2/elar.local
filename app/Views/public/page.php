@@ -12,6 +12,7 @@
     <link rel="icon" href="<?= base_url('img/favicon-1.ico');?>" sizes="192x192">
 
     <link rel="stylesheet" href="<?= base_url('css/style.css');?>?t=<?=time()?>">
+    <link rel="stylesheet" href="<?= base_url('css/public/main.css');?>?t=<?=time()?>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="stylesheet" href="<?= base_url('css/anim-bg.css');?>?t=<?=time()?>">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,7 +23,7 @@
 
     <link rel="stylesheet" href="<?= base_url('css/fb.css');?>?t=<?=time()?>">
     <script defer src="<?= base_url('js/imask.js');?>?t=<?=time()?>"></script>
-    <script defer src="<?= base_url('js/fb.js');?>js/fb.js?t=<?=time()?>"></script>
+    <script defer src="<?= base_url('js/fb.js');?>?t=<?=time()?>"></script>
 
     <?php if(!empty($includes->js)) foreach ($includes->js as $js):?>
         <script defer src="<?= base_url($js);?>?t=<?php echo(microtime(true).rand()); ?>"></script>

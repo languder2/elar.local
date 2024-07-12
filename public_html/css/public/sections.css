@@ -1,32 +1,10 @@
-.current-count{
-    position: absolute;
-    background-color: #820000;
-    display: block;
-    right: 0;
-    border-radius: 10px;
-    color: white;
-    top: 10px;
-    font-size: 15px;
-    padding: 5px 10px;
-    min-width: 30px;
-    text-align: center;
-    color: white !important;
-}
-h5 .current-count{
-    top: 8px;
-    font-size: 15px;
-    padding: 5px 7px;
-}
-
-a.current-count:hover{
-    background-color: #ff0000;
-}
-a.section{
-    color: black !important;
-}
-a.section:hover{
-    color: #ff0000 !important;
-}
 .Section_tagline{
     margin-top: 100px;
+}
+section.sections{
+    border: solid 1px #820000;
+    border-top: none;
+}
+section.sections .section:not(:last-child){
+    border-bottom: solid 1px #820000;
 }

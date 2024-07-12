@@ -92,7 +92,7 @@ class PublicationsController extends BaseController
         /** get types:  list  */
         $this->page['data']['types']=
             $this->db->table("types")
-                ->orderBy("title")
+                ->orderBy("name")
                 ->get()->getResult();
 
         /** get authors:  list  */
@@ -133,7 +133,7 @@ class PublicationsController extends BaseController
         /** get types:  list  */
         $this->page['data']['types']=
             $this->db->table("types")
-                ->orderBy("title")
+                ->orderBy("name")
                 ->get()->getResult();
 
 
@@ -428,7 +428,7 @@ class PublicationsController extends BaseController
                 ->get()->getFirstRow();
 
         /* вывод */
-        $this->page['pageContent']= view("public/publication",["publication"=>$publication]);
+        $this->page['pageContent']= view("public/Publications/Single",["publication"=>$publication]);
         return view("public/page",$this->page);
     }
 

@@ -191,7 +191,7 @@ class SectionsController extends BaseController
         return true;
     }
 
-    public function showSection($sid= false, $currenPage= 1):string|RedirectResponse
+    public function showSection($sid= 0, $currenPage= 1):string|RedirectResponse
     {
         $this->page['includes']=(object)[
             'js'=>[],
@@ -212,19 +212,18 @@ class SectionsController extends BaseController
             ->get()
             ->getFirstRow();
 
-        if(empty($section)) return redirect()->to(base_url("/"));
-
         /* get parent */
-        $section->parent= $this->db
-            ->table("sections")
-            ->where(['id'=>$section->parent])
-            ->get()
-            ->getFirstRow();
+        if(!empty($section))
+            $section->parent= $this->db
+                ->table("sections")
+                ->where(['id'=>$section->parent])
+                ->get()
+                ->getFirstRow();
 
         /* get subsections */
-        $section->sub= $this->db
+        $sections= $this->db
             ->table("sections")
-            ->where(['parent'=>$section->id])
+            ->where(['parent'=>$sid])
             ->get()
             ->getResult();
 
@@ -250,8 +249,13 @@ class SectionsController extends BaseController
 
         /* get Publications */
         $publications= $this->db
-            ->table("publications")
-            ->where("JSON_CONTAINS(sections, '".$sid."', '$')")
+            ->table("publications");
+
+        if($sid)
+            $publications= $publications
+                ->where("JSON_CONTAINS(sections, '".$sid."', '$')");
+
+        $publications= $publications
             ->limit($this->countInPage,($currenPage-1)*$this->countInPage)
             ->orderBy("date","desc")
             ->orderBy("name","asc")
@@ -260,11 +264,14 @@ class SectionsController extends BaseController
 
         $this->PublicationsModel->prepareToShow($publications);
 
-        $this->page['sort']= view("public/Templates/Sort",[]);
+        /* sort */
+        $this->page['sort']= view("public/Templates/Sort",[
+            "baseurl"=>base_url("/section/$sid/sort/"),
+        ]);
 
         $this->page['subsections']= view("public/Sections/List",[
-            "title"=>"Подразделы",
-            "list"=>$section->sub,
+            "title"=>$sid?"Подразделы":"Разделы",
+            "list"=>$sections,
         ]);
 
         $this->page['publication']= view("public/Publications/List",[
@@ -273,7 +280,7 @@ class SectionsController extends BaseController
         ]);
 
 
-       $this->page['pageContent']= view("public/Sections/Simple",$this->page);
+       $this->page['pageContent']= view("public/Sections/Single",$this->page);
 
         return  view("public/page",$this->page);
     }

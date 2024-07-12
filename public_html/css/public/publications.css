@@ -5,12 +5,6 @@
 .publication-title{
     background-color: white;
 }
-a:not([aria-disabled=true]){
-    color: #820000;
-}
-a:hover{
-    color: #ff0000;
-}
 .pagination .page-link.active{
     background-color: #820000;
     color: #FFFFFF;
@@ -34,4 +28,16 @@ a.btn-opn:hover{
     border-radius: 15px;
     transition: .3s linear;
 }
+section.publications{
+    border: solid 1px #820000;
+}
+section.publications .publication:not(:last-child){
+    border-bottom: solid 1px #820000;
+}
 
+section.publication-single{
+    border: solid 1px #820000;
+}
+section.publication-single .row:not(:last-child){
+    border-bottom: solid 1px #820000;
+}

@@ -193,7 +193,7 @@
                         <option value="<?=$type->id?>"
                             <?=(!empty($form->data->type) && $form->data->type==$type->id)?"selected":""?>
                         >
-                            <?=$type->title?>
+                            <?=$type->name?>
                         </option>
                     <?php endforeach;?>
                 </select>

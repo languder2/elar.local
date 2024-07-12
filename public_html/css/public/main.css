@@ -33,3 +33,47 @@
     grid-template-columns: 1fr 100px;
 }
 
+a.link:not([aria-disabled=true]){
+    color: var(--bs-body-color);
+}
+a.red-link:not([aria-disabled=true]){
+    color: #570000;
+}
+a.red-link:hover,
+a.link:hover{
+    color: #ff0000;
+}
+a.current-count{
+    position: absolute;
+    background-color: #820000;
+    display: block;
+    right: 20px;
+    border-radius: 10px;
+    color: white;
+    top: 15px;
+    padding: 5px 10px;
+    min-width: 30px;
+    text-align: center;
+    font-size: 15px;
+}
+a.current-count:hover{
+    color: white !important;
+    background-color: #ff0000;
+}
+a.sort-link{
+    padding: 0px 5px;
+}
+a.sort-link span{
+    color: #820000;
+    justify-self: center;
+    vertical-align: middle;
+    text-align: center;
+    padding: 15px 0;
+    background: white;
+    border-radius: 15px;
+    display: block;
+}
+a.sort-link:hover span{
+    background-color: #820000;
+    color: white;
+}
