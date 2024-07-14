@@ -1,0 +1,37 @@
+/* List border, Separator */
+@media screen and (min-width: 992px) {
+    section.list-box .noLastBorder .list-item:last-child{
+        border-bottom: none;
+    }
+    section.list-box .list-section:first-child{
+        border-right: solid 1px #820000;
+    }
+}
+
+section.list-box .list-container{
+    border-left: solid 1px #820000;
+    border-right: solid 1px #820000;
+}
+
+section.list-box .list-item{
+    padding-right: 4rem !important;
+}
+
+section.list-box .list-item{
+  border-bottom: solid 1px #820000;
+}
+
+section.list-box .current-count{
+    top: 12px;
+}
+section.list-box .section-footer{
+    background-color: #820000;
+    color: #FFFFFF;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+/* box-sort */
+.box-sort a.sort-link span{
+    padding: 6px;
+    border: solid 1px #820000;
+}

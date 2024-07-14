@@ -1,5 +1,5 @@
 <?php if(!empty($section)):?>
-    <section class="bg-white rounded-4 mb-5">
+    <section class="box bg-white rounded-4 mb-5">
         <div class="title-view">
             Раздел
         </div>

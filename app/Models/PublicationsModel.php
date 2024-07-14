@@ -90,18 +90,21 @@ class PublicationsModel extends Model{
             ]
         ];
 
-
-
         foreach ($list as $key=>$publication){
             foreach ($ops as $code=>$op){
+
                 $publication->{$op->field}= json_decode($publication->{$op->field},true);
+
                 if(is_array($publication->{$op->field}))
-                    $ops->{$code}->ids= array_merge($ops->{$code}->list,$publication->{$op->field});
+                    $ops->{$code}->ids= array_merge($ops->{$code}->ids,$publication->{$op->field});
+
                 elseif($publication->{$op->field})
                     $ops->{$code}->ids[]= $publication->{$op->field};
+
                 $list[$key]= $publication;
             }
         }
+
         foreach ($ops as $code=>$op) {
             if(empty($op->ids)) continue;
             $res = $this->db

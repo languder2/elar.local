@@ -1,4 +1,4 @@
-<section class="publications mb-5 bg-white rounded-4">
+<section class="publications mb-5 bg-white rounded-4 box">
     <div class="title-view">
         <span class="d-inline-block d-md-none">Публикации:</span>
         <div class="container-fluid">
@@ -31,9 +31,7 @@
                     <div class="fw-bold d-md-none">
                         Тип:
                     </div>
-                    <a href="/publication/<?=$item->id?>" class="red-link">
-                        <?=$item->type->name?>
-                    </a>
+                        <?=$item->type->name??""?>
                 </div>
                 <div class="col col-md-6 col-lg-6 py-2">
                     <div class="fw-bold d-md-none">
@@ -48,7 +46,8 @@
                         Авторы:
                     </div>
                     <?php foreach ($item->authors as $key=>$author):?>
-                        <a href="/author/<?=$author->id??""?>" class="red-link text-nowrap">
+                        <?php if(empty($author->id)) continue;?>
+                        <a href="<?=base_url("set-authors/$author->id")?>" class="red-link text-nowrap">
                             <?=$author->name??$author;?><?=(count($item->authors)-$key>1)?", ":""?>
                         </a>
                     <?php endforeach;?>
@@ -59,5 +58,7 @@
     <?php if (empty($list)){
         echo '<h4 class="text-center mb-4 py-2 bg-white">Публикацйи нет</h4>';
     } ?>
-    <?=$paginator?? "" ?>
+    <div class="section-footer py-3">
+        <?=$paginator?? "" ?>
+    </div>
 </section>

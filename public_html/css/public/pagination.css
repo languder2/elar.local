@@ -1,0 +1,26 @@
+.public-pagination{
+    font-size: 1rem;
+    display: flex;
+    padding-left: 0;
+    list-style: none;
+}
+
+.public-pagination .page-item{
+
+}
+
+.public-pagination .page-link{
+    padding: 5px 10px;
+
+}
+.public-pagination .disabled .page-link{
+    color: #aaa;
+}
+.public-pagination .page-link.active{
+    color: #820000;
+    background-color: #f5f5f5;
+}
+.public-pagination .page-link:hover{
+    color: #ff0000;
+    background-color: white;
+}

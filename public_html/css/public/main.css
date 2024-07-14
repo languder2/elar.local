@@ -1,3 +1,7 @@
+.border-color-main{
+    border: solid 1px #820000 !important;
+    opacity: 1;
+}
 .gridSpecList{
     display: grid;
     grid-template-columns: 1fr 100px;
@@ -41,7 +45,7 @@ a.red-link:not([aria-disabled=true]){
 }
 a.red-link:hover,
 a.link:hover{
-    color: #ff0000;
+    color: #aa0000;
 }
 a.current-count{
     position: absolute;
@@ -58,10 +62,10 @@ a.current-count{
 }
 a.current-count:hover{
     color: white !important;
-    background-color: #ff0000;
+    background-color: #aa0000;
 }
 a.sort-link{
-    padding: 0px 5px;
+    padding: 0 5px;
 }
 a.sort-link span{
     color: #820000;
@@ -76,4 +80,42 @@ a.sort-link span{
 a.sort-link:hover span{
     background-color: #820000;
     color: white;
+}
+
+.box{
+    border: solid 1px #820000;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+
+}
+
+.section-footer{
+    background-color: #820000;
+    color: #FFFFFF;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+
+/* search */
+.box-search{}
+.box-search button{
+    border-color: #820000;
+    background-color: #820000;
+    color: white;
+}
+.box-search button:hover{
+    background-color: white;
+    color: #820000;
+    border-color: #820000;
+}
+.box-search button:active{
+    background-color:  #aa0000 !important;
+    color: white;
+}
+.box-search input[name=search]{
+
+}
+.box-search input[name=search]:focus{
+    box-shadow: none;
+    border-color: #820000;
 }

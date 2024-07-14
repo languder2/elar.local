@@ -5,7 +5,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use CodeIgniter\HTTP\DownloadResponse;
-class DownloadController extends BaseController
+class Download extends BaseController
 {
     protected array $data;
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger):bool

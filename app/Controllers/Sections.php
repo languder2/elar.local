@@ -7,11 +7,12 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-class SectionsController extends BaseController
+class Sections extends BaseController
 {
     protected array $page;
     protected int $countInPage= 20;
     protected PublicationsModel $PublicationsModel;
+
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger):bool
     {
         parent::initController($request, $response, $logger);
@@ -27,7 +28,9 @@ class SectionsController extends BaseController
             'js'=>["/js/admin/change-visible.js"],
             'css'=>["/css/admin/sections.css"],
         ];
+
         $page["title"]= "Control Panel: Разделы";
+
         $page['menuTop']= view("admin/template/menuTop",["menu"=>$this->model->getMenu("admin")]);
 
         if($this->session->has("message"))
@@ -43,16 +46,19 @@ class SectionsController extends BaseController
             $list= $list->like($filter)->orWhere(["parent!="=>0]);
 
         $list= $list->orderBy("parent")->orderBy("sort")->orderBy("name");
+
         $page['list']= $list->get()->getResult();
+
         $page['list']= $this->model->convertTree2List($page['list']);
 
         $page['filter']= view("admin/Sections/Filter",["filter"=>(object)$filter]);
 
         $page['pageContent']= view("admin/Sections/List",$page);
+
         return view("admin/template/page",$page);
     }
 
-    public function form($action= "add",$id= false):string
+    public function form($action= "add",$id= false):string|RedirectResponse
     {
         if(!$this->model->hasAuth())
             return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
@@ -191,26 +197,20 @@ class SectionsController extends BaseController
         return true;
     }
 
-    public function showSection($sid= 0, $currenPage= 1):string|RedirectResponse
+    public function showSection($sid= 0, $currentPage= 1):string|RedirectResponse
     {
         $this->page['includes']=(object)[
             'js'=>[],
             'css'=>[
-                "/css/public/sections.css",
-                "/css/public/publications.css",
+                "css/public/sections.css",
+                "css/public/publications.css",
+                "css/public/pagination.css",
             ],
         ];
 
         $this->page['meta']= (object)[
             "title"=> "Control Panel: Разделы"
         ];
-
-
-        /* sort */
-        $this->page['sort']= view("public/Templates/Sort",[
-            "baseurl"=>base_url("/section/$sid/sort/"),
-        ]);
-
 
 
         /* get section */
@@ -237,41 +237,42 @@ class SectionsController extends BaseController
 
         $this->page['section']= $section;
 
-        /* paginator */
-        $count=  $this->db
-            ->table("publications")
-            ->where("JSON_CONTAINS(sections, '".$sid."', '$')")
-            ->get()
-            ->getNumRows();
+        /* get Sort from session */
+        if($this->session->has("publicationsSort"))
+            $sorts= $this->session->get("publicationsSort");
+        else
+            $sorts=(object)[
+                "date"=>"desc",
+            ];
 
-        $maxPages= ceil($count / $this->countInPage);
+        /* sort view */
+        $this->page['sort']= view("public/Templates/Sort",[
+            "baseurl"=>base_url("section/$sid/"),
+            "sort"=> $sorts,
+        ]);
 
-        if($maxPages<$currenPage) $currenPage = $maxPages;
-        if($currenPage<1) $currenPage = 1;
-        if($maxPages>1)
-            $paginator= view("admin/template/paginator",[
-                "maxPages"=>$maxPages,
-                "currentPage"=>$currenPage,
-                "baseLink"=>base_url("/section/$sid/page-"),
-            ]);
+        if(empty($sorts->name))
+            $sorts->name= "asc";
 
         /* get Publications */
-        $publications= $this->db
-            ->table("publications");
-
         if($sid)
-            $publications= $publications
-                ->where("JSON_CONTAINS(sections, '".$sid."', '$')");
+            $where= "JSON_CONTAINS(sections, '".$sid."', '$')";
 
-        $publications= $publications
-            ->limit($this->countInPage,($currenPage-1)*$this->countInPage)
-            ->orderBy("date","desc")
-            ->orderBy("name","asc")
-            ->get()
-            ->getResult();
+        $publications= $this->db->table("publications");
+
+        $paginator= $this->model->getListWithPagination(
+            $publications,
+            $where??[],
+            $likes??[],
+            $sorts??[],
+            (object)[
+                "link"      =>  base_url("section/$sid/page-"),
+                "current"   =>  $currentPage,
+                "inPage"    =>  $this->countInPage,
+            ]
+        );
 
         $this->PublicationsModel->prepareToShow($publications);
-
 
         $this->page['subsections']= view("public/Sections/List",[
             "title"=>$sid?"Подразделы":"Разделы",
@@ -280,7 +281,7 @@ class SectionsController extends BaseController
 
         $this->page['publication']= view("public/Publications/List",[
             "list"=>$publications,
-            "paginator"=>$paginator??"",
+            "paginator"=>$paginator,
         ]);
 
 
@@ -291,7 +292,43 @@ class SectionsController extends BaseController
 
     public function setSort($sid= 0, $sort = false, $sortDirection= "asc"):RedirectResponse
     {
-        echo $sid= "";
-        return redirect()->route('SectionsController::showSection',[5]);
+        $publicationsSort= (object)[$sort=>$sortDirection];
+        $this->session->set("publicationsSort",$publicationsSort);
+        return redirect()->route('Sections::showSection',[$sid]);
     }
+
+    public function showSections():string
+    {
+        $includes=(object)[
+            'js'=>[],
+            'css'=>[
+                "/css/public/sections.css",
+            ],
+        ];
+
+        $this->page['meta']= (object)[
+            "title"=> "Разделы"
+        ];
+
+        $list= $this->db
+            ->table("sections")
+            ->orderBy("parent")
+            ->orderBy("sort")
+            ->orderBy("name")
+            ->get()
+            ->getResult()
+        ;
+
+        $list= $this->model->buildTree($list);
+
+        $pageContent= view("public/Sections/All",[
+            "list"  =>  $list,
+        ]);
+
+        return  view("public/page",[
+            "includes"      =>  $includes,
+            "pageContent"   =>  $pageContent
+        ]);
+    }
+
 }

@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
                     <?php foreach ($publication->authors as $key=>$author):?>
-                        <a href="<?=base_url("/author/$author->id")?>" class="red-link">
+                        <a href="<?=base_url("set-authors/$author->id")?>" class="red-link">
                             <?=$author->name?><?=(count($publication->authors)-$key>1)?", ":""?>
                         </a>
                     <?php endforeach;?>
@@ -72,7 +72,7 @@
                     Научный руководитель:
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
-                    <a href="<?=base_url("/author/".$publication->advisor->id)?>" class="red-link">
+                    <a href="<?=base_url("set-advisors/".$publication->advisor->id)?>" class="red-link">
                         <?=$publication->advisor->name?>
                     </a>
                 </div>
@@ -95,7 +95,7 @@
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
                     <?php foreach ($publication->tags as $key=>$tag):?>
-                        <a href="<?=base_url("/tag/$tag->id")?>" class="red-link">
+                        <a href="<?=base_url("set-tags/$tag->id")?>" class="red-link">
                             <?=$tag->name?><?=(count($publication->authors)-$key>1)?", ":""?>
                         </a>
                     <?php endforeach;?>

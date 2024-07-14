@@ -7,7 +7,7 @@ use CodeIgniter\HTTP\RequestInterface;
 use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 
-class TypesController extends BaseController
+class Types extends BaseController
 {
     private TypesModel $sm;
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger)
@@ -67,13 +67,13 @@ class TypesController extends BaseController
         $form= (object)$this->request->getVar('form');
         $rules= [
             //'form.code' => 'required|is_unique[edProfiles.code]',
-            'form.title' => 'required|is_unique[Sources.title]',
+            'form.name' => 'required|is_unique[Sources.name]',
         ];
-      if($form->op=="edit") $rules['form.title']= "required|is_unique[Types.title, id, ".$form->id."]";
+      if($form->op=="edit") $rules['form.name']= "required|is_unique[Types.name, id, ".$form->id."]";
         $messages= [
-            'form.title'=>[
+            'form.name'=>[
                 "required"=>"required",
-                "is_unique"=>"Источник с именем $form->title уже существует"
+                "is_unique"=>"Источник с именем $form->name уже существует"
             ],
         ];
         $inputs = $this->validate($rules,$messages);
@@ -97,7 +97,7 @@ class TypesController extends BaseController
         if (!$id) return redirect()->to(base_url("/admin/types/"));
         $source = $this->sm->dbGetRow("types", ["id" => $id]);
         if ($source->cnt == "") {
-        $this->session->setFlashdata("message", (object)["type" => "success", "class" => "callout-success", "message" => "Источник удален: #$source->id: $source->title"]);
+        $this->session->setFlashdata("message", (object)["type" => "success", "class" => "callout-success", "message" => "Источник удален: #$source->id: $source->name"]);
         $this->sm->dbDelete("types", ["id" => $id]);
         }
         else

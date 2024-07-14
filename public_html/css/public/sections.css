@@ -11,3 +11,18 @@ section.sections .section:not(:last-child){
 section.sections .section{
     padding-right: 4rem !important;
 }
+/* all section list */
+.section-list hr:last-child{
+    display: none;
+}
+.section-list hr{
+    border-top: solid 1px #820000;
+    opacity: 1;
+}
+.section-list .current-count{
+    top: 0;
+}
+.section-list .subsection,
+.section-list .section{
+
+}

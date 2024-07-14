@@ -4,7 +4,7 @@
             <h3 class="mt-2 mb-3">Источники</h3>
         </div>
         <div class="col-lg col-sm-4 pt-2 fs-5 text-end">
-            <a href="<?=base_url('admin/Types/add')?>" class="btn btn-primary w-75">
+            <a href="<?=base_url('admin/types/add')?>" class="btn btn-primary w-75">
                 Создать
             </a>
         </div>
@@ -27,7 +27,7 @@
                 <?=$source->id?>
             </div>
             <div class="ps-4">
-                <?=$source->title?>
+                <?=$source->name?>
             </div>
             <div>
                 <?=$source->cnt?>
@@ -38,14 +38,14 @@
                 </div>
             </div>
             <div>
-                <a class="btn btn-primary btn-sm" href="<?=base_url("admin/Types/edit/$source->id")?>"><i class="bi bi-pencil"></i></a>
+                <a class="btn btn-primary btn-sm" href="<?=base_url("admin/types/edit/$source->id")?>"><i class="bi bi-pencil"></i></a>
             </div>
             <div>
                 <a class="btn btn-danger btn-sm"
-                   href="<?=base_url("admin/Types/delete/$source->id")?>"
+                   href="<?=base_url("admin/types/delete/$source->id")?>"
                    data-title="Удалить Коллекцию"
                    data-message="Удалить #
-                   <?=$source->id?> <?=$source->title?>"><i class="bi bi-trash3"></i></a>
+                   <?=$source->id?> <?=$source->name?>"><i class="bi bi-trash3"></i></a>
             </div>
         <?php endforeach;?>
     </div>

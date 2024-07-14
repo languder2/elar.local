@@ -13,7 +13,7 @@ class PublicController extends BaseController
     private PublicModel $pbl;
 
     protected array $page;
-    protected int $countInPage= 20;
+    protected int $countInPage= 10;
     protected PublicationsModel $PublicationsModel;
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger):bool
     {
@@ -267,7 +267,6 @@ class PublicController extends BaseController
             ->getResult();
 
         $this->PublicationsModel->prepareToShow($publications);
-
 
         $this->page['publication']= view("public/Publications/List",[
             "list"=>$publications,

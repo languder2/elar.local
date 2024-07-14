@@ -7,7 +7,7 @@ use CodeIgniter\HTTP\ResponseInterface;
 use Psr\Log\LoggerInterface;
 use App\Models\PublicationsModel;
 
-class PublicationsController extends BaseController
+class Publications extends BaseController
 {
     protected array $page;
     protected int $countInPage = 20;
@@ -285,7 +285,7 @@ class PublicationsController extends BaseController
             $insertID= $this->db->insertID();
             $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Публикация добавлена: #$insertID: ".$form->data->name]);
 
-            $pdf= "publications/".$insertID."_publication.pdf";
+            $pdf= "pdf/".$insertID."_publication.pdf";
             $fileName= $insertID."_publication.pdf";
 
             if(file_exists($pdf))
@@ -300,7 +300,7 @@ class PublicationsController extends BaseController
             $publication= $this->db->table("publications")->where(['id'=>$id])->get()->getFirstRow();
             if($form->data->pdf != $publication->pdf){
 
-                $pdf= "publications/".$id."_publication.pdf";
+                $pdf= "pdf/".$id."_publication.pdf";
                 if(file_exists($pdf)) unlink($pdf);
                 if(file_exists($publication->pdf)) unlink($publication->pdf);
                 rename($form->data->pdf, $pdf);
@@ -365,7 +365,6 @@ class PublicationsController extends BaseController
         $this->session->set("sectionsFilter",$filter);
         return redirect()->to(base_url("/admin/sections/"));
     }
-
     public function publication($id=false):string|RedirectResponse
     {
         /* meta */
@@ -432,38 +431,125 @@ class PublicationsController extends BaseController
         return view("public/page",$this->page);
     }
 
-    public function correct():bool
+    public function publicFilter($clear,$type,$id):RedirectResponse|string
     {
-        echo "test";
-        /*
-        $query= "
-            UPDATE sections SET cnt= (
-                SELECT COUNT(id) FROM Publications WHERE JSON_CONTAINS(sections,CONCAT('\"',sections.id,'\"'),'$')
-            );
-        ";
-        $this->db->query($query);
+        $filter = [];
 
-        $query= "
-            UPDATE types SET cnt= (
-                SELECT COUNT(id) FROM Publications WHERE type= types.id
-            );        
-        ";
-        $this->db->query($query);
-        /* правака имен: строка -> json */
-        /*
-        $res= $this->db->table("Publications")->get()->getResult();
-        foreach($res as $publication){
-            $publication->authors=
-                json_encode(
-                    array_map('trim',
-                        explode(",",$publication->authors)
-                    ),
-                    JSON_UNESCAPED_UNICODE
-                );
-            $this->db->table("Publications")->update(["authors"=>$publication->authors],["id"=>$publication->id]);
+        if($clear)
+            $this->session->remove("publicationsFilterWhere");
+
+        if(!$clear && $this->session->has("publicationsFilterWhere"))
+            $filter = $this->session->get("publicationsFilterWhere");
+
+        if($type){
+            $filter["JSON_CONTAINS($type,'$id','$')"]= 1;
+            $this->session->set("publicationsFilterWhere",$filter);
         }
-        */
-        return true;
+
+        return redirect()->to(base_url("publications"));
+    }
+
+    public function list($currentPage= 1):string|RedirectResponse
+    {
+        $includes=(object)[
+            'js'=>[],
+            'css'=>[
+                "css/public/publications.css",
+                "css/public/pagination.css",
+            ],
+        ];
+
+        /* get filters  */
+        if($this->session->has("publicationsFilterWhere"))
+            $where= $this->session->get("publicationsFilterWhere");
+
+        /* filters box  */
+        $filtersBox= view("public/Publications/Filters",[
+            "action"=> base_url("search-publications"),
+            "search"=> $search??null,
+        ]);
+
+        /* likes */
+        if($this->session->has("publications_search")){
+            $search= $this->session->get("publications_search");
+            $likes[]= (object)[
+                "field"     =>  "name",
+                "search"    =>  $search,
+                "side"      =>  "both",
+            ];
+        }
+
+        /* search box */
+        $searchBox= view("public/Publications/Search",[
+            "action"=> base_url("search-publications"),
+            "search"=> $search??null,
+        ]);
+
+        /* get sort */
+        if($this->session->has("publicationsSort"))
+            $sorts= $this->session->get("publicationsSort");
+        else
+            $sorts=(object)[
+                "date"=>"desc",
+            ];
+
+        /* sort view */
+        $sortBox= view("public/Templates/Sort",[
+            "baseurl"=>base_url("publications/"),
+            "sort"=> $sorts,
+        ]);
+
+        $publications= $this->db->table("publications");
+
+        $paginator= $this->model->getListWithPagination(
+            $publications,
+            $where??[],
+            $likes??[],
+            $sorts??[],
+            (object)[
+                "link"      =>  base_url("publications/page-"),
+                "current"   =>  $currentPage,
+                "inPage"    =>  $this->countInPage,
+            ]
+        );
+
+
+        $this->PublicationsModel->prepareToShow($publications);
+
+        $publicationsBox= view("public/Publications/List",[
+            "list"      =>  $publications,
+            "paginator" =>  $paginator,
+        ]);
+
+
+        $pageContent= view("public/Publications/PageContent",[
+            "sort"      =>  $sortBox,
+            "search"    =>  $searchBox,
+            "list"      =>  $publicationsBox,
+        ]);
+
+        return view("public/page",[
+            "includes"      =>  $includes,
+            "pageContent"   =>  $pageContent
+        ]);
+    }
+
+    public function setPublicSort($sort = false, $sortDirection= "asc"):RedirectResponse
+    {
+        $publicationsSort= (object)[$sort=>$sortDirection];
+        $this->session->set("publicationsSort",$publicationsSort);
+        return redirect()->route('publications');
+    }
+    public function setPublicSearch():RedirectResponse
+    {
+        $search= $this->request->getVar("search");
+
+        if(empty($search))
+            $this->session->remove("publications_search");
+
+        else
+            $this->session->set("publications_search",$search);
+        return redirect()->route('publications');
     }
 
 }

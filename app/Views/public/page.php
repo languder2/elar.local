@@ -22,8 +22,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <link rel="stylesheet" href="<?= base_url('css/fb.css');?>?t=<?=time()?>">
-    <script defer src="<?= base_url('js/imask.js');?>?t=<?=time()?>"></script>
-    <script defer src="<?= base_url('js/fb.js');?>?t=<?=time()?>"></script>
+<!--    <script defer src="<?= base_url('js/imask.js');?>?t=<?=time()?>"></script>-->
+<!--    <script defer src="<?= base_url('js/fb.js');?>?t=<?=time()?>"></script>-->
 
     <?php if(!empty($includes->js)) foreach ($includes->js as $js):?>
         <script defer src="<?= base_url($js);?>?t=<?php echo(microtime(true).rand()); ?>"></script>
@@ -56,8 +56,8 @@
         <div class="collapse navbar-collapse " id="navbarBasic">
             <ul class="navbar-nav  mb-2 mb-xl-0">
                 <li class="nav-item">
-                    <a class="nav-link">
-                        Разделы и коллекции
+                    <a href="<?=base_url("sections")?>" class="nav-link">
+                        Разделы
                     </a>
                 </li>
                 <div class="btn-group">
@@ -68,10 +68,12 @@
                         <li>
                             <h6 class="dropdown-header">Посмотреть:</h6>
                         </li>
-                        <li><a class="dropdown-item" href="/browse/date">По дате</a></li>
-                        <li><a class="dropdown-item" href="/browse/authors">По автору</a></li>
-                        <li><a class="dropdown-item" href="/browse/name">По заглавию</a></li>
-                        <li><a class="dropdown-item" href="/browse/tags">Источники</a></li>
+                        <li>
+                            <a class="dropdown-item" href="<?=base_url("publications")?>">Публикации</a>
+                        </li>
+                        <li><a class="dropdown-item" href="/show/authors">Авторов</a></li>
+                        <li><a class="dropdown-item" href="/show/advisors">Руководителей</a></li>
+                        <li><a class="dropdown-item" href="/show/tags">Темы</a></li>
                     </ul>
                 </div>
             </ul>

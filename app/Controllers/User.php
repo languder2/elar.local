@@ -3,7 +3,7 @@
 namespace App\Controllers;
 use CodeIgniter\HTTP\RedirectResponse;
 
-class UserController extends BaseController
+class User extends BaseController
 {
     public function exit(): RedirectResponse
     {

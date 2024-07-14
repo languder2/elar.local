@@ -16,7 +16,7 @@ class TypesModel extends GeneralModel {
     public function SourcesAdd($form){
 
         $sql=[
-            "title"=>$form->title,
+            "name"=>$form->name,
             "description"=>$form->description,
         ];
         $this->db->table("Types")->insert($sql);
@@ -25,12 +25,12 @@ class TypesModel extends GeneralModel {
     }
     public function SourcesChange($form){
         $sql=[
-            "title"=>$form->title,
+            "name"=>$form->name,
             "description"=>$form->description,
 
         ];
         $this->db->table("Types")->update($sql,["id"=>$form->id]);
-        $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Источник изменен: #$form->id: $form->title"]);
+        $this->session->setFlashdata("message",(object)["type"=>"success","class"=>"callout-success","message"=>"Источник изменен: #$form->id: $form->name"]);
         return true;
     }
     public function getSourcesList($filter= []):array{
@@ -40,7 +40,7 @@ class TypesModel extends GeneralModel {
         $results= [];
         foreach($q->getResult() as $record){
             $record->id = $record->id;
-            $record->title = $record->title;
+            $record->name = $record->name;
             $record->cnt = $record->cnt;
             $results[$record->id]= $record;
         }
