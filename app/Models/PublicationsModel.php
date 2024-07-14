@@ -18,7 +18,7 @@ class PublicationsModel extends Model{
             "types"     => "UPDATE types    SET cnt= (SELECT COUNT(id) FROM publications WHERE type= types.id)",
             "sections"  => "UPDATE sections SET cnt= (SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(sections,CONCAT(sections.id),'$'))",
             "authors"   => "UPDATE authors  SET cnt= (SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(authors,CONCAT(authors.id),'$'))",
-            "advisors"  => "UPDATE advisors SET cnt= (SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(authors,CONCAT(advisors.id),'$'))",
+            "advisors"  => "UPDATE advisors SET cnt= (SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(advisor,CONCAT(advisors.id),'$'))",
             "tags"      => "UPDATE tags     SET cnt= (SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(tags,CONCAT(tags.id),'$'))",
         };
 

@@ -55,9 +55,11 @@
             </div>
     <?php endforeach;?>
     </div>
-    <?php if (empty($list)){
-        echo '<h4 class="text-center mb-4 py-2 bg-white">Публикацйи нет</h4>';
-    } ?>
+    <?php if (empty($list)):?>
+        <h4 class="text-center my-4 py-0">
+            публикацйи не найдено
+        </h4>
+    <?php endif; ?>
     <div class="section-footer py-3">
         <?=$paginator?? "" ?>
     </div>

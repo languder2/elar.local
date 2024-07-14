@@ -22,6 +22,7 @@ class Publications extends BaseController
         "sections",
         "types",
         "authors",
+        "advisors",
         "tags",
     ];
 
@@ -465,8 +466,7 @@ class Publications extends BaseController
 
         /* filters box  */
         $filtersBox= view("public/Publications/Filters",[
-            "action"=> base_url("search-publications"),
-            "search"=> $search??null,
+            "filters"       => $where??[],
         ]);
 
         /* likes */
@@ -525,6 +525,7 @@ class Publications extends BaseController
         $pageContent= view("public/Publications/PageContent",[
             "sort"      =>  $sortBox,
             "search"    =>  $searchBox,
+            "filters"   =>  $filtersBox,
             "list"      =>  $publicationsBox,
         ]);
 

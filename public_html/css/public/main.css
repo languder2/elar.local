@@ -86,7 +86,7 @@ a.sort-link:hover span{
     border: solid 1px #820000;
     border-bottom-left-radius: 15px;
     border-bottom-right-radius: 15px;
-
+    background-color: white;
 }
 
 .section-footer{

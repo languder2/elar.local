@@ -6,7 +6,7 @@
         <div class="col col-lg-12 box-section">
             <div class="row row-cols-1 row-cols-lg-5 g-3">
 
-                <a  href="<?=$baseurl??""?>date-<?=(!isset($sort->date) || $sort->date=="desc")?"asc":"desc"?>/"
+                <a  href="<?=$baseurl??""?>date-<?=(!isset($sort->date) || $sort->date=="asc")?"desc":"asc"?>/"
                         class="d-block col sort-link"
                 >
                     <span>

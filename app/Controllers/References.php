@@ -35,10 +35,12 @@ class References extends BaseController
         /* Reference letters */
         $letters= $this->db
             ->table($type)
-            ->select("DISTINCT LEFT(name, 1) AS letter")
+            ->select("DISTINCT UPPER(LEFT(name, 1)) AS letter")
             ->where("cnt>",0)
             ->get()
             ->getResult();
+
+        sort($letters);
 
         if($this->session->has("letterFor_$type")){
             $currentLetter = $this->session->get("letterFor_$type");
