@@ -16,6 +16,7 @@ class Publications extends BaseController
         "sections",
         "authors",
         "tags",
+        "advisors",
     ];
 
     protected array $toCountUpdate= [
@@ -57,8 +58,8 @@ class Publications extends BaseController
             $this->page['message']= $this->session->getFlashdata("message");
 
         $filter= [];
-        if($this->session->has("publicationsFilter"))
-            $filter= $this->session->get("publicationsFilter");
+        if($this->session->has("publicationsFilters"))
+            $filter= $this->session->get("publicationsFilters");
 
         $count=  $this->db
             ->table("publications")
@@ -170,11 +171,12 @@ class Publications extends BaseController
                 $tags= $this->model->getList("tags", "id","name",$tags);
                 $publication->tags= implode(", ",$tags);
             }
-            if(!empty($publication->advisor)) {
-                $advisors= json_decode($publication->advisor);
+
+            if(!empty($publication->advisors)) {
+                $advisors= json_decode($publication->advisors);
                 $advisors= $this->db->table("advisors")->whereIn('id',$advisors)->get()->getResult();
                 $advisors= $this->model->getList("advisors", "id","name",$advisors);
-                $publication->advisor= implode(", ",$advisors);
+                $publication->advisors= implode(", ",$advisors);
             }
 
             $this->page['data']['form']= (object)[
@@ -270,12 +272,12 @@ class Publications extends BaseController
             );
 
         /* обработка научного реководителя */
-        if(!empty($form->data->advisor))
-            $form->data->advisor=
+        if(!empty($form->data->advisors))
+            $form->data->advisors=
                 $this->PublicationsModel->getRelationships(
                     "advisors",
                     "name",
-                    $form->data->advisor
+                    $form->data->advisors
                 );
 
         /* обработка тегов */
@@ -419,9 +421,9 @@ class Publications extends BaseController
                 ->get()->getResult();
 
         /* получение руководителя*/
-        if(!empty($publication->advisor))
-            $publication->advisor= $this->db->table("advisors")
-                ->where("name",$publication->advisor)
+        if(!empty($publication->advisors))
+            $publication->advisors= $this->db->table("advisors")
+                ->whereIn("id",$publication->advisors)
                 ->get()->getFirstRow();
 
         /* вывод */
@@ -432,7 +434,9 @@ class Publications extends BaseController
     public function list($currentPage= 1):string|RedirectResponse
     {
         $includes=(object)[
-            'js'=>[],
+            'js'=>[
+                "js/public/filter.js"
+            ],
             'css'=>[
                 "css/public/publications.css",
                 "css/public/pagination.css",
@@ -440,9 +444,15 @@ class Publications extends BaseController
         ];
 
         /* get filters  */
-        if($this->session->has("publicationsFilterWhere"))
-            $where= $this->session->get("publicationsFilterWhere");
+        if($this->session->has("publicationsConditions")){
+            $currentFilter= $this->session->get("publicationsFilters");
+            $conditions= $this->session->get("publicationsConditions");
+            foreach ($conditions as $condition){
+                $where[array_key_first($condition)]= reset($conditions);
+            }
+        }
 
+        //dd($where??"");
 
         /* get filter lists*/
         foreach ($this->filterList as $table => $title){
@@ -453,16 +463,26 @@ class Publications extends BaseController
                 ->get()
                 ->getResult();
 
+            if(!empty($currentFilter[$table]))
+                $current= $this->db
+                    ->table($table)
+                    ->where("id",$currentFilter[$table])
+                    ->get()
+                    ->getFirstRow();
+            else
+                $current= NULL;
+
             if(count($filter))
-                $filters[$table]= view("public/Publications/Filter",[
+                $filtersView[$table]= view("public/Publications/Filter",[
                     "title"     =>  $title,
                     "filter"    =>  $filter,
                     "tag"       =>  $table,
+                    "current"   =>  $current->name??null,
                 ]);
         }
 
         $filtersBox= view("public/Publications/Filters",[
-            "filters"       => $filters??[],
+            "filters"       => $filtersView??[],
         ]);
 
         /* likes */
@@ -509,7 +529,6 @@ class Publications extends BaseController
             ]
         );
 
-
         $this->PublicationsModel->prepareToShow($publications);
 
         $publicationsBox= view("public/Publications/List",[
@@ -531,19 +550,39 @@ class Publications extends BaseController
         ]);
     }
 
-    public function publicFilter($clear,$type,$id):RedirectResponse|string
+    public function publicFilter($type,$id,$clear= false):RedirectResponse|string
     {
-        $filter = [];
+        $filter     = [];
+        $conditions = [];
 
-        if($clear)
-            $this->session->remove("publicationsFilterWhere");
+        if($clear){
+            $this->session->remove("publicationsFilters");
+            $this->session->remove("publicationsConditions");
+        }
 
-        if(!$clear && $this->session->has("publicationsFilterWhere"))
-            $filter = $this->session->get("publicationsFilterWhere");
+        if($this->session->has("publicationsFilters")){
+            $filter             = $this->session->get("publicationsFilters");
+            $conditions         = $this->session->get("publicationsConditions");
+        }
 
-        if($type){
-            $filter["JSON_CONTAINS($type,'$id','$')"]= 1;
-            $this->session->set("publicationsFilterWhere",$filter);
+        if($id != 0){
+            $filter[$type]      = $id;
+            $conditions[$type]  = ["JSON_CONTAINS($type,'$id','$')" => 1];
+            $this->session->set("publicationsFilters",      $filter);
+            $this->session->set("publicationsConditions",   $conditions);
+        }
+        else{
+            unset($filter[$type]);
+            unset($conditions[$type]);
+
+            if(empty($filter)){
+                $this->session->remove("publicationsFilters");
+                $this->session->remove("publicationsConditions");
+            }
+            else{
+                $this->session->set("publicationsFilters",      $filter);
+                $this->session->set("publicationsConditions",   $conditions);
+            }
         }
 
         return redirect()->to(base_url("publications"));

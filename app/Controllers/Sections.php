@@ -330,4 +330,9 @@ class Sections extends BaseController
         ]);
     }
 
+    public function test()
+    {
+        dd($this->session->get(""));
+    }
+
 }

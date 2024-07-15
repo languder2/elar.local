@@ -119,3 +119,82 @@ a.sort-link:hover span{
     box-shadow: none;
     border-color: #820000;
 }
+
+/* FILTER BOX */
+.filter-input-group{
+    position: relative;
+    padding: 1rem;
+}
+.filter-input-group input{
+    margin:             1px 0;
+}
+
+.filter-input-group label{
+    position:       absolute;
+    top:                1.5rem;
+    left:               21px;
+    background-color:   white;
+}
+.filter-input-group >input:focus{
+    box-shadow:         none;
+    border:             solid 2px #820000;
+    margin:             0;
+    border-radius:      6px 6px 0 0;
+}
+.filter-input-group:has(>input:focus) label,
+.filter-input-group label.active{
+    transition: 0.3s ease;
+    font-size: 13px;
+    top: 7px;
+    padding: 0 3px;
+    left: 18px
+}
+.filter-input-group .variables{
+    transition:         1s ease;
+    position:           absolute;
+    background:         white;
+    left:               0.5rem;
+    right:              0.5rem;
+    padding:            0.5rem 0;
+    z-index:            -1;
+    border:             solid 2px #820000;
+    border-top:         none;
+    border-radius:      0 0 6px 6px;
+    overflow-y:         auto;
+    opacity:            0;
+}
+.filter-input-group:has(>input:focus) .variables{
+    opacity:            1;
+    display:            block;
+    transition:         0.5s ease;
+    max-height:         200px;
+    z-index:            1000;
+}
+
+.filter-input-group .variables a{
+    transition:         0.3s ease;
+    display:            block;
+    padding:            0.2rem 1rem;
+    cursor:             pointer;
+}
+.filter-input-group .variables a.hide{
+    transition:         0.3s ease;
+    display:            none;
+}
+.filter-input-group .variables a:hover{
+    background-color:   #820000;
+    color:              white !important;
+}
+.filter-input-group .variables::-webkit-scrollbar {
+    width:              3px; /* ширина scrollbar */
+    background:         #820000;
+}
+.filter-input-group .variables::-webkit-scrollbar-track {
+    background:         transparent; /* цвет дорожки */
+
+}
+.filter-input-group .variables::-webkit-scrollbar-thumb {
+    border:             1px solid #820000;  /* padding вокруг плашки */
+    border-right:       1px solid white;  /* padding вокруг плашки */
+    border-radius:      20px;
+}

@@ -139,10 +139,10 @@
 
         <div class="form-floating my-2 px-1">
             <input  type="text"
-                    name="form[data][advisor]"
+                    name="form[data][advisors]"
                     id="form-tags"
                     placeholder="Научный руководитель"
-                    value="<?=$form->data->advisor??""?>"
+                    value="<?=$form->data->advisors??""?>"
                     class="form-control h-auto"
             >
             <label class="h-auto w-auto" for="form-tags">
@@ -165,12 +165,14 @@
             <div class="main-container">
                 <div class="editor-container editor-container_classic-editor editor-container_include-style" id="editor-container">
                     <div class="editor-container__editor">
-                        <textarea   name="form[data][description]"
-                                    id="form-description"
-                                    class="form-control"
-                                    style="resize: none; height: 200px"
-                                    placeholder="Аннотация"
-                        ><?=$form->data->description??""?></textarea>
+                        <label>
+                            <textarea   name="form[data][description]"
+                                        id="form-description"
+                                        class="form-control"
+                                        style="resize: none; height: 200px"
+                                        placeholder="Аннотация"
+                            ><?=$form->data->description??""?></textarea>
+                        </label>
                     </div>
                 </div>
             </div>

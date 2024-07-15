@@ -3,13 +3,13 @@
         <div class="col col-lg-12 title-view">
             <h6 class="m-0">Показать</h6>
         </div>
-        <div class="col col-lg-12 box-section">
+        <div class="col col-lg-12 box-section  bg-white">
             <div class="row row-cols-1 row-cols-lg-5 g-3">
 
                 <a  href="<?=$baseurl??""?>date-<?=(!isset($sort->date) || $sort->date=="asc")?"desc":"asc"?>/"
                         class="d-block col sort-link"
                 >
-                    <span>
+                    <span class="border-color-main">
                         По дате
 
                         <?php if(!empty($sort->date) and $sort->date == "asc"):?>
@@ -26,7 +26,7 @@
                 <a href="<?=$baseurl??""?>name-<?=(!isset($sort->name) || $sort->name=="desc")?"asc":"desc"?>/"
                         class="d-block col sort-link"
                 >
-                    <span>
+                    <span class="border-color-main">
                         По заглавию
 
                         <?php if(!empty($sort->name) and $sort->name == "asc"):?>
@@ -41,19 +41,19 @@
                 </a>
 
                 <a href="<?=base_url("show/tags")?>" class="d-block col sort-link">
-                    <span>
+                    <span class="border-color-main">
                     Темы
                     </span>
                 </a>
 
                 <a href="<?=base_url("show//authors")?>" class="d-block col sort-link">
-                    <span>
+                    <span class="border-color-main">
                     Авторов
                     </span>
                 </a>
 
                 <a href="<?=base_url("show//advisors")?>" class="d-block col sort-link">
-                    <span>
+                    <span class="border-color-main">
                     Руководители
                     </span>
                 </a>

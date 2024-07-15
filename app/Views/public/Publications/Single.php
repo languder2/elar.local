@@ -66,14 +66,14 @@
                 </div>
             </div>
         <?php endif;?>
-        <?php if(!empty($publication->advisor)):?>
+        <?php if(!empty($publication->advisors)):?>
             <div class="row g-0 px-4 py-3">
                 <div class="col-12 col-md-4 col-lg-3 ">
                     Научный руководитель:
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
-                    <a href="<?=base_url("set-advisors/".$publication->advisor->id)?>" class="red-link">
-                        <?=$publication->advisor->name?>
+                    <a href="<?=base_url("set-advisors/".$publication->advisors->id)?>" class="red-link">
+                        <?=$publication->advisors->name?>
                     </a>
                 </div>
             </div>

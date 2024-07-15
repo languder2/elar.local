@@ -60,13 +60,13 @@
                     <?=$publication->description?>
                 </div>
             <?php endif;?>
-            <?php if(!empty($publication->advisor)):?>
+            <?php if(!empty($publication->advisors)):?>
                 <div class="col-12 col-md-4 col-lg-3 ">
                     Научный руководитель:
                 </div>
                 <div class="col-12 col-md-8 col-lg-9">
-                    <a href="<?=base_url("/author/".$publication->advisor->id)?>">
-                        <?=$publication->advisor->name?>
+                    <a href="<?=base_url("/advisors/".$publication->advisors->id)?>">
+                        <?=$publication->advisors->name?>
                     </a>
                 </div>
             <?php endif;?>

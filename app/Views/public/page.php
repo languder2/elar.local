@@ -49,7 +49,7 @@
         </div>
     </div>
     <div class="container-fluid under-header" style="max-width: 1320px; margin: 0 auto;">
-        <a class="d-hidden" href="#"><img src=""></a>
+        <a class="d-hidden" href="#"><img src="" alt=""></a>
         <button class="navbar-toggler bg-light" type="button" data-bs-toggle="collapse" data-bs-target="#navbarBasic" aria-controls="navbarBasic" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -103,12 +103,12 @@
             <div class="col-lg col-sm-12">
                 <ul class="nav flex-column">
                     <li class="nav-item mb-2">
-                        <a href="/chapter.php" class="nav-link p-0 text-muted mb-3" style=" color: #CA182E !important;">Адрес</a>
+                        <a href="https://mgu-mlt.ru/kontakty-i-adresa/" class="nav-link p-0 text-muted mb-3" style=" color: #CA182E !important;">Адрес</a>
                         <p>Запорожская обл.,
                             г. Мелитополь,
                             пр-кт Богдана Хмельницкого, д. 18</p>
                     </li>
-                    <li class="nav-item mb-2"><a href="/chapter.php" class="nav-link p-0 text-muted how-find">Как нас найти?</a></li>
+                    <li class="nav-item mb-2"><a href="https://mgu-mlt.ru/kontakty-i-adresa/" class="nav-link p-0 text-muted how-find">Как нас найти?</a></li>
                 </ul>
             </div>
             <div class="col">
@@ -132,5 +132,24 @@
         </div>
     </footer>
 </section>
+<?php if(!in_array($_SERVER["REMOTE_ADDR"],LOCAL_ADDRESS)):?>
+    <!-- Yandex.Metrika counter -->
+    <script type="text/javascript" >
+        (function(m,e,t,r,i,k,a){m[i]=m[i]||function(){(m[i].a=m[i].a||[]).push(arguments)};
+            m[i].l=1*new Date();
+            for (let j = 0; j < document.scripts.length; j++) {if (document.scripts[j].src === r) { return; }}
+            k=e.createElement(t),a=e.getElementsByTagName(t)[0],k.async=1,k.src=r,a.parentNode.insertBefore(k,a)})
+        (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+        ym(97831870, "init", {
+            clickmap:true,
+            trackLinks:true,
+            accurateTrackBounce:true,
+            webvisor:true
+        });
+    </script>
+    <noscript><div><img src="https://mc.yandex.ru/watch/97831870" style="position:absolute; left:-9999px;" alt="" /></div></noscript>
+    <!-- /Yandex.Metrika counter -->
+<?php endif;?>
 </body>
 </html>

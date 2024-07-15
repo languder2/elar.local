@@ -92,7 +92,7 @@ $routes->get(   'publications/(:segment)-(:segment)/',      [Publications::class
 $routes->get(   'publication/(:num)',                       [Publications::class, 'publication']);
 $routes->post(  'search-publications',                      [Publications::class, 'setPublicSearch']);
 $routes->get(   'correct/',                                 [Publications::class, 'correct']);
-$routes->get(   'set-(:segment)/(:num)',                    [[Publications::class, 'publicFilter'], "true/$1/$2"]);
+$routes->get(   'set-(:segment)/(:num)',                    [Publications::class, 'publicFilter']);
 
 /** Public: Section */
 $routes->get(   'section/(:num)',                           [Sections::class, 'showSection']);
