@@ -26,6 +26,13 @@ class Publications extends BaseController
         "tags",
     ];
 
+    protected array $filterList=  [
+        "tags"      =>  "Тема",
+        "authors"   =>  "Автор",
+        "advisors"  =>  "Научный руководитель",
+        "years"     =>  "Год",
+    ];
+
     protected PublicationsModel $PublicationsModel;
     public function initController(RequestInterface $request, ResponseInterface $response, LoggerInterface $logger):bool
     {
@@ -356,16 +363,6 @@ class Publications extends BaseController
         return true;
     }
 
-    public function setFilter():RedirectResponse|string
-    {
-        if(!$this->model->hasAuth())
-            return view("admin/template/page",["pageContent"=>view("admin/User/Auth")]);
-
-        $filter= $this->request->getVar('filter')??[];
-
-        $this->session->set("sectionsFilter",$filter);
-        return redirect()->to(base_url("/admin/sections/"));
-    }
     public function publication($id=false):string|RedirectResponse
     {
         /* meta */
@@ -432,24 +429,6 @@ class Publications extends BaseController
         return view("public/page",$this->page);
     }
 
-    public function publicFilter($clear,$type,$id):RedirectResponse|string
-    {
-        $filter = [];
-
-        if($clear)
-            $this->session->remove("publicationsFilterWhere");
-
-        if(!$clear && $this->session->has("publicationsFilterWhere"))
-            $filter = $this->session->get("publicationsFilterWhere");
-
-        if($type){
-            $filter["JSON_CONTAINS($type,'$id','$')"]= 1;
-            $this->session->set("publicationsFilterWhere",$filter);
-        }
-
-        return redirect()->to(base_url("publications"));
-    }
-
     public function list($currentPage= 1):string|RedirectResponse
     {
         $includes=(object)[
@@ -464,9 +443,26 @@ class Publications extends BaseController
         if($this->session->has("publicationsFilterWhere"))
             $where= $this->session->get("publicationsFilterWhere");
 
-        /* filters box  */
+
+        /* get filter lists*/
+        foreach ($this->filterList as $table => $title){
+            $filter= $this->db
+                ->table($table)
+                ->where("cnt>0")
+                ->orderBy("name","asc")
+                ->get()
+                ->getResult();
+
+            if(count($filter))
+                $filters[$table]= view("public/Publications/Filter",[
+                    "title"     =>  $title,
+                    "filter"    =>  $filter,
+                    "tag"       =>  $table,
+                ]);
+        }
+
         $filtersBox= view("public/Publications/Filters",[
-            "filters"       => $where??[],
+            "filters"       => $filters??[],
         ]);
 
         /* likes */
@@ -533,6 +529,24 @@ class Publications extends BaseController
             "includes"      =>  $includes,
             "pageContent"   =>  $pageContent
         ]);
+    }
+
+    public function publicFilter($clear,$type,$id):RedirectResponse|string
+    {
+        $filter = [];
+
+        if($clear)
+            $this->session->remove("publicationsFilterWhere");
+
+        if(!$clear && $this->session->has("publicationsFilterWhere"))
+            $filter = $this->session->get("publicationsFilterWhere");
+
+        if($type){
+            $filter["JSON_CONTAINS($type,'$id','$')"]= 1;
+            $this->session->set("publicationsFilterWhere",$filter);
+        }
+
+        return redirect()->to(base_url("publications"));
     }
 
     public function setPublicSort($sort = false, $sortDirection= "asc"):RedirectResponse
