@@ -26,3 +26,10 @@
 {
     background-color: #0a53be10;
 }
+.years-list-grid{
+    display: grid;
+    grid-template-columns: 50px 1fr 100px 50px 50px;
+    gap: 5px;
+    text-align: center;
+    align-items: center;
+}

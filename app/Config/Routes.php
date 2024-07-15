@@ -5,6 +5,10 @@ use App\Controllers\User;
 use App\Controllers\Admin;
 use App\Controllers\Sections;
 use App\Controllers\Types;
+use App\Controllers\YearsController;
+use App\Controllers\TagsController;
+use App\Controllers\AuthorController;
+use App\Controllers\AdvisorsController;
 use App\Controllers\Publications;
 use App\Controllers\PublicController;
 use App\Controllers\Download;
@@ -48,6 +52,38 @@ $routes->post(  '/admin/publications/form-processing',      [Publications::class
 $routes->get(   '/admin/publications/edit/(:num)',          [Publications::class, 'form/edit']);
 $routes->get(   '/admin/publications/delete/(:num)',        [Publications::class, 'delete']);
 $routes->post(  '/admin/publications/change-visible',       [Publications::class, 'changeVisible']);
+
+/** ADMIN: YAERS  */
+$routes->get(   '/admin/years',                          [YearsController::class, 'adminList']);
+$routes->get(   '/admin/years/add',                  [YearsController::class, 'form/add']);
+$routes->post(  '/admin/years/form-processing',      [YearsController::class, 'formProcessing']);
+$routes->get(   '/admin/years/delete/(:num)',            [YearsController::class, 'delete/$1']);
+$routes->post(  '/admin/years/set-filter',               [YearsController::class, 'setFilter']);
+$routes->post(  '/admin/years/change-visible/',          [YearsController::class, 'changeVisible']);
+
+/** ADMIN: TAGS  */
+$routes->get(   '/admin/tags',                          [TagsController::class, 'adminList']);
+$routes->get(   '/admin/tags/add',                  [TagsController::class, 'form/add']);
+$routes->post(  '/admin/tags/form-processing',      [TagsController::class, 'formProcessing']);
+$routes->get(   '/admin/tags/delete/(:num)',            [TagsController::class, 'delete/$1']);
+$routes->post(  '/admin/tags/set-filter',               [TagsController::class, 'setFilter']);
+$routes->post(  '/admin/tags/change-visible/',          [TagsController::class, 'changeVisible']);
+
+/** ADMIN: AUTHORS  */
+$routes->get(   '/admin/authors',                          [AuthorController::class, 'adminList']);
+$routes->get(   '/admin/authors/add',                  [AuthorController::class, 'form/add']);
+$routes->post(  '/admin/authors/form-processing',      [AuthorController::class, 'formProcessing']);
+$routes->get(   '/admin/authors/delete/(:num)',            [AuthorController::class, 'delete/$1']);
+$routes->post(  '/admin/authors/set-filter',               [AuthorController::class, 'setFilter']);
+$routes->post(  '/admin/authors/change-visible/',          [AuthorController::class, 'changeVisible']);
+
+/** ADMIN: ADVISORS  */
+$routes->get(   '/admin/advisors',                          [AdvisorsController::class, 'adminList']);
+$routes->get(   '/admin/advisors/add',                  [AdvisorsController::class, 'form/add']);
+$routes->post(  '/admin/advisors/form-processing',      [AdvisorsController::class, 'formProcessing']);
+$routes->get(   '/admin/advisors/delete/(:num)',            [AdvisorsController::class, 'delete/$1']);
+$routes->post(  '/admin/advisors/set-filter',               [AdvisorsController::class, 'setFilter']);
+$routes->post(  '/admin/advisors/change-visible/',          [AdvisorsController::class, 'changeVisible']);
 
 /** Public: Publications */
 $routes->get(   'publications',                             [Publications::class, 'list']);

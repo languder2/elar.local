@@ -41,7 +41,6 @@ class Sections extends BaseController
             $filter= $this->session->get("sectionsFilter");
 
         $list= $this->model->db->table("sections");
-
         if(!empty($filter))
             $list= $list->like($filter)->orWhere(["parent!="=>0]);
 
