@@ -446,6 +446,9 @@ table.iksweb.resource tr:last-child{
 .crumb:hover{
     color: red;
 }
+.section-footer p{
+    color: #6C757D;
+}
 @media screen and (max-width: 1399px) {
 
 }
