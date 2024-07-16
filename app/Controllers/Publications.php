@@ -25,6 +25,7 @@ class Publications extends BaseController
         "authors",
         "advisors",
         "tags",
+        "years",
     ];
 
     protected array $filterList=  [
@@ -330,9 +331,9 @@ class Publications extends BaseController
 
 
         /* пересчет счетчиков */
-        foreach ($this->toCountUpdate as $by){
+        foreach ($this->toCountUpdate as $by)
             $this->PublicationsModel->recountPublications($by);
-        }
+
         return redirect()->to(base_url("/admin/publications/"));
     }
 
@@ -447,19 +448,16 @@ class Publications extends BaseController
         if($this->session->has("publicationsConditions")){
             $currentFilter= $this->session->get("publicationsFilters");
             $conditions= $this->session->get("publicationsConditions");
-            foreach ($conditions as $condition){
-                $where[array_key_first($condition)]= reset($conditions);
-            }
+            foreach ($conditions as $condition)
+                $where[array_key_first($condition)]= current($condition);
         }
-
-        //dd($where??"");
 
         /* get filter lists*/
         foreach ($this->filterList as $table => $title){
             $filter= $this->db
                 ->table($table)
                 ->where("cnt>0")
-                ->orderBy("name","asc")
+                ->orderBy("name",($table=="years")?"desc":"asc")
                 ->get()
                 ->getResult();
 
@@ -567,13 +565,32 @@ class Publications extends BaseController
 
         if($id != 0){
             $filter[$type]      = $id;
-            $conditions[$type]  = ["JSON_CONTAINS($type,'$id','$')" => 1];
+            if($type == "years"){
+
+                $year= $this->db
+                    ->table("years")
+                    ->where("id",$id)
+                    ->get()
+                    ->getFirstRow();
+
+
+                $conditions["yearsFrom"]    = ["date>=" => "$year->yearFrom-01-01"];
+                $conditions["yearsTo"]      = ["date<"  => "$year->yearTo-01-01"];
+            }
+            else
+                $conditions[$type]  = ["JSON_CONTAINS($type,'$id','$')" => 1];
+
             $this->session->set("publicationsFilters",      $filter);
             $this->session->set("publicationsConditions",   $conditions);
         }
         else{
             unset($filter[$type]);
-            unset($conditions[$type]);
+            if($type == "years") {
+                unset($conditions["yearsFrom"]);
+                unset($conditions["yearsTo"]);
+            }
+            else
+                unset($conditions[$type]);
 
             if(empty($filter)){
                 $this->session->remove("publicationsFilters");

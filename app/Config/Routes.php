@@ -99,6 +99,7 @@ $routes->get(   'section/(:num)',                           [Sections::class, 's
 $routes->get(   'section/(:num)/page-(:num)/',              [Sections::class, 'showSection']);
 $routes->get(   'section/(:num)/(:segment)-(:segment)/',    [Sections::class, 'setSort']);
 $routes->get(   'sections',                                 [Sections::class, 'showSections']);
+$routes->post(  'section-search/(:num)',                    [Sections::class, 'publicSearch']);
 
 /** PUBLIC: PAGES */
 //$routes->get(   '/',                                           [PublicController::class, 'MainList']);

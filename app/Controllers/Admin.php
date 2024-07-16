@@ -17,10 +17,17 @@ class Admin extends BaseController
         $PublicationsModel= model(PublicationsModel::class);
 
         /* пересчет счетчиков разделов */
-        $PublicationsModel->recountPublications("sections");
+        foreach ([
+                     "sections",
+                     "types",
+                     "authors",
+                     "advisors",
+                     "tags",
+                     "years",
+                 ] as $by
+        )
+            $PublicationsModel->recountPublications($by);
 
-        /* пересчет счетчика типа */
-        $PublicationsModel->recountPublications("types");
         return true;
     }
 

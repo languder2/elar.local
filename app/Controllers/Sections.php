@@ -253,6 +253,21 @@ class Sections extends BaseController
         if(empty($sorts->name))
             $sorts->name= "asc";
 
+        /* search */
+        if($this->session->has("section_search")){
+            $search= $this->session->get("section_search");
+            $likes[]= (object)[
+                "field"     =>  "name",
+                "search"    =>  $search,
+                "side"      =>  "both",
+            ];
+        }
+
+        $this->page['searchBox']= view("public/Publications/Search",[
+            "action"=> base_url("section-search/$sid"),
+            "search"=> $search??null,
+        ]);
+
         /* get Publications */
         if($sid)
             $where= "JSON_CONTAINS(sections, '".$sid."', '$')";
@@ -335,4 +350,15 @@ class Sections extends BaseController
         dd($this->session->get(""));
     }
 
+    public function publicSearch($id):RedirectResponse
+    {
+        $search= $this->request->getVar("search");
+
+        if(empty($search))
+            $this->session->remove("section_search");
+
+        else
+            $this->session->set("section_search",$search);
+        return redirect()->to(base_url("section/$id"));
+    }
 }

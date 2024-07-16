@@ -20,6 +20,7 @@ class PublicationsModel extends Model{
             "authors"   => "UPDATE authors  SET cnt= (SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(authors,CONCAT(authors.id),'$'))",
             "advisors"  => "UPDATE advisors SET cnt= (SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(advisors,CONCAT(advisors.id),'$'))",
             "tags"      => "UPDATE tags     SET cnt= (SELECT COUNT(id) FROM publications WHERE JSON_CONTAINS(tags,CONCAT(tags.id),'$'))",
+            "years"     => "UPDATE years    SET cnt= (SELECT COUNT(id) FROM publications WHERE date>=CONCAT(years.yearFrom,'-01-01') and date<CONCAT(years.yearTo,'-01-01'))",
         };
 
         if(!$query) return false;
